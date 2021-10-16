@@ -1,12 +1,16 @@
 name: m5x-sdk
 
-on: [push]
+on: 
+  push:
+    branches:
+      - main
 
 jobs:
   
   build:
 
     runs-on: ubuntu-latest
+    environment: Production
     strategy:
       matrix: 
         dotnet-version: ['5.0.x']
@@ -28,4 +32,5 @@ jobs:
        - name: Publish Packages
          run: ./cid/pub_pkg.sh
          env:
-           NUGET_API_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+           NUGET_API_KEY: ${{secrets.MACULA_NUGET_ORG_KEY}}
+           NUGET_URL: https://api.nuget.org/v3/index.json
