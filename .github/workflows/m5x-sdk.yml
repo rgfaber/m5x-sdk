@@ -27,5 +27,5 @@ jobs:
 #         run: dotnet test --no-restore --verbosity normal M5x.root.sln
        - name: Publish Packages
          run: ./cid/pub_pkg.sh
-         with:
+         env:
            NUGET_API_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
