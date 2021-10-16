@@ -3,6 +3,7 @@
 ## October 2021
 
 - moved to github.com and publishes now to Nuget.Org
+- Updated Dependencies
 
 ## September 2021
 

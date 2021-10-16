@@ -36,3 +36,6 @@ jobs:
            NUGET_URL: https://api.nuget.org/v3/index.json
        - name: Test Published Packages
          run: ./cid/testpub.sh
+         env:
+           NUGET_API_KEY: ${{secrets.MACULA_NUGET_ORG_KEY}}
+           NUGET_URL: https://api.nuget.org/v3/index.json

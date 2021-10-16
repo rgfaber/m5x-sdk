@@ -1,6 +1,7 @@
 #! /bin/bash
-echo  "branch=$CI_COMMIT_REF_NAME"
-cd cid
+
+
+cd cid || exit
 
 export api_key="$NUGET_API_KEY"
 export source="$NUGET_URL"
