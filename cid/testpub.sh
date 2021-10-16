@@ -9,9 +9,7 @@ dotnet nuget add source "$NUGET_URL" -n "Macula Nugets" -u "$DOCKER_USR" -p "$DO
 
 export version=$1
 dotnet nuget locals --clear all
-if [ "$CI_COMMIT_REF_NAME" != "master" ]; then
-  version="$version-debug"
-fi
+
 dotnet add package -n -s "$source" -v "$version" "M5x"
 dotnet add package -n -s "$source" -v "$version" "M5x.Ardalis"
 dotnet add package -n -s "$source" -v "$version" "M5x.AsciiArt"

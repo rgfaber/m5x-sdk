@@ -9,6 +9,7 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../../m5x.snk</AssemblyOriginatorKeyFile>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <PackageIconUrl>../../discomco-favicon.png</PackageIconUrl>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 <!--    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">-->

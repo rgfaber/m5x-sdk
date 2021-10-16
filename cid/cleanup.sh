@@ -4,10 +4,8 @@ export api_key="$NUGET_API_KEY"
 export source="$NUGET_URL"
 export version=$1
 dotnet nuget locals --clear all
-if [ "$CI_COMMIT_REF_NAME" != "main" ]; then
-  version="$version-debug"
-fi
-dotnet nuget delete "M5.Fx" $version -k $api_key -s $source --non-interactive
+
+dotnet nuget delete "M5x" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.Ardalis" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.AsciiArt" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.AutoMapper" $version -k $api_key -s $source --non-interactive
