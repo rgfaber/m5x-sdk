@@ -1,6 +1,10 @@
-# M5x SDK
+# ![](https://discomco.pl/img/discomco-favicon.png) M5x SDK
 
 ## Introduction
 
-This is a library of various tools and classes that we have been carrying around from project to project since 2001; updating as we move along.
+This is an opinionated library of various tools and classes that we have been carrying around from project to project since 2001; updating as we move along.
+
+## M5x.DEC
+
+The M5x.DEC.* namespace contains an SDK that specifically supports **D**omain Driven Design - **E**vent Sourcing and **C**ommand Query Responsibility Segregation and Clean Architecture using the Event/Command Handler pattern. Built in support for EventStoreDB, CouchDB and NATS. Support for Redis and RabbitMQ is in the pipeline.  
 

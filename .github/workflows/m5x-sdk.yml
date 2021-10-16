@@ -25,7 +25,7 @@ jobs:
          run: chmod +x ./cid
        - name: Install dependencies
          run: dotnet restore
-       - name: Build
+       - name: Build Packages
          run: ./cid/build.sh #dotnet build --configuration Release --no-restore M5x.root.sln
 #       - name: Test
 #         run: dotnet test --no-restore --verbosity normal M5x.root.sln
@@ -34,3 +34,5 @@ jobs:
          env:
            NUGET_API_KEY: ${{secrets.MACULA_NUGET_ORG_KEY}}
            NUGET_URL: https://api.nuget.org/v3/index.json
+       - name: Test Published Packages
+         run: ./cid/testpub.sh

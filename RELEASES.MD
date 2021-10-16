@@ -1,5 +1,9 @@
 # Releases
 
+## October 2021
+
+- moved to github.com and publishes now to Nuget.Org
+
 ## September 2021
 
 ### v1.9.20-experimental
