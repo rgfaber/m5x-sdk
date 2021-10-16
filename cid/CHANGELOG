@@ -1,0 +1,8 @@
+###v19.1.0  
+ - Included CID support for Bounded Services Test Pacakages Including
+    - M5x.Consul.Tests
+    - M5x.Couch.Tests
+    - M5x.Docker.Tests
+    - M5x.Nats.Tests
+    - M5x.Store.Tests    
+  - Corrected Build Process for CID

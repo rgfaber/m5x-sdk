@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <ProjectGuid>{2935B53C-420D-47D0-882D-15AAA05380C4}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Description>Macula Base Storage Library</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MyCouch" Version="7.6.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../M5x.Couch/M5x.Couch.csproj" />
+    <ProjectReference Include="../M5x.DEC/M5x.DEC.csproj" />
+    <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.MD" />
+  </ItemGroup>
+</Project>

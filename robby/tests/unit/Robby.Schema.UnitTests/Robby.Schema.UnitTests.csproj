@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\M5x.DEC.TestKit\M5x.DEC.TestKit.csproj" />
+    <ProjectReference Include="..\..\..\..\src\M5x.Testing\M5x.Testing.csproj" />
+    <ProjectReference Include="..\..\..\src\internal\Robby.Schema\Robby.Schema.csproj" />
+  </ItemGroup>
+
+</Project>

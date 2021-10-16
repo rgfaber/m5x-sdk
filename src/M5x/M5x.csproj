@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup Label="Globals">
+        <SccProjectName>SAK</SccProjectName>
+        <SccProvider>SAK</SccProvider>
+        <SccAuxPath>SAK</SccAuxPath>
+        <SccLocalPath>SAK</SccLocalPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Description>Macula .NETCore Base Library</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <Compile Remove="Json\JsonContentNegotiator.cs" />
+        <Compile Remove="Nats\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="CsvHelper" Version="27.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+        <PackageReference Include="NodaTime" Version="3.0.7" />
+        <PackageReference Include="SharpZipLib" Version="1.3.3" />
+        <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+        <PackageReference Include="System.ComponentModel.EventBasedAsync" Version="4.3.0" />
+        <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
+        <PackageReference Include="System.Security.Principal" Version="4.3.0" />
+        <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <EmbeddedResource Remove="Nats\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Nats\**" />
+    </ItemGroup>
+
+</Project>

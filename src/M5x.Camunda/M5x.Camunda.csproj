@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AssemblyName>M5x.Camunda</AssemblyName>
+        <RootNamespace>M5x.Camunda</RootNamespace>
+        <Description>Macula Camunda Abstraction</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Camunda.Api.Client" Version="2.6.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../M5x/M5x.csproj"/>
+        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj"/>
+    </ItemGroup>
+
+</Project>

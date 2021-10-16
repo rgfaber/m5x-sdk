@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyOriginatorKeyFile>../../m5x.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <ProjectReference Include="..\Robby.Domain\Robby.Domain.csproj" />
+  </ItemGroup>
+
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>../../BLD_PKG</OutputPath>
+    <DefineConstants>DEBUG;NETCOREAPP3_0;CORECLR</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>../../BLD_PKG</OutputPath>
+    <DefineConstants>RELEASE;NETCOREAPP3_0;CORECLR</DefineConstants>
+  </PropertyGroup>
+
+
+</Project>

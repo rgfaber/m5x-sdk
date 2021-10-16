@@ -1,0 +1,22 @@
+<Project>
+    <PropertyGroup>
+        <VersionPrefix>1.10.1</VersionPrefix>
+        <VersionSuffix>$(VersionSuffix)</VersionSuffix>
+        <Authors>macula.io</Authors>
+        <Company>DisComCo Sp.z.o.o</Company>
+        <Copyright>Copyright (c)2019-2021 by DisComCo</Copyright>
+        <TargetFramework>net5.0</TargetFramework>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>../../m5x.snk</AssemblyOriginatorKeyFile>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+<!--    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">-->
+<!--        <OutputPath>../../BLD</OutputPath>-->
+<!--        <DefineConstants>DEBUG;NETCOREAPP3_0;CORECLR</DefineConstants>-->
+<!--    </PropertyGroup>-->
+<!--    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">-->
+<!--        <OutputPath>../../BLD</OutputPath>-->
+<!--        <DefineConstants>RELEASE;NETCOREAPP3_0;CORECLR</DefineConstants>-->
+<!--    </PropertyGroup>-->
+</Project>

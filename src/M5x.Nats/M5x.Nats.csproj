@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0"/>
+        <PackageReference Include="MyNatsClient" Version="0.19.1"/>
+        <PackageReference Include="MyNatsClient.Encodings.Json" Version="0.19.1"/>
+        <PackageReference Include="MyNatsClient.Encodings.Protobuf" Version="0.19.1"/>
+        <PackageReference Include="MyNatsClient.Rx" Version="0.13.0"/>
+    </ItemGroup>
+
+
+</Project>

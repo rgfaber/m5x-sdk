@@ -1,0 +1,282 @@
+name: m5x-sdk
+
+on: [push]
+
+jobs:
+  
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        dotnet-version: ['5.0.x']
+        
+    steps:
+       - uses: actions/checkout@v2
+       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+         uses: actions/setup-dotnet@v1.7.2
+         with:
+           dotnet-version: ${{ matrix.dotnet-version }}
+       - name: Make Scripts Executable
+         run: chmod +x ./cid
+       - name: Install dependencies
+         run: dotnet restore
+       - name: Build
+         run: ./cid/build.sh #dotnet build --configuration Release --no-restore M5x.root.sln
+#       - name: Test
+#         run: dotnet test --no-restore --verbosity normal M5x.root.sln
+         
+  deployment:
+    runs-on: ubuntu-latest
+    environment: Production
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Publish M5x
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+            PROJECT_FILE_PATH: src/M5x/M5x.csproj
+            NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Ardalis
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Ardalis/M5x.Ardalis.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.AsciiArt
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.AsciiArt/M5x.AsciiArt.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.AutoMapper
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.AutoMapper/M5x.AutoMapper.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}          
+      - name: Publish M5x.Bogus
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Bogus/M5x.Bogus.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Camunda
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Camunda/M5x.Camunda.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}                      
+      - name: Publish M5x.Chassis
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Chassis/M5x.Chassis.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}                                
+      - name: Publish M5x.Consul
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Consul/M5x.Consul.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}                                
+      - name: Publish M5x.Couch
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Couch/M5x.Couch.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Dapper
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Dapper/M5x.Dapper.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}                                            
+      - name: Publish M5x.DEC
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.DEC/M5x.DEC.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}          
+      - name: Publish M5x.DEC.Infra
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.DEC.Infra/M5x.DEC.Infra.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}         
+      - name: Publish M5x.DEC.Schema
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.DEC.Schema/M5x.DEC.Schema.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}            
+      - name: Publish M5x.DEC.TestKit
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.DEC.TestKit/M5x.DEC.TestKit.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}          
+      - name: Publish M5x.DGraph
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.DGraph/M5x.DGraph.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Docker
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Docker/M5x.Docker.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.ElasticSearch
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.ElasticSearch/M5x.ElasticSearch.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.EventFlow
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.EventFlow/M5x.EventFlow.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}                                              
+      - name: Publish M5x.EventStore
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.EventStore/M5x.EventStore.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}                                            
+      - name: Publish M5x.Git
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Git/M5x.Git.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.GitLab
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.GitLab/M5x.GitLab.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}   
+      - name: Publish M5x.Grpc
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Grpc/M5x.Grpc.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Kubernetes
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Kubernetes/M5x.Kubernetes.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}    
+      - name: Publish M5x.Kuzzle
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Kuzzle/M5x.Kuzzle.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}   
+      - name: Publish M5x.MailKit
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.MailKit/M5x.MailKit.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.MediatR
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.MediatR/M5x.MediatR.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}     
+      - name: Publish M5x.Minio
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Minio/M5x.Minio.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}} 
+      - name: Publish M5x.MongoDB
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.MongoDB/M5x.MongoDB.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}                
+      - name: Publish M5x.MudBlazor
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.MudBlazor/M5x.MudBlazor.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}  
+      - name: Publish M5x.Nats
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Nats/M5x.Nats.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.NBomber
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.NBomber/M5x.NBomber.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Neo4j
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Neo4j/M5x.Neo4j.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Polly
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Polly/M5x.Polly.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.RabbitMQ
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.RabbitMQ/M5x.RabbitMQ.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Redis
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Redis/M5x.Redis.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}} 
+      - name: Publish M5x.Serilog
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Serilog/M5x.Serilog.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}     
+      - name: Publish M5x.SignalR
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.SignalR/M5x.SignalR.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Sso
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Sso/M5x.Sso.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}                                                                      
+      - name: Publish M5x.Stan
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Stan/M5x.Stan.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Swagger
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Swagger/M5x.Swagger.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}     
+      - name: Publish M5x.TermUi
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.TermUi/M5x.TermUi.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Testing
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Testing/M5x.Testing.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}     
+      - name: Publish M5x.Tty
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Tty/M5x.Tty.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Twilio
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Twilio/M5x.Twilio.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Xml
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Xml/M5x.Xml.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}
+      - name: Publish M5x.Yaml
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/M5x.Yaml/M5x.Yaml.csproj
+          NUGET_KEY: ${{secrets.MACULA_NUGET_ORG_KEY_KEY}}                                                                      
+            
+            
+            
+            
+            
+            
+            
+            

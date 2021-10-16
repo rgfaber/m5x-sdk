@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EventFlow.AspNetCore" Version="0.82.4659" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\M5x.CEQS.Infra\M5x.CEQS.Infra.csproj" />
+  </ItemGroup>
+
+</Project>

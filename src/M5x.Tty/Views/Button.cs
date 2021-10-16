@@ -1,0 +1,293 @@
+﻿//
+// Button.cs: Button control
+//
+// Authors:
+//   Miguel de Icaza (miguel@gnome.org)
+//
+
+using System;
+using M5x.Tty.Core;
+using M5x.Tty.Types;
+using M5x.Tty.Windows;
+using NStack;
+
+namespace M5x.Tty.Views
+{
+    /// <summary>
+    ///     Button is a <see cref="View" /> that provides an item that invokes an <see cref="Action" /> when activated by the
+    ///     user.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Provides a button showing text invokes an <see cref="Action" /> when clicked on with a mouse
+    ///         or when the user presses SPACE, ENTER, or hotkey. The hotkey is the first letter or digit following the first
+    ///         underscore ('_')
+    ///         in the button text.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="View.HotKeySpecifier" /> to change the hotkey specifier from the default of ('_').
+    ///     </para>
+    ///     <para>
+    ///         If no hotkey specifier is found, the first uppercase letter encountered will be used as the hotkey.
+    ///     </para>
+    ///     <para>
+    ///         When the button is configured as the default (<see cref="IsDefault" />) and the user presses
+    ///         the ENTER key, if no other <see cref="View" /> processes the <see cref="KeyEvent" />, the <see cref="Button" />
+    ///         's
+    ///         <see cref="Action" /> will be invoked.
+    ///     </para>
+    /// </remarks>
+    public class Button : View
+    {
+        private Rune _leftBracket;
+        private Rune _leftDefault;
+        private Rune _rightBracket;
+        private Rune _rightDefault;
+        private bool is_default;
+        private ustring text;
+
+        /// <summary>
+        ///     Initializes a new instance of <see cref="Button" /> using <see cref="LayoutStyle.Computed" /> layout.
+        /// </summary>
+        /// <remarks>
+        ///     The width of the <see cref="Button" /> is computed based on the
+        ///     text length. The height will always be 1.
+        /// </remarks>
+        public Button() : this(string.Empty)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of <see cref="Button" /> using <see cref="LayoutStyle.Computed" /> layout.
+        /// </summary>
+        /// <remarks>
+        ///     The width of the <see cref="Button" /> is computed based on the
+        ///     text length. The height will always be 1.
+        /// </remarks>
+        /// <param name="text">The button's text</param>
+        /// <param name="is_default">
+        ///     If <c>true</c>, a special decoration is used, and the user pressing the enter key
+        ///     in a <see cref="Dialog" /> will implicitly activate this button.
+        /// </param>
+        public Button(ustring text, bool is_default = false) : base(text)
+        {
+            Init(text, is_default);
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of <see cref="Button" /> using <see cref="LayoutStyle.Absolute" /> layout, based on the
+        ///     given text
+        /// </summary>
+        /// <remarks>
+        ///     The width of the <see cref="Button" /> is computed based on the
+        ///     text length. The height will always be 1.
+        /// </remarks>
+        /// <param name="x">X position where the button will be shown.</param>
+        /// <param name="y">Y position where the button will be shown.</param>
+        /// <param name="text">The button's text</param>
+        public Button(int x, int y, ustring text) : this(x, y, text, false)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of <see cref="Button" /> using <see cref="LayoutStyle.Absolute" /> layout, based on the
+        ///     given text.
+        /// </summary>
+        /// <remarks>
+        ///     The width of the <see cref="Button" /> is computed based on the
+        ///     text length. The height will always be 1.
+        /// </remarks>
+        /// <param name="x">X position where the button will be shown.</param>
+        /// <param name="y">Y position where the button will be shown.</param>
+        /// <param name="text">The button's text</param>
+        /// <param name="is_default">
+        ///     If <c>true</c>, a special decoration is used, and the user pressing the enter key
+        ///     in a <see cref="Dialog" /> will implicitly activate this button.
+        /// </param>
+        public Button(int x, int y, ustring text, bool is_default)
+            : base(new Rect(x, y, text.RuneCount + 4 + (is_default ? 2 : 0), 1), text)
+        {
+            Init(text, is_default);
+        }
+
+        /// <summary>
+        ///     The text displayed by this <see cref="Button" />.
+        /// </summary>
+        public new ustring Text
+        {
+            get => text;
+
+            set
+            {
+                text = value;
+                Update();
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets whether the <see cref="Button" /> is the default action to activate in a dialog.
+        /// </summary>
+        /// <value><c>true</c> if is default; otherwise, <c>false</c>.</value>
+        public bool IsDefault
+        {
+            get => is_default;
+            set
+            {
+                is_default = value;
+                Update();
+            }
+        }
+
+        private void Init(ustring text, bool is_default)
+        {
+            HotKeySpecifier = new Rune('_');
+
+            _leftBracket = new Rune(Driver != null ? Driver.LeftBracket : '[');
+            _rightBracket = new Rune(Driver != null ? Driver.RightBracket : ']');
+            _leftDefault = new Rune(Driver != null ? Driver.LeftDefaultIndicator : '<');
+            _rightDefault = new Rune(Driver != null ? Driver.RightDefaultIndicator : '>');
+
+            CanFocus = true;
+            this.is_default = is_default;
+            this.text = text ?? string.Empty;
+            Update();
+        }
+
+        internal void Update()
+        {
+            if (IsDefault)
+                base.Text = ustring.Make(_leftBracket) + ustring.Make(_leftDefault) + " " + text + " " +
+                            ustring.Make(_rightDefault) + ustring.Make(_rightBracket);
+            else
+                base.Text = ustring.Make(_leftBracket) + " " + text + " " + ustring.Make(_rightBracket);
+
+            var w = base.Text.RuneCount - (base.Text.Contains(HotKeySpecifier) ? 1 : 0);
+            if (Width is Dim.DimCombine || Width is Dim.DimView || Width is Dim.DimFill)
+            {
+                // It's a Dim.DimCombine and so can't be assigned. Let it have it's width anchored.
+                w = Width.Anchor(w);
+            }
+            else if (Width is Dim.DimFactor)
+            {
+                // Tries to get the SuperView width otherwise the button width.
+                var sw = SuperView != null ? SuperView.Frame.Width : w;
+                if (((Dim.DimFactor) Width).IsFromRemaining()) sw -= Frame.X;
+                w = Width.Anchor(sw);
+            }
+            else
+            {
+                Width = w;
+            }
+
+            var layout = LayoutStyle;
+            var layoutChanged = false;
+            if (!(Height is Dim.DimAbsolute))
+            {
+                // The height is always equal to 1 and must be Dim.DimAbsolute.
+                layoutChanged = true;
+                LayoutStyle = LayoutStyle.Absolute;
+            }
+
+            Height = 1;
+            if (layoutChanged) LayoutStyle = layout;
+            Frame = new Rect(Frame.Location, new Size(w, 1));
+            SetNeedsDisplay();
+        }
+
+        private bool CheckKey(KeyEvent key)
+        {
+            if (key.Key == (Key.AltMask | HotKey))
+            {
+                SetFocus();
+                Clicked?.Invoke();
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override bool ProcessHotKey(KeyEvent kb)
+        {
+            if (kb.IsAlt)
+                return CheckKey(kb);
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override bool ProcessColdKey(KeyEvent kb)
+        {
+            if (IsDefault && kb.KeyValue == '\n')
+            {
+                Clicked?.Invoke();
+                return true;
+            }
+
+            return CheckKey(kb);
+        }
+
+        /// <inheritdoc />
+        public override bool ProcessKey(KeyEvent kb)
+        {
+            var c = kb.KeyValue;
+            if (c == '\n' || c == ' ' || kb.Key == HotKey)
+            {
+                Clicked?.Invoke();
+                return true;
+            }
+
+            return base.ProcessKey(kb);
+        }
+
+
+        /// <summary>
+        ///     Clicked <see cref="Action" />, raised when the user clicks the primary mouse button within the Bounds of this
+        ///     <see cref="View" />
+        ///     or if the user presses the action key while this view is focused. (TODO: IsDefault)
+        /// </summary>
+        /// <remarks>
+        ///     Client code can hook up to this event, it is
+        ///     raised when the button is activated either with
+        ///     the mouse or the keyboard.
+        /// </remarks>
+        public event Action Clicked;
+
+        /// <inheritdoc />
+        public override bool MouseEvent(MouseEvent me)
+        {
+            if (me.Flags == MouseFlags.Button1Clicked || me.Flags == MouseFlags.Button1DoubleClicked ||
+                me.Flags == MouseFlags.Button1TripleClicked)
+            {
+                if (CanFocus)
+                {
+                    if (!HasFocus)
+                    {
+                        SetFocus();
+                        SetNeedsDisplay();
+                    }
+
+                    Clicked?.Invoke();
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override void PositionCursor()
+        {
+            if (HotKey == Key.Unknown)
+                for (var i = 0; i < base.Text.RuneCount; i++)
+                    if (base.Text[i] == text[0])
+                    {
+                        Move(i, 0);
+                        return;
+                    }
+
+            base.PositionCursor();
+        }
+    }
+}

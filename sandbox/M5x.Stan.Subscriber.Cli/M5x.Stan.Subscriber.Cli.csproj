@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\M5x.DEC.Infra\M5x.DEC.Infra.csproj" />
+    <ProjectReference Include="..\M5x.Publisher.Contract\M5x.Publisher.Contract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>../../BLD_SUB</OutputPath>
+    <DefineConstants>DEBUG;NETCOREAPP3_0;CORECLR</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>../../BLD_SUB</OutputPath>
+    <DefineConstants>RELEASE;NETCOREAPP3_0;CORECLR</DefineConstants>
+  </PropertyGroup>
+  
+  
+  
+</Project>

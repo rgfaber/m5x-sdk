@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Description>Macula CouchDB Abstraction</Description>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="CouchDB.NET" Version="3.1.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0"/>
+    </ItemGroup>
+
+
+    <!--  <ItemGroup>-->
+    <!--    <ProjectReference Include="../M5x.Docker/M5x.Docker.csproj" />-->
+    <!--    <ProjectReference Include="../M5x/M5x.csproj" />-->
+    <!--  </ItemGroup>-->
+
+
+</Project>

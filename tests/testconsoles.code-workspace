@@ -1,0 +1,67 @@
+{
+	"folders": [{
+			"name": "Requester",
+			"path": "Xc.Requester.TestCon"
+		},
+		{
+			"name": "Responder",
+			"path": "Xc.Responder.TestCon"
+		},
+		{
+			"name": "NatsTests",
+			"path": "M5x.Nats.Tests"
+		}
+	],
+	"settings": {
+		"debug.allowBreakpointsEverywhere": true
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [{
+				"name": "RespCons",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": {
+					"command": "dotnet",
+					"type": "process",
+					"args": [
+						"build",
+						"${workspaceRoot:NatsTests}/M5x.Nats.Tests.csproj"
+					],
+					"problemMatcher": "$msCompile"
+				},
+				"program": "${workspaceRoot:Responder}/bin/Debug/netcoreapp2.1/Xc.Responder.TestCon.dll",
+				"args": [],
+				"cwd": "${workspaceRoot:Responder}",
+				"stopAtEntry": false,
+				"console": "internalConsole"
+			},
+			{
+				"name": "ReqCons",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": {
+					"command": "dotnet",
+					"type": "process",
+					"args": [
+						"build",
+						"${workspaceRoot:NatsTests}/M5x.Nats.Tests.csproj"
+					],
+					"problemMatcher": "$msCompile"
+				},
+				"program": "${workspaceRoot:Requester}/bin/Debug/netcoreapp2.1/Xc.Requester.TestCon.dll",
+				"args": [],
+				"cwd": "${workspaceRoot:Requester}",
+				"stopAtEntry": false,
+				"console": "internalConsole"
+			}
+		],
+		"compounds": [{
+			"name": "1-Launch RnR",
+			"configurations": [
+				"ReqCons",
+				"RespCons"
+			]
+		}]
+	}
+}

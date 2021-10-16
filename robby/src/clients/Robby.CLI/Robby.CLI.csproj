@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyOriginatorKeyFile>../../../../m5x.snk</AssemblyOriginatorKeyFile>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>    
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>../../../../../ROB/CLI</OutputPath>
+    <DefineConstants>DEBUG;NETCOREAPP3_0;CORECLR</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>../../../../../ROB/CLI</OutputPath>
+    <DefineConstants>RELEASE;NETCOREAPP3_0;CORECLR</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include=".env" />
+  </ItemGroup>
+  <ItemGroup>
+
+    <ProjectReference Include="..\Robby.Client.Infra\Robby.Client.Infra.csproj" />
+
+  </ItemGroup>
+
+
+
+
+</Project>

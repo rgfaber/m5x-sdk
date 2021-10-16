@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\M5x.Kubernetes\M5x.Kubernetes.csproj" />
+        <ProjectReference Include="..\..\src\M5x.Stan\M5x.Stan.csproj" />
+        <ProjectReference Include="..\..\src\M5x.Testing\M5x.Testing.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="logatron-test.creds" />
+        <None Remove="priv.txt" />
+        <None Remove="dev-user.nk" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="test.creds" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="README.MD" />
+        <Content Include="README.MD">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>

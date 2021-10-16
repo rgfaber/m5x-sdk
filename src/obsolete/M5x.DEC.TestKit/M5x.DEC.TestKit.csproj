@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\M5x.DEC\M5x.DEC.csproj" />
+    <ProjectReference Include="..\M5x.Testing\M5x.Testing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EventFlow.TestHelpers" Version="0.82.4659" />
+  </ItemGroup>
+
+</Project>

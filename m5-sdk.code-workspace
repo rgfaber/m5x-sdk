@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": ".git"
+		},
+		{
+			"path": "../../logatron.io/contexts/vecodis-context"
+		}
+	],
+	"settings": {}
+}

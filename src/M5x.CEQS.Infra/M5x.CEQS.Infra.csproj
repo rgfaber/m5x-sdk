@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Logger" />
+    <Folder Include="Socket" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\M5x.CEQS.Schema\M5x.CEQS.Schema.csproj" />
+    <ProjectReference Include="..\M5x.CEQS\M5x.CEQS.csproj" />
+    <ProjectReference Include="..\M5x.Chassis\M5x.Chassis.csproj" />
+    <ProjectReference Include="..\M5x.Couch\M5x.Couch.csproj" />
+    <ProjectReference Include="..\M5x.EventStore\M5x.EventStore.csproj" />
+    <ProjectReference Include="..\M5x.Kubernetes\M5x.Kubernetes.csproj" />
+    <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj" />
+    <ProjectReference Include="..\M5x.Stan\M5x.Stan.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EventStore.Client" Version="21.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logger\LogWriter.cs" />
+  </ItemGroup>
+
+</Project>

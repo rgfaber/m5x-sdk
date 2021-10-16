@@ -1,0 +1,34 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using M5x.DEC.Persistence;
+using M5x.Schemas;
+using Serilog;
+
+namespace M5x.DEC.Infra.CouchDb
+{
+    public abstract class CouchReader<TQuery, TReadModel> : IModelReader<TQuery, TReadModel>
+        where TQuery : Query
+        where TReadModel : IReadEntity
+    {
+        protected readonly ILogger Logger;
+        protected readonly ICouchStore<TReadModel> Store;
+
+        public CouchReader(ICouchStore<TReadModel> store, ILogger logger)
+        {
+            Store = store;
+            Logger = logger;
+        }
+
+
+        public Task<IEnumerable<TReadModel>> FindAllAsync(TQuery qry)
+        {
+            return null;
+        }
+
+
+        public async Task<TReadModel> GetByIdAsync(string id)
+        {
+            return await Store.GetByIdAsync(id);
+        }
+    }
+}

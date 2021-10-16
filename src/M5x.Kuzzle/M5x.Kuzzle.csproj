@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="kuzzlesdk" Version="2.0.5"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\M5x\M5x.csproj"/>
+    </ItemGroup>
+
+</Project>

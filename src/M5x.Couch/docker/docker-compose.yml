@@ -1,0 +1,25 @@
+version: "3.5"
+
+services:
+  couchdb:
+    image: local/couch
+    build:
+      context: .
+    hostname: couch-db
+    container_name: local-couch
+    environment:
+      - COUCHDB_USER=test
+      - COUCHDB_PASSWORD=test
+      - VIRTUAL_HOST=couchdb.localhost
+    ports:
+      - 5984:5984
+    volumes:
+      - couchdb-storage:/opt/couchdb/data
+      - couchdb-config:/opt/couchdb/etc/local.d
+      - couchdb-logs:/opt/couchdb/log
+
+
+volumes:
+  couchdb-storage:
+  couchdb-config:
+  couchdb-logs:

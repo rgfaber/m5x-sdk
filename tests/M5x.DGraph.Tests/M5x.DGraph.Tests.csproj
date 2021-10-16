@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\M5x.DGraph\M5x.DGraph.csproj"/>
+        <ProjectReference Include="..\..\src\M5x.Testing\M5x.Testing.csproj"/>
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CouchDB.NET" Version="3.1.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\M5x.Chassis\M5x.Chassis.csproj" />
+        <ProjectReference Include="..\M5x.DEC.Schema\M5x.DEC.Schema.csproj" />
+        <ProjectReference Include="..\M5x.DEC\M5x.DEC.csproj" />
+        <ProjectReference Include="..\M5x.EventStore\M5x.EventStore.csproj" />
+        <ProjectReference Include="..\M5x.Polly\M5x.Polly.csproj" />
+        <ProjectReference Include="..\M5x.RabbitMQ\M5x.RabbitMQ.csproj" />
+        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj" />
+        <ProjectReference Include="..\M5x.Stan\M5x.Stan.csproj" />
+        <ProjectReference Include="..\M5x.Swagger\M5x.Swagger.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="RabbitMQ\**" />
+        <Compile Remove="NATS\**" />
+        <Compile Remove="MongoDB\**" />
+        <Compile Remove="EventStore\EventStream.cs" />
+        <Compile Remove="STAN\STANResponder2.cs" />
+        <Compile Remove="CouchDb\CouchBuilder.cs" />
+        <Compile Remove="CouchDb\ICouchBuilder.cs" />
+        <Compile Include="RabbitMq\RMqEmitter.cs" />
+        <Compile Include="RabbitMq\RmqSubscriber.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Remove="RabbitMQ\**" />
+        <EmbeddedResource Remove="NATS\**" />
+        <EmbeddedResource Remove="MongoDB\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="RabbitMQ\**" />
+        <None Remove="NATS\**" />
+        <None Remove="MongoDB\**" />
+    </ItemGroup>
+
+</Project>

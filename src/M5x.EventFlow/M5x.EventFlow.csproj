@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj"/>
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="EventFlow" Version="0.83.4713"/>
+        <PackageReference Include="EventFlow.DependencyInjection" Version="0.83.4713"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2"/>
+    </ItemGroup>
+
+</Project>

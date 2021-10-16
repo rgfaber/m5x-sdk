@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\M5x.DEC.TestKit\M5x.DEC.TestKit.csproj" />
+    <ProjectReference Include="..\..\..\src\clients\Robby.Client.Infra\Robby.Client.Infra.csproj" />
+    <ProjectReference Include="..\..\..\src\hosts\Robby.Cmd.Infra\Robby.Cmd.Infra.csproj" />
+    <ProjectReference Include="..\..\..\src\hosts\Robby.Etl.Infra\Robby.Etl.Infra.csproj" />
+    <ProjectReference Include="..\..\..\src\hosts\Robby.Qry.Infra\Robby.Qry.Infra.csproj" />
+    <ProjectReference Include="..\..\..\src\hosts\Robby.Sub.Infra\Robby.Sub.Infra.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".env" />
+    <EmbeddedResource Include=".env" />
+  </ItemGroup>
+
+
+</Project>

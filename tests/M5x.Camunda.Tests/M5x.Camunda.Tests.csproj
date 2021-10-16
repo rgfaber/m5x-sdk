@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="test.bpmn" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="test.bpmn" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\M5x.Camunda\M5x.Camunda.csproj" />
+        <ProjectReference Include="..\..\src\M5x.Testing\M5x.Testing.csproj" />
+    </ItemGroup>
+
+</Project>
