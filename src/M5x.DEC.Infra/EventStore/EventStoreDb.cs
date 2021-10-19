@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using EventStore.Client;
 using M5x.DEC.Events;
 using M5x.DEC.Persistence.EventStore;
 using M5x.DEC.Schema;
+using M5x.EventStore;
 using M5x.EventStore.Interfaces;
+using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace M5x.DEC.Infra.EventStore
 {
@@ -131,9 +133,9 @@ namespace M5x.DEC.Infra.EventStore
         {
             try
             {
-                // var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
-                // return (IEvent<TAggregateId>) JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
-                //     Type.GetType(eventType), settings);
+                var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
+                return (IEvent<TAggregateId>) JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
+                    Type.GetType(eventType), settings);
 
                 // // var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
                 // // return (IEvent<TAggregateId>) JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
@@ -153,8 +155,8 @@ namespace M5x.DEC.Infra.EventStore
 
         private static byte[] Serialize<TAggregateId>(IEvent<TAggregateId> @event) where TAggregateId : IIdentity
         {
-            // return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
-            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event));
+            return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
+            //return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event));
             //return JsonSerializer.SerializeToUtf8Bytes(@event);
         }
     }
