@@ -115,7 +115,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
         protected abstract string GetExpectedHopeTopic();
 
 
-        protected virtual string GetAttributedHopeTopic()
+        protected string GetAttributedHopeTopic()
         {
             var attrs = (TopicAttribute[])typeof(THope).GetCustomAttributes(typeof(TopicAttribute), true);
             return attrs.Length > 0 ? attrs[0].Id : $"No Topic Defined on {typeof(THope)}!";

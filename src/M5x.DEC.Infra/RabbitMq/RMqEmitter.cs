@@ -22,9 +22,9 @@ namespace M5x.DEC.Infra.RabbitMq
 
 
 
-        public async Task EmitAsync(TFact fact, CancellationToken cancellationToken)
+        public Task EmitAsync(TFact fact, CancellationToken cancellationToken=default)
         {
-            await _endpoint.Publish(fact, cancellationToken);
+            return _endpoint.Publish(fact, cancellationToken);
         }
     }
 }

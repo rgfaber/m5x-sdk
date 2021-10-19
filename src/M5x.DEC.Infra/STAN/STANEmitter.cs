@@ -11,11 +11,6 @@ using Serilog;
 
 namespace M5x.DEC.Infra.STAN
 {
-    
-    
-    
-    
-    
     public abstract class STANEmitter<TAggregateId, TFact>
         : IFactEmitter<TAggregateId, TFact>
         where TFact : IFact
@@ -46,8 +41,6 @@ namespace M5x.DEC.Infra.STAN
 
         public async Task EmitAsync(TFact fact, CancellationToken cancellationToken=default)
         {
-            await _retryPolicy.ExecuteAsync(async () =>
-            {
                 try
                 {
                     if (_conn.State != ConnState.CONNECTED)
@@ -65,9 +58,9 @@ namespace M5x.DEC.Infra.STAN
                 {
                     _logger?.Fatal(
                         $"[{FactTopic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}");
+                    throw;
                 }
-                return Task.CompletedTask;
-            });
+            
         }
 
 

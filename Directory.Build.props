@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>1.10.3</VersionPrefix>
+        <VersionPrefix>1.10.4</VersionPrefix>
         <VersionSuffix>$(VersionSuffix)</VersionSuffix>
         <Authors>macula.io</Authors>
         <Company>DisComCo Sp.z.o.o</Company>
@@ -10,6 +10,7 @@
         <AssemblyOriginatorKeyFile>../../m5x.snk</AssemblyOriginatorKeyFile>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <PackageIconUrl>https://discomco.pl/img/discomco-favicon.png</PackageIconUrl>
+        <PackageProjectUrl>https://github.com/rgfaber/m5x-sdk</PackageProjectUrl>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 </Project>

@@ -2,6 +2,12 @@
 
 ## October 2021
 
+### v1.10.4
+ 
+- initiated support for RabbitMQ in M5x.DEC.Infra
+- updated dependencies 
+
+### v1.10.3
 - moved to github.com and publishes now to Nuget.Org
 - Updated Dependencies
 

@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Description>Macula .NETCore Base Library</Description>
+        <Description>M5x .NETCore Base Library - a collection of general purpose classes and extensions</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 

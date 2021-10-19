@@ -13,7 +13,7 @@ namespace M5x.DEC.Persistence
     {
         private readonly IEventStore eventStore;
 
-        private readonly IDECBus publisher;
+        private readonly IDECBus bus;
         //        private readonly IAggregatePublisher publisher;
 
         // public EventRepository(IEventStore eventStore, IAggregatePublisher publisher)
@@ -23,10 +23,10 @@ namespace M5x.DEC.Persistence
         // }
 
 
-        public EventStream(IEventStore eventStore, IDECBus publisher)
+        public EventStream(IEventStore eventStore, IDECBus bus)
         {
             this.eventStore = eventStore;
-            this.publisher = publisher;
+            this.bus = bus;
         }
 
 
@@ -71,7 +71,7 @@ namespace M5x.DEC.Persistence
                 foreach (var @event in uncomEvts)
                 {
                     await eventStore.AppendEventAsync(@event);
-                    await publisher.PublishAsync((dynamic)@event);
+                    await bus.PublishAsync((dynamic)@event);
                 }
 
                 aggregatePersistence.ClearUncommittedEvents();

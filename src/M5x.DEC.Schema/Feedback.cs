@@ -19,8 +19,15 @@ namespace M5x.DEC.Schema
         TPayload Payload { get; set; }
     }
 
-    public abstract record Feedback<TPayload> : IFeedback<TPayload> where TPayload : IPayload
+    public abstract record Feedback : IFeedback
     {
+        protected Feedback(AggregateInfo meta, string correlationId)
+        {
+            CorrelationId = correlationId;
+            Meta = meta;
+            ErrorState = new ErrorState();
+        }
+
         protected Feedback()
         {
             Meta = AggregateInfo.Empty;
@@ -28,26 +35,29 @@ namespace M5x.DEC.Schema
             ErrorState = new ErrorState();
         }
 
+        public string CorrelationId { get; set; }
+        public ErrorState ErrorState { get; }
+        public AggregateInfo Meta { get; set; }
+        public bool IsSuccess => ErrorState.IsSuccessful;
+    }
+    
+    
+
+    public abstract record Feedback<TPayload> : Feedback, IFeedback<TPayload> where TPayload : IPayload
+    {
+        protected Feedback()
+        {
+            Meta = AggregateInfo.Empty;
+            CorrelationId = GuidUtils.NewCleanGuid;
+        }
+
         protected Feedback(AggregateInfo meta, string correlationId, TPayload payload)
         {
-            ErrorState = new ErrorState();
             Meta = meta;
             CorrelationId = correlationId;
             Payload = payload;
         }
 
-        protected Feedback(string correlationId)
-        {
-            ErrorState = new ErrorState();
-            CorrelationId = correlationId;
-            Meta = AggregateInfo.Empty;
-        }
-
-
-        public bool IsSuccess => ErrorState.IsSuccessful;
-        [Required] public ErrorState ErrorState { get; }
-        [Required] public AggregateInfo Meta { get; set; }
-        [Required(AllowEmptyStrings = false)] public string CorrelationId { get; set; }
         public TPayload Payload { get; set; }
 
         public override string ToString()

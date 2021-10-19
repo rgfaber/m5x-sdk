@@ -37,7 +37,7 @@ namespace M5x.DEC.Tests
 
     internal class MyEventStream : EventStream<MyRoot, MyID>, IMyEventStream
     {
-        public MyEventStream(IEventStore eventStore, IDECBus publisher) : base(eventStore, publisher)
+        public MyEventStream(IEventStore eventStore, IDECBus bus) : base(eventStore, bus)
         {
         }
     }

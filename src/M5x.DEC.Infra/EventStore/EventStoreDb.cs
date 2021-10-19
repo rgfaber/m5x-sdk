@@ -77,7 +77,7 @@ namespace M5x.DEC.Infra.EventStore
                 var eventData = new EventData(
                     Uuid.FromGuid(@event.EventId),
                     typeName,
-                    Serialize(@event),
+                      JsonSerializer.SerializeToUtf8Bytes(@event),
                     JsonSerializer.SerializeToUtf8Bytes(@event.Meta));
 //                    Encoding.UTF8.GetBytes(@event.Meta.ToString()));
                 var expectedRevision = StreamRevision.None;

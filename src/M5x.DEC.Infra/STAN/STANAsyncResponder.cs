@@ -14,7 +14,8 @@ using Serilog;
 
 namespace M5x.DEC.Infra.STAN
 {
-    public abstract class STANAsyncResponder<TAggregate, TID, THope, TCmd, TFeedback> : BackgroundService
+    public abstract class STANAsyncResponder<TAggregate, TID, THope, TCmd, TFeedback> : BackgroundService,
+        IResponder<TAggregate, TID, THope, TCmd, TFeedback>
         where TAggregate : IAggregateRoot<TID>
         where TID : IIdentity
         where THope : IHope

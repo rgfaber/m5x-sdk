@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
@@ -10,7 +11,8 @@ using Serilog;
 
 namespace M5x.DEC.Infra.STAN
 {
-    public abstract class STANRequester<THope, TFeedback> : IDisposable, IRequester<THope, TFeedback>
+    public abstract class STANRequester<THope, TFeedback> : IDisposable, 
+        IRequester<THope, TFeedback>
         where THope : IHope
         where TFeedback : IFeedback
     {
@@ -41,9 +43,9 @@ namespace M5x.DEC.Infra.STAN
         }
 
 
-        public async Task<TFeedback> RequestAsync(THope req)
+        public Task<TFeedback> RequestAsync(THope hope, CancellationToken cancellationToken=default)
         {
-            return await _retryPolicy.ExecuteAsync(async () =>
+            return _retryPolicy.ExecuteAsync(async () =>
             {
                 TFeedback rsp = default;
                 try
@@ -51,13 +53,11 @@ namespace M5x.DEC.Infra.STAN
                     await WaitForConnection();
                     if (_conn.State == ConnState.CONNECTED)
                     {
-                        _logger?.Debug($"[{HopeTopic}]-HOPE {JsonSerializer.Serialize(req)}");
-                        rsp = (TFeedback)_conn.Request(HopeTopic, req);
+                        _logger?.Debug($"[{HopeTopic}]-HOPE {JsonSerializer.Serialize(hope)}");
+                        rsp = (TFeedback)_conn.Request(HopeTopic, hope);
                         _conn.Flush();
                         _logger?.Debug($"[{HopeTopic}]-FEEDBACK {JsonSerializer.Serialize(rsp)}");
-                    }
-
-                    ;
+                    };
                 }
                 catch (Exception e)
                 {
@@ -66,7 +66,6 @@ namespace M5x.DEC.Infra.STAN
                     _logger?.Fatal($"[{HopeTopic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}");
                     throw;
                 }
-
                 return rsp;
             });
         }

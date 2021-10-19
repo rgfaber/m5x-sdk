@@ -1,20 +1,24 @@
 ﻿using System;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
+using MassTransit.ExtensionsDependencyInjectionIntegration;
 
 namespace M5x.RabbitMQ
 {
     public static class Inject
     {
-        public static IServiceCollection AddRabbitMQ(this IServiceCollection services)
+        public static IServiceCollection AddRabbitMQ(this IServiceCollection services, Action<IServiceCollectionBusConfigurator> configureMassTransit)
         {
             return services
-                .AddSingleton<IConnectionFactory, ConnectionFactory>(x => new ConnectionFactory
-                {
-                    Uri = new Uri(RabbitMqConfig.Url),
-                    UserName = RabbitMqConfig.UserName,
-                    Password = RabbitMqConfig.Password
-                })
+                .AddMassTransit(configureMassTransit)
+                .AddSingleton<IConnectionFactory, ConnectionFactory>(
+                    x => new ConnectionFactory
+                    {
+                        Uri = new Uri(RabbitMqConfig.Url),
+                        UserName = RabbitMqConfig.UserName,
+                        Password = RabbitMqConfig.Password
+                    })
                 .AddTransient<IRabbitMqClient, RabbitMqClient>();
         }
     }

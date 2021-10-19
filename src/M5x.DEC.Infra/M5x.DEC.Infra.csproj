@@ -28,10 +28,11 @@
         <Compile Remove="NATS\**" />
         <Compile Remove="MongoDB\**" />
         <Compile Remove="EventStore\EventStream.cs" />
-        <Compile Remove="STAN\STANResponder2.cs" />
         <Compile Remove="CouchDb\CouchBuilder.cs" />
         <Compile Remove="CouchDb\ICouchBuilder.cs" />
         <Compile Include="RabbitMq\RMqEmitter.cs" />
+        <Compile Include="RabbitMq\RMqAsyncResponder.cs" />
+        <Compile Include="RabbitMq\RMqRequester.cs" />
         <Compile Include="RabbitMq\RmqSubscriber.cs" />
     </ItemGroup>
 
