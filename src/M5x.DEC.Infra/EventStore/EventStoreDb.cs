@@ -77,7 +77,7 @@ namespace M5x.DEC.Infra.EventStore
                 var eventData = new EventData(
                     Uuid.FromGuid(@event.EventId),
                     typeName,
-                      JsonSerializer.SerializeToUtf8Bytes(@event),
+                      Serialize(@event),
                     JsonSerializer.SerializeToUtf8Bytes(@event.Meta));
 //                    Encoding.UTF8.GetBytes(@event.Meta.ToString()));
                 var expectedRevision = StreamRevision.None;
@@ -135,10 +135,14 @@ namespace M5x.DEC.Infra.EventStore
                 // return (IEvent<TAggregateId>) JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
                 //     Type.GetType(eventType), settings);
 
-                // var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
-                return (IEvent<TAggregateId>)JsonSerializer.Deserialize(data, Type.GetType(eventType));
-                //  JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
-                // Type.GetType(eventType), settings);
+                // // var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
+                // // return (IEvent<TAggregateId>) JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
+                // //     Type.GetType(eventType), settings);
+                //
+                // // var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
+                 return (IEvent<TAggregateId>)JsonSerializer.Deserialize(data, Type.GetType(eventType));
+                // //  JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
+                // // Type.GetType(eventType), settings);
             }
             catch (Exception e)
             {
@@ -150,8 +154,8 @@ namespace M5x.DEC.Infra.EventStore
         private static byte[] Serialize<TAggregateId>(IEvent<TAggregateId> @event) where TAggregateId : IIdentity
         {
             // return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
-            //return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event));
-            return JsonSerializer.SerializeToUtf8Bytes(@event);
+            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event));
+            //return JsonSerializer.SerializeToUtf8Bytes(@event);
         }
     }
 }
