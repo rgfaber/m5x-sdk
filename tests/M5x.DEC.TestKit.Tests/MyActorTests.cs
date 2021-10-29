@@ -14,7 +14,8 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Tests
 {
-    public class MyActorTests : ActorTests<IMyActor, MyAggregate, MyID, MyCommand, MyHope, MyFeedback>
+    public class MyActorTests : ActorTests<IMyActor, 
+        MyAggregate, MyID, MyCommand, MyFeedback>
     {
         public MyActorTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
@@ -24,7 +25,7 @@ namespace M5x.DEC.TestKit.Tests
         {
             Actor = Container.GetRequiredService<IMyActor>();
             Feedback = MyTestContract.Feedback;
-            Hope = MyTestContract.Hope;
+            Command = MyTestDomain.Command;
         }
 
         protected override void SetTestEnvironment()
@@ -46,9 +47,9 @@ namespace M5x.DEC.TestKit.Tests
 
         public override async Task Must_ActorMustReturnErrorFeedbackForBadHope()
         {
-            var hope = MyTestContract.Hope;
-            hope.Payload = null;
-            var res = await Actor.HandleAsync(hope).ConfigureAwait(false);
+            var cmd = (MyCommand)Command;
+            cmd.Payload = null;
+            var res = await Actor.HandleAsync(cmd).ConfigureAwait(false);
             res.IsSuccess.ShouldBe(false);
         }
         

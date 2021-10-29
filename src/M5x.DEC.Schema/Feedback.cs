@@ -4,13 +4,11 @@ using M5x.DEC.Schema.Utils;
 
 namespace M5x.DEC.Schema
 {
-    public interface IFeedback
+    public interface IFeedback : IExecutionResult
     {
         [Required(AllowEmptyStrings = false)] string CorrelationId { get; set; }
         [Required] ErrorState ErrorState { get; }
-        [Required] AggregateInfo Meta { get; set; }
-
-        bool IsSuccess { get; }
+        [Required] AggregateInfo Meta { get; }
     }
 
     public interface IFeedback<TPayload> : IFeedback
@@ -34,14 +32,12 @@ namespace M5x.DEC.Schema
             CorrelationId = GuidUtils.NewCleanGuid;
             ErrorState = new ErrorState();
         }
-
         public string CorrelationId { get; set; }
         public ErrorState ErrorState { get; }
         public AggregateInfo Meta { get; set; }
         public bool IsSuccess => ErrorState.IsSuccessful;
     }
-    
-    
+
 
     public abstract record Feedback<TPayload> : Feedback, IFeedback<TPayload> where TPayload : IPayload
     {

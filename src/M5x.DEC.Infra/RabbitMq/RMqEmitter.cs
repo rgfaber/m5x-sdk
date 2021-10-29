@@ -1,30 +1,72 @@
+using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using M5x.DEC.Events;
 using M5x.DEC.Schema;
-using MassTransit;
+using Polly;
 using Polly.Retry;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Core.DependencyInjection.Services;
 using Serilog;
 
 namespace M5x.DEC.Infra.RabbitMq
 {
-    public class RMqEmitter<TAggregateId, TFact> : IFactEmitter<TAggregateId,TFact> 
-        where TAggregateId : IIdentity 
+    public abstract class RMqEmitter<TAggregateId, TEvent, TFact> :
+        IFactEmitter<TAggregateId, TEvent, TFact>, IDisposable
+        where TAggregateId : IIdentity
+        where TEvent : IEvent<TAggregateId>
         where TFact : IFact
     {
-        private readonly IPublishEndpoint _endpoint;
+        private readonly int _backoff = 100;
+        private readonly IModel _channel;
+        private readonly IConnection _connection;
+        private readonly IRabbitMqConnectionFactory _connectionFactory;
+        private readonly ILogger _logger;
+        private readonly int _maxRetries = Polly.Config.MaxRetries;
+        private readonly AsyncRetryPolicy _retryPolicy;
 
 
-        public RMqEmitter(IPublishEndpoint endpoint,
-        ILogger logger, AsyncRetryPolicy retryPolicy = null)
+        protected RMqEmitter(
+            IConnection connection,
+            ILogger logger,
+            AsyncRetryPolicy retryPolicy = null)
         {
-            _endpoint = endpoint;
+            _logger = logger;
+            _retryPolicy = retryPolicy
+                           ?? Policy
+                               .Handle<Exception>()
+                               .WaitAndRetryAsync(_maxRetries,
+                                   times => TimeSpan.FromMilliseconds(times * _backoff));
+            _connection = connection;
+            _channel = _connection.CreateModel();
+        }
+
+        public void Dispose()
+        {
+            _connection?.Dispose();
+            _channel?.Dispose();
         }
 
 
+        public string Topic => GetTopic();
 
-        public Task EmitAsync(TFact fact, CancellationToken cancellationToken=default)
+
+        public Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
         {
-            return _endpoint.Publish(fact, cancellationToken);
+            _channel.ExchangeDeclare(Topic, ExchangeType.Fanout);
+            var fact = ToFact(@event);
+            var body = JsonSerializer.SerializeToUtf8Bytes(fact);
+            _channel.BasicPublish(Topic, "", null, body);
+            return Task.CompletedTask;
         }
+
+        private string GetTopic()
+        {
+            var attrs = (TopicAttribute[])typeof(TFact).GetCustomAttributes(typeof(TopicAttribute), true);
+            return attrs.Length > 0 ? attrs[0].Id : throw new Exception($"No Topic Defined on {typeof(TFact)}!");
+        }
+
+        protected abstract TFact ToFact(TEvent @event);
     }
 }

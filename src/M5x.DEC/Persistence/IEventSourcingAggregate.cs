@@ -22,7 +22,7 @@ namespace M5x.DEC.Persistence
 
 //        void ApplyEvent<TPayload>(IEvent<TAggregateId, TPayload> @event, long version) where TPayload : IPayload;
 
-        IEnumerable<IEvent<TAggregateId>> GetUncommittedEvents();
+
         void ClearUncommittedEvents();
 
 //        IEnumerable<IAggregateEvent<TAggregateId>> Load();

@@ -8,6 +8,12 @@ namespace M5x.DEC.Schema
     [Serializable]
     public sealed class Errors : List<KeyValuePair<string, Error>>
     {
+        public void Add(string key, string message)
+        {
+            var err = new Error { ErrorMessage = message };
+            Add(key, err);
+        }
+
         public void Add(string key, Error ex)
         {
             var element = new KeyValuePair<string, Error>(key, ex);

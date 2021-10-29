@@ -1,6 +1,5 @@
 using System.Text.Json;
 
-
 namespace M5x.DEC.Schema
 {
     // public interface IAggregateInfo : IPayload
@@ -15,6 +14,8 @@ namespace M5x.DEC.Schema
 
     public record AggregateInfo // : IAggregateInfo
     {
+        public static readonly AggregateInfo Empty = new();
+
         public AggregateInfo()
         {
         }
@@ -29,8 +30,6 @@ namespace M5x.DEC.Schema
         public string Id { get; set; }
         public long Version { get; set; }
         public int Status { get; set; }
-
-        public static readonly AggregateInfo Empty = new();
 
         public static AggregateInfo New(string id, long version = -1, int status = 0)
         {

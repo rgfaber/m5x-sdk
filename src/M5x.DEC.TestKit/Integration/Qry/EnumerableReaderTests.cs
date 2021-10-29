@@ -33,9 +33,8 @@ namespace M5x.DEC.TestKit.Integration.Qry
                 throw;
             }
         }
-        
-        
-        
+
+
         [Fact]
         public async Task Must_FindAllMustReturnEnumerableReadModel()
         {
@@ -52,8 +51,5 @@ namespace M5x.DEC.TestKit.Integration.Qry
                 throw;
             }
         }
-
-        
-        
     }
 }

@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using CouchDB.Driver;
 using M5x.DEC.Schema;
 
 namespace M5x.DEC.Infra.CouchDb
 {
     public interface ICouchStore<TReadModel> where TReadModel : IReadEntity
     {
-
         Task<TReadModel> AddOrUpdateAsync(TReadModel entity,
             bool batch = false,
             bool withConflicts = false,

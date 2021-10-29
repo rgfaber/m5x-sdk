@@ -33,7 +33,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
     }
     
     
-    public interface IMyReader: IModelReader<MyPagedQry,MyReadModel> {}
+    public interface IMyReader: ISingleModelReader<MyPagedQry,MyReadModel> {}
     
     public class MyReader: CouchReader<MyPagedQry, MyReadModel>, IMyReader
     {

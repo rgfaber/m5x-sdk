@@ -7,7 +7,7 @@ using Serilog;
 namespace M5x.DEC.Infra.CouchDb
 {
     public abstract class CouchWriter<TAggregateId, TFact, TReadModel> :
-        IModelWriter<TAggregateId, TFact, TReadModel>
+        IFactWriter<TAggregateId, TFact, TReadModel>
         where TAggregateId : IIdentity
         where TFact : IFact
         where TReadModel : IReadEntity
@@ -35,6 +35,7 @@ namespace M5x.DEC.Infra.CouchDb
         }
 
         public abstract Task<TReadModel> UpdateAsync(TFact fact);
+
         public async Task<TReadModel> DeleteAsync(string id)
         {
             return await Store.DeleteAsync(id).ConfigureAwait(false);

@@ -99,8 +99,8 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 throw;
             }
         }
- 
-        
+
+
         [Fact]
         public void Must_HaveRsp()
         {
@@ -178,12 +178,5 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 throw;
             }
         }
-        
-
-        
-        
-        
-
-
     }
 }

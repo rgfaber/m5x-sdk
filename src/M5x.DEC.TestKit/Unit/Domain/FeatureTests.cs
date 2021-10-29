@@ -1,9 +1,6 @@
-using System;
 using System.Text.Json;
 using M5x.DEC.Schema;
-using M5x.DEC.Schema.Utils;
 using M5x.Testing;
-using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -29,7 +26,6 @@ namespace M5x.DEC.TestKit.Unit.Domain
         protected FeatureTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
-
 
 
         [Fact]
@@ -67,7 +63,7 @@ namespace M5x.DEC.TestKit.Unit.Domain
         {
             Assert.NotNull(Event);
         }
-        
+
         [Fact]
         public void Must_EventMustBeDeserializable()
         {
@@ -75,8 +71,5 @@ namespace M5x.DEC.TestKit.Unit.Domain
             var res = JsonSerializer.Deserialize<TEvent>(s);
             Assert.NotNull(res);
         }
-        
-        
-        
     }
 }

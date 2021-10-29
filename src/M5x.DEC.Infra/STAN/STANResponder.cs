@@ -4,33 +4,32 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using M5x.DEC.Commands;
-using M5x.DEC.ExecutionResults;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
 using Microsoft.Extensions.Hosting;
 using NATS.Client;
 using Serilog;
 
-
 namespace M5x.DEC.Infra.STAN
 {
-    public abstract class STANResponder<TAggregate, TID, THope, TCmd, TFeedback> : BackgroundService,
-        IResponder<TAggregate, TID, THope, TCmd, TFeedback>
-        where TAggregate : IAggregateRoot<TID>
+    public abstract class STANResponder<TID, THope, TCmd, TFeedback> : BackgroundService,
+        IResponder<TID, THope, TCmd, TFeedback>
         where TID : IIdentity
         where THope : IHope
-        where TCmd : ICommand<TAggregate, TID, IExecutionResult>
+        where TCmd : ICommand<TID>
         where TFeedback : IFeedback
     {
+        private readonly IActor<TID, TCmd, TFeedback> _actor;
         private readonly IEncodedConnection _conn;
-        private readonly IActor<TAggregate, TID, TCmd, THope, TFeedback> _actor;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private string _logMessage;
         private IAsyncSubscription _subscription;
 
+        
+
         protected STANResponder(IEncodedConnection conn,
-            IActor<TAggregate, TID, TCmd, THope, TFeedback> actor,
+            IActor<TID, TCmd, TFeedback> actor,
             ILogger logger)
         {
             _conn = conn;
@@ -38,7 +37,7 @@ namespace M5x.DEC.Infra.STAN
             _logger = logger;
             _conn.OnSerialize = o =>
             {
-                var res = JsonSerializer.SerializeToUtf8Bytes((TFeedback) o);
+                var res = JsonSerializer.SerializeToUtf8Bytes((TFeedback)o);
                 return res;
             };
             _conn.OnDeserialize = data =>
@@ -54,10 +53,23 @@ namespace M5x.DEC.Infra.STAN
                 }
             };
         }
-        private string CommandTopic => GetTopic();
-        private static string GetTopic()
+
+        public string Topic => GetTopic();
+
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
-            var atts = (TopicAttribute[]) typeof(THope).GetCustomAttributes(typeof(TopicAttribute), true);
+            await StartRespondingAsync(cancellationToken);
+        }
+
+
+        public override async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await StopRespondingAsync(cancellationToken);
+        }
+
+        private string GetTopic()
+        {
+            var atts = (TopicAttribute[])typeof(THope).GetCustomAttributes(typeof(TopicAttribute), true);
             if (atts.Length == 0) throw new Exception($"Attribute 'Topic' is not defined on {typeof(THope)}!");
             return atts[0].Id;
         }
@@ -69,41 +81,36 @@ namespace M5x.DEC.Infra.STAN
             }
         }
 
-        public override async Task StartAsync(CancellationToken cancellationToken)
-        {
-            await StartRespondingAsync(cancellationToken);
-        }
-
 
         private async Task StartRespondingAsync(CancellationToken cancellationToken)
         {
             try
             {
-  //              var request = string.Empty;
-                if (_conn.State != ConnState.CONNECTED)
-                {
-                    await WaitForConnection();
-                }
-                _logMessage = $"[{CommandTopic}]-RSP on [{JsonSerializer.Serialize(_conn.DiscoveredServers)}]";
+                //              var request = string.Empty;
+                if (_conn.State != ConnState.CONNECTED) await WaitForConnection();
+                _logMessage = $"[{Topic}]-RSP on [{JsonSerializer.Serialize(_conn.DiscoveredServers)}]";
                 _logger?.Debug(_logMessage);
                 _logMessage = "";
-                _subscription = _conn.SubscribeAsync(CommandTopic, async (sender, args) =>
+                _subscription = _conn.SubscribeAsync(Topic, async (sender, args) =>
                 {
-                    if (args.ReceivedObject is not THope req) return;
+                    if (args.ReceivedObject is not THope hope) return;
 //                    request = $"{CommandTopic} - [{req.CorrelationId}]";
-                    _logger?.Debug($"[{CommandTopic}]-REQ {JsonSerializer.Serialize(req)}");
-                    var rsp = _actor.Handle(req);
+                    _logger?.Debug($"[{Topic}]-REQ {JsonSerializer.Serialize(hope)}");
+                    var cmd = ToCommand(hope);
+                    var rsp = _actor.Handle(cmd);
                     _conn.Publish(args.Message.Reply, rsp);
                     _conn.Flush();
-                    _logger?.Debug($"[{CommandTopic}]-RSP {JsonSerializer.Serialize(rsp)} ");
+                    _logger?.Debug($"[{Topic}]-RSP {JsonSerializer.Serialize(rsp)} ");
                 });
             }
             catch (Exception e)
             {
-                _logMessage = $"[{CommandTopic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}";
+                _logMessage = $"[{Topic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}";
                 _logger.Fatal(_logMessage);
             }
         }
+
+        protected abstract TCmd ToCommand(THope hope);
 
         private async Task StopRespondingAsync(CancellationToken cancellationToken)
         {
@@ -118,24 +125,13 @@ namespace M5x.DEC.Infra.STAN
             }
         }
 
-
-        public override async Task StopAsync(CancellationToken cancellationToken)
-        {
-            await StopRespondingAsync(cancellationToken);
-        }        
-        
         private Task WaitForConnection()
         {
-            return Task.Run( () =>
+            return Task.Run(() =>
             {
                 while (_conn.State != ConnState.CONNECTED)
-                {
                     _logger.Information($"Waiting for Connection. State: {_conn.State}");
-                }
             });
         }
-
-        
-        
     }
 }

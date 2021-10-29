@@ -18,11 +18,13 @@ namespace M5x.Testing
             Console.SetOut(_textWriter);
         }
 
-
-        public void Dispose()
+        public virtual void Dispose()
         {
+            Cleanup();
             Output.WriteLine(_textWriter.ToString());
             Console.SetOut(_originalOut);
         }
+
+        protected virtual void Cleanup() {}
     }
 }

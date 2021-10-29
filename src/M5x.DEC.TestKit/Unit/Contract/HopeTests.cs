@@ -13,8 +13,8 @@ namespace M5x.DEC.TestKit.Unit.Contract
         where THope : IHope
         where TFeedback : IFeedback
     {
-        protected string ExpectedHopeTopic;
         private string _attributedHopeTopic;
+        protected string ExpectedHopeTopic;
         protected IFeedback Feedback;
         protected IHope Hope;
 
@@ -135,9 +135,9 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
-        } 
-        
-        
+        }
+
+
         [Fact]
         public void Must_DeserializedHopeMustBeTHope()
         {
@@ -218,10 +218,5 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 throw;
             }
         }
-
-
-
-
-
     }
 }

@@ -4,7 +4,7 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.TestKit.Tests.SuT
 {
-    public record MyCommand: Command<MyAggregate,MyID,IExecutionResult>
+    public record MyCommand: Command<MyID>
     { 
 
         public MyCommand(MyID aggregateId, MyPayload payload) : base(aggregateId)

@@ -11,7 +11,7 @@ using Serilog;
 
 namespace M5x.DEC.Infra.STAN
 {
-    public abstract class STANRequester<THope, TFeedback> : IDisposable, 
+    public abstract class STANRequester<THope, TFeedback> : IDisposable,
         IRequester<THope, TFeedback>
         where THope : IHope
         where TFeedback : IFeedback
@@ -22,7 +22,9 @@ namespace M5x.DEC.Infra.STAN
         private readonly AsyncRetryPolicy _retryPolicy;
         private string _logMessage;
 
-        public STANRequester(IEncodedConnection conn, ILogger logger, AsyncRetryPolicy retryPolicy = null)
+
+
+        protected STANRequester(IEncodedConnection conn, ILogger logger, AsyncRetryPolicy retryPolicy = null)
         {
             _conn = conn;
             _logger = logger;
@@ -35,15 +37,15 @@ namespace M5x.DEC.Infra.STAN
             conn.OnDeserialize = data => JsonSerializer.Deserialize<TFeedback>(data);
         }
 
-        public string HopeTopic => GetHopeTopic();
-
         public void Dispose()
         {
             _conn?.Dispose();
         }
 
+        public string Topic => GetTopic();
 
-        public Task<TFeedback> RequestAsync(THope hope, CancellationToken cancellationToken=default)
+
+        public Task<TFeedback> RequestAsync(THope hope, CancellationToken cancellationToken = default)
         {
             return _retryPolicy.ExecuteAsync(async () =>
             {
@@ -53,28 +55,31 @@ namespace M5x.DEC.Infra.STAN
                     await WaitForConnection();
                     if (_conn.State == ConnState.CONNECTED)
                     {
-                        _logger?.Debug($"[{HopeTopic}]-HOPE {JsonSerializer.Serialize(hope)}");
-                        rsp = (TFeedback)_conn.Request(HopeTopic, hope);
+                        _logger?.Debug($"[{Topic}]-HOPE {JsonSerializer.Serialize(hope)}");
+                        rsp = (TFeedback)_conn.Request(Topic, hope);
                         _conn.Flush();
-                        _logger?.Debug($"[{HopeTopic}]-FEEDBACK {JsonSerializer.Serialize(rsp)}");
-                    };
+                        _logger?.Debug($"[{Topic}]-FEEDBACK {JsonSerializer.Serialize(rsp)}");
+                    }
+
+                    ;
                 }
                 catch (Exception e)
                 {
                     rsp.ErrorState.Errors.Add($"STANRequester<{typeof(TFeedback).PrettyPrint()}>.Exception",
                         e.AsApiError());
-                    _logger?.Fatal($"[{HopeTopic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}");
+                    _logger?.Fatal($"[{Topic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}");
                     throw;
                 }
+
                 return rsp;
             });
         }
 
 
-        protected virtual string GetHopeTopic()
+        private string GetTopic()
         {
             var attrs = (TopicAttribute[])typeof(THope).GetCustomAttributes(typeof(TopicAttribute), true);
-            return attrs.Length > 0 ? attrs[0].Id : $"No Topic Defined on {typeof(THope)}!";
+            return attrs.Length > 0 ? attrs[0].Id : throw new Exception($"No Topic Defined on {typeof(THope)}!");
         }
 
 

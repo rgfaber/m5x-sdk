@@ -13,14 +13,14 @@ namespace M5x.DEC.TestKit.Integration.Qry
         where TQuery : IQuery
         where TReadModel : IPayload
     {
-        protected TReader Reader;
         protected IQuery Query;
-        
+        protected TReader Reader;
+
         protected ReaderTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
-        
-        
+
+
         [Fact]
         public void Must_QueryMustBeOfTypeTQuery()
         {
@@ -35,7 +35,6 @@ namespace M5x.DEC.TestKit.Integration.Qry
             }
         }
 
-        
 
         [Fact]
         public void Needs_Reader()

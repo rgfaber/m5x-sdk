@@ -7,21 +7,15 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.Persistence
 {
-    public abstract class EventStream<TAggregate, TAggregateId> : IEventStream<TAggregate, TAggregateId>
+    [Obsolete("Use AsyncEventStream Instead")]
+    public abstract class EventStream<TAggregate, TAggregateId> 
+        : IEventStream<TAggregate, TAggregateId>
         where TAggregate : AggregateRoot<TAggregateId>, IAggregate<TAggregateId>
         where TAggregateId : IIdentity
     {
-        private readonly IEventStore eventStore;
-
         private readonly IDECBus bus;
-        //        private readonly IAggregatePublisher publisher;
 
-        // public EventRepository(IEventStore eventStore, IAggregatePublisher publisher)
-        // {
-        //     this.eventStore = eventStore;
-        //     this.publisher = publisher;
-        // }
-
+        private readonly IEventStore eventStore;
 
         public EventStream(IEventStore eventStore, IDECBus bus)
         {
@@ -103,9 +97,12 @@ namespace M5x.DEC.Persistence
         }
     }
 
+    public interface IEventStream {}
 
-    public interface IEventStream<TAggregate, TAggregateId>
-        where TAggregate : IAggregate<TAggregateId> where TAggregateId : IIdentity
+
+    public interface IEventStream<TAggregate, TAggregateId> : IEventStream
+        where TAggregate : IAggregate<TAggregateId> 
+        where TAggregateId : IIdentity
     {
         TAggregate GetById(TAggregateId id);
 

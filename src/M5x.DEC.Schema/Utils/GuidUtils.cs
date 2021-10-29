@@ -21,6 +21,8 @@ namespace M5x.DEC.Schema.Utils
     /// </summary>
     public static class GuidUtils
     {
+        public const string TEST_GUID = "7e577e57-7e57-7e57-7e57-7e577e577e57";
+
         /// <summary>
         ///     Gets the new clean unique identifier.
         /// </summary>
@@ -35,6 +37,5 @@ namespace M5x.DEC.Schema.Utils
 
         public static string NewGuid => Guid.NewGuid().ToString();
         public static string LowerCaseGuid => NewGuid.ToLowerInvariant();
-        public const string TEST_GUID = "7e577e57-7e57-7e57-7e57-7e577e577e57";
     }
 }

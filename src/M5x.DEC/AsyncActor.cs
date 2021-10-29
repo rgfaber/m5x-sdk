@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using M5x.DEC.Commands;
 using M5x.DEC.Events;
-using M5x.DEC.ExecutionResults;
 using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
@@ -12,21 +11,15 @@ using Serilog;
 
 namespace M5x.DEC
 {
-    public abstract class
-        AsyncActor<TAggregate, TAggregateId, TCommand, THope, TFeedback, TEvent, TFact>
-        : IAsyncActor<TAggregate, TAggregateId, TCommand, THope, TFeedback>
+    public abstract class AsyncActor<TAggregate, TAggregateId, TCommand, TFeedback>
+        : IAsyncActor<TAggregateId, TCommand, TFeedback>
         where TAggregate : IEventSourcingAggregate<TAggregateId>
         where TAggregateId : IIdentity
-        where TCommand : ICommand<TAggregate, TAggregateId, IExecutionResult>
+        where TCommand : ICommand<TAggregateId>
         where TFeedback : IFeedback
-        where TFact : IFact
-        where TEvent : IEvent<TAggregateId>
-        where THope : IHope
-
     {
-        private readonly IFactEmitter<TAggregateId, TFact> _emitter;
-        private readonly IEnumerable<IEventHandler<TAggregateId, TEvent>> _handlers;
         private readonly IDECBus _bus;
+        private readonly IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> _handlers;
 
         protected readonly IAsyncEventStream<TAggregate, TAggregateId> Aggregates;
         protected readonly ILogger Logger;
@@ -35,84 +28,70 @@ namespace M5x.DEC
         protected AsyncActor(
             IAsyncEventStream<TAggregate, TAggregateId> aggregates,
             IDECBus bus,
-            IEnumerable<IEventHandler<TAggregateId, TEvent>> handlers,
-            IFactEmitter<TAggregateId, TFact> emitter,
+            IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> handlers,
             ILogger logger)
         {
             Aggregates = aggregates;
             _bus = bus;
             _handlers = handlers;
-            _emitter = emitter;
             Logger = logger;
         }
 
 
-        public async Task ReplayAsync(CancellationToken cancellationToken=default)
+        public async Task ReplayAsync(CancellationToken cancellationToken = default)
         {
             var events = Aggregates.LoadAllAsync(cancellationToken);
             if (events == null) return;
             var enumerator = events.GetAsyncEnumerator(cancellationToken);
             do
             {
-                var ev = (TEvent)enumerator.Current.Event;
+                var ev = enumerator.Current.Event;
                 await EmitAsync(_handlers, ev);
             } while (await enumerator.MoveNextAsync());
         }
-        
-        
-        private Task EmitAsync(IEnumerable<IEventHandler<TAggregateId, TEvent>> handlers,
-            TEvent @event)
+
+
+        public Task<TFeedback> HandleAsync(TCommand cmd)
+        {
+            Guard.Against.Null(cmd, nameof(cmd));
+            Guard.Against.Null(cmd.AggregateId, nameof(cmd.AggregateId));
+            Guard.Against.NullOrWhiteSpace(cmd.CorrelationId, nameof(cmd.CorrelationId));
+            _bus.Subscribe<IEvent<TAggregateId>>(async @event => await HandleAsync(_handlers, @event));
+            return Act(cmd);
+        }
+
+
+        private Task EmitAsync(IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> handlers,
+            IEvent<TAggregateId> @event)
         {
             Guard.Against.Null(@event, nameof(@event));
             Guard.Against.Null(@event.Meta, nameof(@event.Meta));
             Guard.Against.Null(@event.EventId, nameof(@event.EventId));
             Guard.Against.NullOrWhiteSpace(@event.Meta.Id, nameof(@event.Meta.Id));
-            
             foreach (var handler in handlers)
                 handler.HandleAsync(@event);
-            
-            return _emitter?.EmitAsync(ToFact(@event));
+            return Task.CompletedTask;
         }
-
-        
-        
-
-        public async Task<TFeedback> HandleAsync(THope hope)
-        {
-            Guard.Against.Null(hope, nameof(hope));
-            Guard.Against.NullOrWhiteSpace(hope.AggregateId, nameof(hope.AggregateId));
-            
-            _bus.Subscribe<TEvent>(async @event => await HandleAsync(_handlers, @event));
-            
-            var feedback = await Act(ToCommand(hope));
-            
-            return feedback;
-        }
-
-        protected abstract TCommand ToCommand(THope hope);
-
 
         protected abstract Task<TFeedback> Act(TCommand cmd);
 
-
-        private async Task HandleAsync(IEnumerable<IEventHandler<TAggregateId, TEvent>> handlers,
-            TEvent @event)
+        private Task HandleAsync(IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> handlers,
+            IEvent<TAggregateId> @event)
         {
-            await _emitter.EmitAsync(ToFact(@event));
             foreach (var handler in handlers)
-                await handler.HandleAsync(@event);
+                handler.HandleAsync(@event);
+            return Task.CompletedTask;
         }
-
-        protected abstract TFact ToFact(TEvent @event);
     }
+    
+    public interface IAsyncActor {}
 
-    public interface IAsyncActor<TAggregate, in TAggregateId, TCommand, THope, TFeedback>
-        where TAggregate : IAggregateRoot<TAggregateId>
+    public interface IAsyncActor<TAggregateId, in TCommand, TFeedback> : IAsyncActor
+        where TCommand : ICommand<TAggregateId>
+        where TFeedback : IFeedback
         where TAggregateId : IIdentity
-        where THope : IHope
-        where TCommand : ICommand<TAggregate, TAggregateId, IExecutionResult>
     {
-        Task<TFeedback> HandleAsync(THope hope);
+        Task<TFeedback> HandleAsync(TCommand cmd);
         Task ReplayAsync(CancellationToken cancellationToken = default);
     }
 }

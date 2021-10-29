@@ -8,11 +8,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
         {
         }
 
-        public MySingletonQuery(string id) : base(id)
-        {
-        }
-
-        public MySingletonQuery(string correlationId, string id) : base(correlationId, id)
+        public MySingletonQuery(string id, string correlationId) : base(id, correlationId)
         {
         }
     }

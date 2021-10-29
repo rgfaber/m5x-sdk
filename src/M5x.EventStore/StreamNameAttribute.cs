@@ -10,6 +10,6 @@ namespace M5x.EventStore
             StreamName = streamName;
         }
 
-        public string StreamName { get;}
+        public string StreamName { get; }
     }
 }

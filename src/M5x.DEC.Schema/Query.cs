@@ -9,6 +9,7 @@ namespace M5x.DEC.Schema
         protected Query(string correlationId)
         {
         }
+
         public string CorrelationId { get; set; }
     }
 
@@ -17,8 +18,4 @@ namespace M5x.DEC.Schema
     {
         public string CorrelationId { get; set; }
     }
-
-    
-    
-    
 }

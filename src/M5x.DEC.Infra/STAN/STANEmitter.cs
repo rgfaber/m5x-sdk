@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using M5x.DEC.Events;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
 using NATS.Client;
@@ -11,17 +12,19 @@ using Serilog;
 
 namespace M5x.DEC.Infra.STAN
 {
-    public abstract class STANEmitter<TAggregateId, TFact>
-        : IFactEmitter<TAggregateId, TFact>
+    public abstract class STANEmitter<TAggregateId, TEvent, TFact>
+        : IFactEmitter<TAggregateId, TEvent, TFact>
         where TFact : IFact
         where TAggregateId : IIdentity
+        where TEvent : IEvent<TAggregateId>
     {
         private readonly IEncodedConnection _conn;
         private readonly ILogger _logger;
         private readonly int _maxRetries = Polly.Config.MaxRetries;
         private readonly AsyncRetryPolicy _retryPolicy;
-        private int _backoff = 100;
+        private readonly int _backoff = 100;
         private string _logMessage;
+
 
         protected STANEmitter(IEncodedConnection conn,
             ILogger logger, AsyncRetryPolicy retryPolicy = null
@@ -37,34 +40,40 @@ namespace M5x.DEC.Infra.STAN
                                    times => TimeSpan.FromMilliseconds(times * _backoff));
         }
 
-        private string FactTopic => GetFactTopic();
+        public string Topic => GetTopic();
 
-        public async Task EmitAsync(TFact fact, CancellationToken cancellationToken=default)
+        public Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
         {
-                try
+            var fact = ToFact(@event);
+            return EmitAsync(fact, cancellationToken);
+        }
+
+        private async Task EmitAsync(TFact fact, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                if (_conn.State != ConnState.CONNECTED)
+                    await WaitForConnection()
+                        .ConfigureAwait(false);
+                if (_logger != null)
                 {
-                    if (_conn.State != ConnState.CONNECTED)
-                        await WaitForConnection()
-                            .ConfigureAwait(false);
-                    if (_logger != null)
-                    {
-                        _logMessage = $"[{FactTopic}]-EMIT  {fact.Meta}";
-                        _logger?.Debug(_logMessage);
-                    }
-                    _conn?.Publish(FactTopic, fact);
-                    _conn?.Flush();
+                    _logMessage = $"[{Topic}]-EMIT  {fact.Meta}";
+                    _logger?.Debug(_logMessage);
                 }
-                catch (Exception e)
-                {
-                    _logger?.Fatal(
-                        $"[{FactTopic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}");
-                    throw;
-                }
-            
+
+                _conn?.Publish(Topic, fact);
+                _conn?.Flush();
+            }
+            catch (Exception e)
+            {
+                _logger?.Fatal(
+                    $"[{Topic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}");
+                throw;
+            }
         }
 
 
-        private static string GetFactTopic()
+        private string GetTopic()
         {
             var atts = (TopicAttribute[])typeof(TFact).GetCustomAttributes(typeof(TopicAttribute), true);
             if (atts.Length == 0) throw new Exception($"Attribute 'Topic' is not defined on {typeof(TFact)}!");
@@ -82,5 +91,7 @@ namespace M5x.DEC.Infra.STAN
                 }
             });
         }
+
+        protected abstract TFact ToFact(TEvent @event);
     }
 }

@@ -9,13 +9,13 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Unit.Contract
 {
-    public abstract class FactTests<TFact>: IoCTestsBase
-    where TFact : IFact
+    public abstract class FactTests<TFact> : IoCTestsBase
+        where TFact : IFact
     {
-        protected IFact Fact;
-        protected string ExpectedFactTopic;
         private string _attributedFactTopic;
-        
+        protected string ExpectedFactTopic;
+        protected IFact Fact;
+
         protected FactTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
@@ -135,13 +135,6 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
-            
         }
-        
-        
-        
-        
-
-        
     }
 }

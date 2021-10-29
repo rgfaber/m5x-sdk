@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using M5x.DEC.Persistence;
+using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -19,14 +20,17 @@ namespace M5x.DEC.Infra.STAN
         private readonly IEnumerable<IFactHandler<TAggregateId, TFact>> _handlers;
         private readonly ILogger _logger;
         protected readonly IEncodedConnection Conn;
+        private readonly IDECBus _bus;
         private string _logMessage;
         private IAsyncSubscription _subscription;
 
         protected STANSubscriber(IEncodedConnection conn,
+            IDECBus bus,
             IEnumerable<IFactHandler<TAggregateId, TFact>> handlers,
             ILogger logger)
         {
             Conn = conn;
+            _bus = bus;
             _handlers = handlers;
             _logger = logger;
             Conn.OnDeserialize = data =>
@@ -45,7 +49,7 @@ namespace M5x.DEC.Infra.STAN
         }
 
 
-        private string FactTopic => GetFactTopic();
+        public string Topic => GetTopic();
 
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -86,32 +90,37 @@ namespace M5x.DEC.Infra.STAN
         {
             try
             {
-                var request = string.Empty;
                 if (Conn.State != ConnState.CONNECTED) await WaitForConnection();
-                _logMessage = $"[{FactTopic}]-SUB on [{JsonSerializer.Serialize(Conn.DiscoveredServers)}]";
+                _logMessage = $"[{Topic}]-SUB on [{JsonSerializer.Serialize(Conn.DiscoveredServers)}]";
                 _logger?.Debug(_logMessage);
                 _logMessage = "";
                 if (Conn.State == ConnState.CONNECTED)
-                    _subscription = Conn.SubscribeAsync(FactTopic, async (sender, args) =>
+                    _subscription = Conn.SubscribeAsync(Topic, (sender, args) =>
                     {
                         var fact = (TFact)args.ReceivedObject;
                         //  await AcknowledgeAsync($"{FactTopic}.Ack", fact);
-                        request = $"{FactTopic} - [{fact.Meta.Id}]";
-                        _logger?.Debug($"[{FactTopic}]-FACT {fact.Meta.Id}");
-                        foreach (var handler in _handlers)
-                        {
-                            _logger?.Debug($"[{FactTopic}]-HND [{handler.GetType()}]");
-                            await handler.HandleAsync(fact);
-                        }
+                        _bus.Subscribe<TFact>(HandleFactAsync);
+                        _bus.PublishAsync(fact);
                     });
             }
             catch (Exception e)
             {
-                _logMessage = $"[{FactTopic}]-ERR {JsonSerializer.Serialize(e.AsApiError())})";
+                _logMessage = $"[{Topic}]-ERR {JsonSerializer.Serialize(e.AsApiError())})";
                 if (_logger != null) _logger.Fatal(_logMessage);
                 await _subscription.DrainAsync();
             }
         }
+        
+        private Task HandleFactAsync(TFact fact)
+        {
+            foreach (var handler in _handlers)
+            {
+                _logger?.Debug($"[{Topic}]-FACT {fact.Meta.Id} \n\t- HND [{handler.GetType()}]");
+                handler.HandleAsync(fact);
+            }
+            return Task.CompletedTask;
+        }
+
 
         private Task AcknowledgeAsync(string topic, TFact fact)
         {
@@ -131,7 +140,7 @@ namespace M5x.DEC.Infra.STAN
             return res;
         }
 
-        private static string GetFactTopic()
+        private string GetTopic()
         {
             var atts = (TopicAttribute[])typeof(TFact).GetCustomAttributes(typeof(TopicAttribute), true);
             if (atts.Length == 0) throw new Exception($"Attribute 'Topic' is not defined on {typeof(TFact)}!");

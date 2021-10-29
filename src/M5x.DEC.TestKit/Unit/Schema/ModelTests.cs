@@ -7,11 +7,11 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Unit.Schema
 {
-    public abstract class RootTests<TReadModel>: IoCTestsBase
-    where TReadModel: IReadEntity 
+    public abstract class RootTests<TReadModel> : IoCTestsBase
+        where TReadModel : IReadEntity
     {
         protected TReadModel Model;
-        
+
         protected RootTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
             Model = CreateModel();
@@ -35,13 +35,12 @@ namespace M5x.DEC.TestKit.Unit.Schema
             Assert.NotNull(des);
             Assert.IsType<TReadModel>(des);
         }
-        
+
         private string GetDbName()
         {
             var atts = (DbNameAttribute[])typeof(TReadModel).GetCustomAttributes(typeof(DbNameAttribute), true);
             if (atts.Length == 0) throw new Exception($"Attribute [DbName] is missing on {typeof(TReadModel)}");
             return atts[0].DbName;
         }
-       
     }
 }

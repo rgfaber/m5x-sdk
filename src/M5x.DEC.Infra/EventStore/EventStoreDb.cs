@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using EventStore.Client;
 using M5x.DEC.Events;
 using M5x.DEC.Persistence.EventStore;
 using M5x.DEC.Schema;
-using M5x.EventStore;
 using M5x.EventStore.Interfaces;
-using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace M5x.DEC.Infra.EventStore
 {
@@ -42,14 +39,19 @@ namespace M5x.DEC.Infra.EventStore
             if (state == ReadState.StreamNotFound) return null;
             await foreach (var @event in events)
             {
-                var s = Deserialize<TAggregateId>(@event.Event.EventType, @event.Event.Data.ToArray());
+                var s = SerializationHelper.Deserialize<TAggregateId>(@event.Event.EventType,
+                    @event.Event.Data.ToArray());
+
                 var ev = new StoreEvent<TAggregateId>(s, @event.Event.EventNumber.ToInt64());
+
                 ret.Add(ev);
             }
+
             return ret;
         }
-        
-        public async IAsyncEnumerable<StoreEvent<TAggregateId>> ReadAllEventsAsync<TAggregateId>(CancellationToken cancellationToken=default) 
+
+        public async IAsyncEnumerable<StoreEvent<TAggregateId>> ReadAllEventsAsync<TAggregateId>(
+            CancellationToken cancellationToken = default)
             where TAggregateId : IIdentity
         {
             var ret = new List<StoreEvent<TAggregateId>>();
@@ -61,11 +63,13 @@ namespace M5x.DEC.Infra.EventStore
                 var prefix = id.GetIdPrefix();
                 var resolvedEvent = enumerator.Current;
                 if (!resolvedEvent.Event.EventStreamId.StartsWith(prefix)) continue;
-                var devt = Deserialize<TAggregateId>(resolvedEvent.Event.EventType,
+                var devt = SerializationHelper.Deserialize<TAggregateId>(resolvedEvent.Event.EventType,
                     resolvedEvent.Event.Data.ToArray());
-                var ev = new StoreEvent<TAggregateId>(devt, resolvedEvent.Event.EventNumber.ToInt64());
-                yield return ev;
 
+                var ev = devt.ToStoreEvent(resolvedEvent.Event.EventNumber.ToInt64());
+//                var ev = new StoreEvent<TAggregateId>(devt, resolvedEvent.Event.EventNumber.ToInt64());
+
+                yield return ev;
             } while (await enumerator.MoveNextAsync());
         }
 
@@ -75,11 +79,10 @@ namespace M5x.DEC.Infra.EventStore
             return await _retryPolicy.ExecuteAsync(async () =>
             {
                 var typeName = @event.GetType().AssemblyQualifiedName;
-                
+
                 var eventData = new EventData(
                     Uuid.FromGuid(@event.EventId),
-                    typeName,
-                      Serialize(@event),
+                    typeName, SerializationHelper.Serialize(@event),
                     JsonSerializer.SerializeToUtf8Bytes(@event.Meta));
 //                    Encoding.UTF8.GetBytes(@event.Meta.ToString()));
                 var expectedRevision = StreamRevision.None;
@@ -116,48 +119,16 @@ namespace M5x.DEC.Infra.EventStore
                     throw new EventStoreAggregateNotFoundException($"Aggregate {id.Value} not found");
                 await foreach (var resolvedEvent in currentSlice)
                 {
-                    var s = Deserialize<TAggregateId>(resolvedEvent.Event.EventType,
-                        resolvedEvent.Event.Data.ToArray());
+                    var s = SerializationHelper.Deserialize<TAggregateId>(resolvedEvent);
                     var ev = new StoreEvent<TAggregateId>(s, resolvedEvent.Event.EventNumber.ToInt64());
                     ret.Add(ev);
                     nextSliceStart = resolvedEvent.Event.EventNumber.Next();
                 }
+
                 hasNext = await currentSlice.MoveNextAsync();
             } while (hasNext);
+
             return ret;
-        }
-
-
-        private static IEvent<TAggregateId> Deserialize<TAggregateId>(string eventType, byte[] data)
-            where TAggregateId : IIdentity
-        {
-            try
-            {
-                var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
-                return (IEvent<TAggregateId>) JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
-                    Type.GetType(eventType), settings);
-
-                // // var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
-                // // return (IEvent<TAggregateId>) JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
-                // //     Type.GetType(eventType), settings);
-                //
-                // // var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
-                 return (IEvent<TAggregateId>)JsonSerializer.Deserialize(data, Type.GetType(eventType));
-                // //  JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
-                // // Type.GetType(eventType), settings);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw new EventStoreDeserializationException($"Failed to Deserialize eventType {eventType}", data, e);
-            }
-        }
-
-        private static byte[] Serialize<TAggregateId>(IEvent<TAggregateId> @event) where TAggregateId : IIdentity
-        {
-            return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
-            //return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event));
-            //return JsonSerializer.SerializeToUtf8Bytes(@event);
         }
     }
 }

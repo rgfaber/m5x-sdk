@@ -56,15 +56,14 @@ namespace M5x.EventStore
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return _retryPolicy.ExecuteAsync(() 
+                return _retryPolicy.ExecuteAsync(()
                     => _client.AppendToStreamAsync(streamName,
-                    expectedState,
-                    eventData,
-                    configureOperationOptions,
-                    userCredentials, cancellationToken));
+                        expectedState,
+                        eventData,
+                        configureOperationOptions,
+                        userCredentials, cancellationToken));
                 throw;
             }
-            
         }
 
         public Task<DeleteResult> SoftDeleteAsync(string streamName, StreamRevision expectedRevision,

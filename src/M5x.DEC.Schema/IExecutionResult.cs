@@ -1,4 +1,4 @@
-﻿namespace M5x.DEC.ExecutionResults
+﻿namespace M5x.DEC.Schema
 {
     public interface IExecutionResult
     {

@@ -8,28 +8,28 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0" />
-        <PackageReference Include="AspNet.Security.OpenIdConnect.Extensions" Version="2.0.0" />
-        <PackageReference Include="AspNet.Security.OpenIdConnect.Primitives" Version="2.0.0" />
-        <PackageReference Include="AspNet.Security.OpenIdConnect.Server" Version="2.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+        <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0"/>
+        <PackageReference Include="AspNet.Security.OpenIdConnect.Extensions" Version="2.0.0"/>
+        <PackageReference Include="AspNet.Security.OpenIdConnect.Primitives" Version="2.0.0"/>
+        <PackageReference Include="AspNet.Security.OpenIdConnect.Server" Version="2.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0"/>
 
         <!--    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" />-->
         <!--    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" />-->
 
-        <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11" />
+        <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11"/>
 
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-        <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.13.1" />
-        <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
-        <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0"/>
+        <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.13.1"/>
+        <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0"/>
+        <PackageReference Include="System.Runtime.Loader" Version="4.3.0"/>
     </ItemGroup>
 
 
@@ -41,7 +41,7 @@
 
 
     <ItemGroup>
-        <ProjectReference Include="../M5x.Swagger/M5x.Swagger.csproj" />
+        <ProjectReference Include="../M5x.Swagger/M5x.Swagger.csproj"/>
     </ItemGroup>
 
 </Project>

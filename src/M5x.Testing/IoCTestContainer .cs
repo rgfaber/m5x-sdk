@@ -22,9 +22,6 @@ namespace M5x.Testing
         private IServiceProvider Provider => Services?.BuildServiceProvider();
         public IApplicationBuilder App => new ApplicationBuilder(Provider);
 
-        public virtual void Dispose()
-        {
-        }
 
         public T GetService<T>()
         {
@@ -49,5 +46,8 @@ namespace M5x.Testing
         {
             return Provider.GetServices<T>();
         }
+
+        public void Dispose()
+        { }
     }
 }

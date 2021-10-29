@@ -1,13 +1,12 @@
 namespace M5x.DEC.Schema
 {
-    
     public interface ISingletonResponse<TPayload> : IResponse
         where TPayload : IPayload
     {
         TPayload Payload { get; set; }
     }
 
-    
+
     public abstract record SingletonResponse<TPayload> : Response, ISingletonResponse<TPayload>
         where TPayload : IPayload
     {

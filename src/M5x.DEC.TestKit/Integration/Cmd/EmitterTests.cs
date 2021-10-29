@@ -1,111 +1,142 @@
 using System;
-using System.DirectoryServices.ActiveDirectory;
 using System.Threading;
 using System.Threading.Tasks;
-using M5x.Config;
+using M5x.DEC.Events;
 using M5x.DEC.Persistence;
+using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
 using M5x.DEC.Schema.Utils;
 using M5x.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Polly;
-using Polly.Retry;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration.Cmd
 {
-    public abstract class EmitterTests<TEmitter, TSubscriber, TAggregateId, TFact> : IoCTestsBase
-        where TEmitter : IFactEmitter<TAggregateId, TFact>
-        where TSubscriber : IHostedService
+    public abstract class EmitterTests<
+        TEmitter,
+        TSubscriber,
+        TAggregateId,
+        TEvent,
+        TFact> : ConnectedTests
+        where TEmitter : IFactEmitter<TAggregateId,TEvent,TFact>
         where TAggregateId : IIdentity
         where TFact : IFact
+        where TEvent : IEvent<TAggregateId>
+        where TSubscriber : ISubscriber<TAggregateId, TFact>
     {
-        // internal class InitializeHandler : IFactHandler<TAggregateId, TFact>
-        // {
-        //     public Task HandleAsync(TFact fact)
-        //     {
-        //         _inFact = fact;
-        //         Assert.True(_outFact.CorrelationId == _inFact.CorrelationId);
-        //         return Task.CompletedTask;
-        //     }
-        // }
-
+        protected IDECBus Bus;
+        protected IFactEmitter<TAggregateId,TEvent,TFact> Emitter;
+        protected IFactHandler<TAggregateId, TFact> FactHandler;
+        protected ILogger Logger;
+        protected ISubscriber<TAggregateId,TFact> Subscriber;
         
-        
-        protected TFact _inFact;
 
-        protected string _correlationId; 
-        
-        protected TFact _outFact;
-
-        private readonly int _maxRetries = Polly.Config.MaxRetries;
-
-        private readonly AsyncRetryPolicy RetryPolicy;
-//        private static Contract.Features.Initialize.Hope _someHope = Contract.Features.Initialize.Hope.New(_someId.Value, _correlationId, _someWorkOrder);
-
-        protected TEmitter _emitter;
-        protected TSubscriber _subscriber;
-
-        protected IFactHandler<TAggregateId, TFact> _handler;
-        private ILogger _logger;
 
         public EmitterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
-            RetryPolicy = Policy
-                .Handle<Exception>()
-                .WaitAndRetryAsync(_maxRetries,
-                    times => TimeSpan.FromMilliseconds(times * 100));
+        }
+        
+        [Fact]
+        public void Needs_DECBus()
+        {
+            Assert.NotNull(Bus);
+        }
+
+        [Fact]
+        public void Needs_OutFact()
+        {
+            Assert.NotNull(TestFacts.OutFact);
         }
 
         [Fact]
         public void Needs_Emitter()
         {
-            Assert.NotNull(_emitter);
+            Assert.NotNull(Emitter);
         }
 
         [Fact]
         public void Needs_Subscriber()
         {
-            Assert.NotNull(_subscriber);
+            Assert.NotNull(Subscriber);
         }
 
         [Fact]
         public void Needs_Logger()
         {
-            Assert.NotNull(_logger);
+            Assert.NotNull(Logger);
         }
 
         [Fact]
-        public void Needs_Handler()
+        public void Needs_FactHandler()
         {
-            Assert.NotNull(_handler);
+            Assert.NotNull(FactHandler);
         }
 
+        [Fact]
+        public void Must_EmitterMustHaveTopic()
+        {
+            Assert.False(string.IsNullOrWhiteSpace(Emitter.Topic));
+        }
 
         [Fact]
-        public void Must_EmitterMustEmitFact()
+        public void Must_EmitterMustHaveFactTopic()
         {
-            var subHost = new HostExecutor(_logger, new IHostedService[] { _subscriber });
+            Assert.Equal(Emitter.Topic, AttributeUtils.GetTopic<TFact>());
+        }
+
+        [Fact]
+        public void Needs_OutEvent()
+        {
+            Assert.NotNull(TestEvents.OutEvent);
+        }
+
+        [Fact]
+        public async Task Must_EmitterMustEmitFact()
+        {
+            Assert.NotNull(TestFacts.OutFact);
+            Assert.NotNull(Emitter);
+            var subHost = Container.GetRequiredService<IHostExecutor>();
+            var cs = new CancellationTokenSource();
+            Assert.NotNull(subHost);
             try
             {
-                subHost.StartAsync(CancellationToken.None).Wait();
-                Output?.WriteLine($"Emitting Fact: {_outFact}");
-                _emitter.EmitAsync(_outFact).Wait();
+                await subHost.StartAsync(cs.Token);
+                Output?.WriteLine($"Emitting Fact: {TestFacts.OutFact}");
+                await Emitter.HandleAsync(TestEvents.OutEvent, cs.Token).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 Output?.WriteLine(e.InnerAndOuter());
-                throw new AggregateException("Retrying Test", e);
+                throw;
             }
             finally
             {
-                subHost.StopAsync(CancellationToken.None).Wait();
+                cs.Cancel();
+                await subHost.StopAsync(cs.Token).ConfigureAwait(false);
             }
         }
-       
+        
+        public class TheFactHandler : IFactHandler<TAggregateId, TFact>
+        {
+            public Task HandleAsync(TFact fact)
+            {
+                TestFacts.InFact = fact;
+                Assert.True(TestFacts.OutFact.CorrelationId == TestFacts.InFact.CorrelationId);
+                return Task.CompletedTask;
+            }
+        }
+
+        public static class TestFacts
+        {
+            public static TFact InFact;
+            public static TFact OutFact;
+        }
+
+        public static class TestEvents
+        {
+            public static TEvent OutEvent;
+        }
     }
 }

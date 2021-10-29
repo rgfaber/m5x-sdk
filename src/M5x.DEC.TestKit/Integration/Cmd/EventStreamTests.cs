@@ -1,33 +1,56 @@
 using M5x.DEC.Persistence;
 using M5x.DEC.Schema;
+using M5x.DEC.TestKit.Unit.Domain;
 using M5x.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration.Cmd
 {
-    public abstract class EventStreamTests<TAggregate, TAggregateId, TEventStream> : IoCTestsBase 
-        where TAggregateId : IIdentity 
+    public abstract class EventStreamTests<TAggregate, TAggregateId, TEventStream, TActor> : EventingTests<TAggregate, TAggregateId>
+        where TAggregateId : IIdentity
         where TAggregate : IAggregate<TAggregateId>
-        where TEventStream: IEventStream<TAggregate,TAggregateId>
-
+        where TEventStream : IAsyncEventStream<TAggregate, TAggregateId>
+        where TActor: IAsyncActor
     {
-        private IEventStream<TAggregate, TAggregateId> _eventStream;
-
+        protected IAsyncEventStream<TAggregate, TAggregateId> EventStream;
+        
+        protected IAsyncActor Actor;
+        
         public EventStreamTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
-
-        protected override void Initialize()
+        
+        [Fact]
+        public void Needs_Actor()
         {
-            _eventStream = Container.GetService<TEventStream>();
+            Assert.NotNull(Actor);
         }
+
+
+        [Fact]
+        public void Needs_Connection()
+        {
+            Assert.NotNull(Connection);
+        }
+        
+        public object Connection;
 
         [Fact]
         public void Needs_EventStream()
         {
-            Assert.NotNull(_eventStream);
+            Assert.NotNull(EventStream);
         }
 
+
+        [Fact]
+        public void Must_EventStreamMustBeAssignableFromTEventStream()
+        {
+            Assert.IsAssignableFrom<TEventStream>(EventStream);
+        }
+        
+        
+        
     }
 }

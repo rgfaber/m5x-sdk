@@ -6,9 +6,9 @@ using Serilog;
 
 namespace M5x.DEC.Infra.Redis
 {
-    public abstract class RedisWriter<TAggregateId, TFact, TReadModel> : IModelWriter<TAggregateId, TFact, TReadModel> 
-        where TAggregateId : IIdentity 
-        where TFact : IFact 
+    public abstract class RedisWriter<TAggregateId, TFact, TReadModel> : IFactWriter<TAggregateId, TFact, TReadModel>
+        where TAggregateId : IIdentity
+        where TFact : IFact
         where TReadModel : IReadEntity
     {
         protected readonly ILogger Logger;

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,10 +12,31 @@ using Serilog;
 
 namespace M5x.DEC.Infra.CouchDb
 {
-    public abstract class CouchStore<TStateModel, TId> : CouchStoreBase<TStateModel,TId>
+    public abstract class CouchStore<TStateModel, TId> : CouchStoreBase<TStateModel, TId>
         where TId : IIdentity
         where TStateModel : IStateEntity<TId>
     {
+        protected CouchStore(ICouchClient client, ILogger logger) : base(client, logger)
+        {
+        }
+
+        protected CouchStore(string dbName,
+            string connectionString,
+            Action<CouchOptionsBuilder> couchSettingsFunc,
+            Action<ClientFlurlHttpSettings> flurlSettingsFunc) : base(dbName,
+            connectionString,
+            couchSettingsFunc,
+            flurlSettingsFunc)
+        {
+        }
+
+        protected CouchStore(ICouchClient clt,
+            ILogger logger,
+            ICouchDatabase<CDoc<TStateModel>> cachedDb = null) : base(clt,
+            logger,
+            cachedDb)
+        {
+        }
 
         public override async Task<TStateModel> AddOrUpdateAsync(TStateModel entity, bool batch = false,
             bool withConflicts = false, CancellationToken cancellationToken = default)
@@ -43,28 +62,6 @@ namespace M5x.DEC.Infra.CouchDb
             }
 
             return res;
-        }
-
-        protected CouchStore(ICouchClient client, ILogger logger) : base(client, logger)
-        {
-        }
-
-        protected CouchStore(string dbName,
-            string connectionString,
-            Action<CouchOptionsBuilder> couchSettingsFunc,
-            Action<ClientFlurlHttpSettings> flurlSettingsFunc) : base(dbName,
-            connectionString,
-            couchSettingsFunc,
-            flurlSettingsFunc)
-        {
-        }
-
-        protected CouchStore(ICouchClient clt,
-            ILogger logger,
-            ICouchDatabase<CDoc<TStateModel>> cachedDb = null) : base(clt,
-            logger,
-            cachedDb)
-        {
         }
     }
 }

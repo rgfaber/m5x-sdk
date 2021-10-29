@@ -10,10 +10,6 @@ namespace M5x.EventStore
             GroupName = groupName;
         }
 
-        public string GroupName { get;}
+        public string GroupName { get; }
     }
-    
-    
-    
-    
 }

@@ -11,7 +11,7 @@ namespace M5x.EventStore
             MemberSerialization memberSerialization)
         {
             var prop = base.CreateProperty(member, memberSerialization);
-    
+
             if (!prop.Writable)
             {
                 var property = member as PropertyInfo;
@@ -21,7 +21,7 @@ namespace M5x.EventStore
                     prop.Writable = hasPrivateSetter;
                 }
             }
-    
+
             return prop;
         }
     }

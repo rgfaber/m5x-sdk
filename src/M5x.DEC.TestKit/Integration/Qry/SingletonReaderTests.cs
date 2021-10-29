@@ -10,14 +10,14 @@ using Xunit.Abstractions;
 namespace M5x.DEC.TestKit.Integration.Qry
 {
     public abstract class SingletonReaderTests<TReader, TQuery, TReadModel> : ReaderTests<TReader, TQuery, TReadModel>
-        where TReader: ISingleModelReader<TQuery,TReadModel> 
-        where TQuery : ISingletonQuery 
+        where TReader : ISingleModelReader<TQuery, TReadModel>
+        where TQuery : ISingletonQuery
         where TReadModel : IPayload
     {
         protected SingletonReaderTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
-        
+
 
         [Fact]
         public void Must_QueryMustBeSingletonQuery()
@@ -33,7 +33,7 @@ namespace M5x.DEC.TestKit.Integration.Qry
             }
         }
 
-        
+
         [Fact]
         public async Task Must_GetByIdMustReturnSingletonReadModel()
         {
@@ -44,7 +44,7 @@ namespace M5x.DEC.TestKit.Integration.Qry
                     var id = ((TQuery)Query).Id;
                     var res = await Reader.GetByIdAsync(id);
                     Assert.NotNull(res);
-                    Assert.IsType<TReadModel>((TReadModel)res);
+                    Assert.IsType<TReadModel>(res);
                 }
             }
             catch (Exception e)

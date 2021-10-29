@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Integration\Cmd\EmitterTests_old.cs" />
+        <Compile Remove="Integration\Cmd\EmitterTests_old.cs" />
     </ItemGroup>
 
 </Project>

@@ -18,6 +18,7 @@
         <ProjectReference Include="..\M5x.EventStore\M5x.EventStore.csproj" />
         <ProjectReference Include="..\M5x.Polly\M5x.Polly.csproj" />
         <ProjectReference Include="..\M5x.RabbitMQ\M5x.RabbitMQ.csproj" />
+        <ProjectReference Include="..\M5x.Redis\M5x.Redis.csproj" />
         <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj" />
         <ProjectReference Include="..\M5x.Stan\M5x.Stan.csproj" />
         <ProjectReference Include="..\M5x.Swagger\M5x.Swagger.csproj" />
@@ -30,8 +31,8 @@
         <Compile Remove="EventStore\EventStream.cs" />
         <Compile Remove="CouchDb\CouchBuilder.cs" />
         <Compile Remove="CouchDb\ICouchBuilder.cs" />
-        <Compile Include="RabbitMq\RMqEmitter.cs" />
         <Compile Include="RabbitMq\RMqAsyncResponder.cs" />
+        <Compile Include="RabbitMq\RMqEmitter.cs" />
         <Compile Include="RabbitMq\RMqRequester.cs" />
         <Compile Include="RabbitMq\RmqSubscriber.cs" />
     </ItemGroup>

@@ -6,7 +6,7 @@ using M5x.EventStore.Interfaces;
 
 namespace M5x.EventStore
 {
-    internal class EsPersistentSubscriptionsClient: IEsPersistentSubscriptionsClient
+    internal class EsPersistentSubscriptionsClient : IEsPersistentSubscriptionsClient
     {
         private readonly EventStorePersistentSubscriptionsClient _clt;
 
@@ -30,13 +30,13 @@ namespace M5x.EventStore
         public string ConnectionName => _clt.ConnectionName;
 
         public Task CreateAsync(string streamName, string groupName, PersistentSubscriptionSettings settings,
-            UserCredentials? userCredentials = null, CancellationToken cancellationToken = default(CancellationToken))
+            UserCredentials? userCredentials = null, CancellationToken cancellationToken = default)
         {
             return _clt.CreateAsync(streamName, groupName, settings, userCredentials, cancellationToken);
         }
 
         public Task DeleteAsync(string streamName, string groupName, UserCredentials? userCredentials = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return _clt.DeleteAsync(streamName, groupName, userCredentials, cancellationToken);
         }
@@ -46,7 +46,7 @@ namespace M5x.EventStore
             Func<PersistentSubscription, ResolvedEvent, int?, CancellationToken, Task> eventAppeared,
             Action<PersistentSubscription, SubscriptionDroppedReason, Exception?>? subscriptionDropped = null,
             UserCredentials? userCredentials = null, int bufferSize = 10, bool autoAck = true,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return _clt.SubscribeAsync(streamName,
                 groupName,
@@ -59,7 +59,7 @@ namespace M5x.EventStore
         }
 
         public Task UpdateAsync(string streamName, string groupName, PersistentSubscriptionSettings settings,
-            UserCredentials? userCredentials = null, CancellationToken cancellationToken = default(CancellationToken))
+            UserCredentials? userCredentials = null, CancellationToken cancellationToken = default)
         {
             return _clt.UpdateAsync(streamName, groupName, settings, userCredentials, cancellationToken);
         }

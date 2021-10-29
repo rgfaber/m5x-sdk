@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using M5x.DEC.Commands;
@@ -106,7 +105,7 @@ namespace M5x.DEC
         }
 
         /// <summary>
-        /// This overload should allow events of type TEvent<TID,TPayload>
+        ///     This overload should allow events of type TEvent<TID, TPayload>
         /// </summary>
         /// <param name="event"></param>
         /// <param name="version"></param>
@@ -118,16 +117,12 @@ namespace M5x.DEC
         //     Version = version;
         // }
 
-        
-        
         // void IEventSourcingAggregate<TId>.ApplyEvent<TPayload>(IEvent<TId, TPayload> @event, long version)
         // {
         //     if (_uncommittedEvents.Any(x => Equals(x.EventId, @event.EventId))) return;
         //     ((dynamic) this).Apply((dynamic) @event);
         //     _version = version;
         // }
-
-
         public void ClearUncommittedEvents()
         {
             _uncommittedEvents.Clear();

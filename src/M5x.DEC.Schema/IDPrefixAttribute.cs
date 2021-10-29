@@ -16,14 +16,14 @@ namespace M5x.DEC.Schema
 
     public static class Helper
     {
-        public static string GetIdPrefix<TAggregateId>(this TAggregateId aggregateId) 
-            where TAggregateId:IIdentity
+        public static string GetIdPrefix<TAggregateId>(this TAggregateId aggregateId)
+            where TAggregateId : IIdentity
         {
             var prefixAttributes =
                 (IDPrefixAttribute[])typeof(TAggregateId).GetCustomAttributes(typeof(IDPrefixAttribute), true);
-                if (prefixAttributes.Length <= 0) return typeof(TAggregateId).FullName.Replace(".", "").ToLower();
-                var att = prefixAttributes[0];
-                return att.Prefix;
+            if (prefixAttributes.Length <= 0) return typeof(TAggregateId).FullName.Replace(".", "").ToLower();
+            var att = prefixAttributes[0];
+            return att.Prefix;
         }
     }
 }

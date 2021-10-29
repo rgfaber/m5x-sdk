@@ -5,19 +5,8 @@ using System.Threading.Tasks;
 
 namespace M5x.DEC.PubSub
 {
-    // public interface IAggregateSubscriber
-    // {
-    //     void Subscribe<T>(Action<T> handler);
-    //
-    //     void Subscribe<T>(Func<T, Task> handler);
-    // }
-    //
-    // public interface IAggregatePublisher
-    // {
-    //     Task PublishAsync<T>(T publishedEvent);
-    // }
 
-    public interface IDECBus : IDisposable //, IAggregatePublisher, IAggregateSubscriber
+    public interface IDECBus : IDisposable 
     {
         void Subscribe<T>(Action<T> handler);
 

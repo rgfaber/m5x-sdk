@@ -5,9 +5,9 @@ using M5x.Testing;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace M5x.DEC.TestKit.Integration.Cmd
+namespace M5x.DEC.TestKit.Integration.Client
 {
-    public abstract class HopeClientTests<TClient, THope, TFeedback> : IoCTestsBase
+    public abstract class HopeClientTests<TClient, THope, TFeedback> : ConnectedTests
         where TClient : Http.IHopeClient<THope, TFeedback>
         where THope : IHope
         where TFeedback : IFeedback

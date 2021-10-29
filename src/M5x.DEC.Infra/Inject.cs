@@ -29,7 +29,6 @@ namespace M5x.DEC.Infra
             return sOut;
         }
 
-
         [Obsolete("Use this method only if you are certain that your app will run in a K8S cluster")]
         private static void ConfigureNATSOptionsFromK8S(this IServiceCollection services,
             Options options,

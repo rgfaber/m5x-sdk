@@ -8,7 +8,7 @@ namespace M5x.DEC.Schema
         int PageNumber { get; set; }
     }
 
-    public abstract record PagedResponse<TPayload> : MultiResponse<TPayload>, IPagedResponse<TPayload> 
+    public abstract record PagedResponse<TPayload> : MultiResponse<TPayload>, IPagedResponse<TPayload>
         where TPayload : IPayload
     {
         protected PagedResponse()
@@ -26,7 +26,8 @@ namespace M5x.DEC.Schema
             PageNumber = pageNumber;
         }
 
-        protected PagedResponse(string correlationId, int pageNumber, IEnumerable<TPayload> payload) : base(correlationId, payload)
+        protected PagedResponse(string correlationId, int pageNumber, IEnumerable<TPayload> payload) : base(
+            correlationId, payload)
         {
             PageNumber = pageNumber;
         }

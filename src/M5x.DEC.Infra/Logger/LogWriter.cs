@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using M5x.DEC.Events;
 using M5x.DEC.Schema;
@@ -24,9 +25,10 @@ namespace M5x.DEC.Infra.Logger
 
         protected ILogger Logger { get; }
 
-        public virtual async Task HandleAsync(TEvent @event)
+        public Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
         {
             Logger.Information(JsonSerializer.Serialize(@event));
+            return Task.CompletedTask;
         }
     }
 }

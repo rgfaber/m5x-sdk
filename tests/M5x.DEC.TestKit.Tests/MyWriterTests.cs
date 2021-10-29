@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Tests
 {
-    public class MyWriterTests: WriterTests<IMyWriter, IMyReader, MyID, MyFact, MyReadModel,MyPagedQry>
+    public class MyWriterTests: FactWriterTests<IMyWriter, IMyReader, MyID, MyFact, MyReadModel,MyPagedQry>
     {
         public MyWriterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {

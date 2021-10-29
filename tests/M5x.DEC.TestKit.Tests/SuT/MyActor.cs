@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using M5x.DEC.Events;
+using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
@@ -9,23 +11,12 @@ using Serilog;
 namespace M5x.DEC.TestKit.Tests.SuT
 {
     
-    public interface IMyActor: IAsyncActor<MyAggregate, MyID, MyCommand, MyHope, MyFeedback>
+    public interface IMyActor: IAsyncActor<MyID, MyCommand,  MyFeedback>
     {
     }
     
-    internal class MyActor: AsyncActor<MyAggregate, MyID, MyCommand, MyHope, MyFeedback, MyEvent, MyFact>, IMyActor
+    internal class MyActor: AsyncActor<MyAggregate, MyID, MyCommand, MyFeedback>, IMyActor
     {
-        public MyActor(IMyEventStream aggregates, IDECBus bus, 
-            IEnumerable<IEventHandler<MyID, MyEvent>> handlers, 
-            IMyEmitter emitter, ILogger logger) : base(aggregates, bus, handlers, emitter, logger)
-        {
-        }
-
-        protected override MyCommand ToCommand(MyHope hope)
-        {
-            return MyCommand.New(AggregateInfo.New(hope.AggregateId, -1, 0), MyTestSchema.TEST_CORRELATION_ID, hope.Payload);
-        }
-
         protected override async Task<MyFeedback> Act(MyCommand cmd)
         {
             AggregateInfo meta = AggregateInfo.New(cmd.AggregateId.Value, -1, 0);
@@ -48,9 +39,15 @@ namespace M5x.DEC.TestKit.Tests.SuT
             return rsp;
         }
 
-        protected override MyFact ToFact(MyEvent @event)
+        public MyActor(
+            IMyEventStream aggregates,
+            IDECBus bus,
+            IEnumerable<IEventHandler<MyID, IEvent<MyID>>> handlers,
+            ILogger logger) : base(aggregates,
+            bus,
+            handlers,
+            logger)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

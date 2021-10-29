@@ -15,14 +15,14 @@ using Serilog;
 
 namespace M5x.DEC.Infra.CouchDb
 {
-    public abstract class CouchStoreBase<TStateModel, TId> : ICouchStore<TStateModel> 
-        where TStateModel : IStateEntity<TId> 
+    public abstract class CouchStoreBase<TStateModel, TId> : ICouchStore<TStateModel>
+        where TStateModel : IStateEntity<TId>
         where TId : IIdentity
     {
         private readonly ICouchClient _clt;
         protected readonly ILogger Logger;
         private ICouchDatabase<CDoc<TStateModel>> _cachedDb;
-        
+
         protected CouchStoreBase(ICouchClient client, ILogger logger)
         {
             _clt = client;
@@ -35,7 +35,7 @@ namespace M5x.DEC.Infra.CouchDb
             _clt = new CouchClient(couchSettingsFunc);
         }
 
-        protected CouchStoreBase(ICouchClient clt, ILogger logger, ICouchDatabase<CDoc<TStateModel>> cachedDb=null)
+        protected CouchStoreBase(ICouchClient clt, ILogger logger, ICouchDatabase<CDoc<TStateModel>> cachedDb = null)
         {
             _clt = clt;
             Logger = logger;
@@ -46,10 +46,11 @@ namespace M5x.DEC.Infra.CouchDb
         protected ICouchDatabase<CouchUser> UsersDb => GetUsersDb();
         protected ICouchDatabase<CDoc<TStateModel>> Db => GetDb(DbName).Result;
 
-        public abstract Task<TStateModel> AddOrUpdateAsync(TStateModel entity, bool batch = false, bool withConflicts = false,
+        public abstract Task<TStateModel> AddOrUpdateAsync(TStateModel entity, bool batch = false,
+            bool withConflicts = false,
             CancellationToken cancellationToken = default);
 
-        public  async Task<TStateModel> GetByIdAsync(string id)
+        public async Task<TStateModel> GetByIdAsync(string id)
         {
             Guard.Against.NullOrWhiteSpace(id, nameof(id));
             var doc = await Db.FindAsync(id);
@@ -69,7 +70,7 @@ namespace M5x.DEC.Infra.CouchDb
             return res;
         }
 
-        
+
         public async Task<IEnumerable<TStateModel>> RetrieveRecent(int pageNumber, int pageSize)
         {
             Guard.Against.SmallerThanOne(pageNumber, nameof(pageNumber));
@@ -83,20 +84,6 @@ namespace M5x.DEC.Infra.CouchDb
         }
 
 
-        protected async Task InitializeIndexesAsync()
-        {
-            var indexes = await Db.GetIndexesAsync().ConfigureAwait(false);
-            if(indexes.Exists(x => (x.Name=="recent") && (x.DesignDocument=="default"))) return;
-            await Db.CreateIndexAsync("recent",
-                builder => { builder.IndexByDescending(d => d.TimeStamp); },
-                new IndexOptions
-                {
-                    DesignDocument = "default",
-                    Partitioned = false
-                }).ConfigureAwait(false);
-        }
-
-
         public async Task<TStateModel> DeleteAsync(string id)
         {
             Guard.Against.NullOrWhiteSpace(id, nameof(id));
@@ -107,8 +94,21 @@ namespace M5x.DEC.Infra.CouchDb
             res.Prev = string.Empty;
             return res;
         }
-        
-        
+
+
+        protected async Task InitializeIndexesAsync()
+        {
+            var indexes = await Db.GetIndexesAsync().ConfigureAwait(false);
+            if (indexes.Exists(x => x.Name == "recent" && x.DesignDocument == "default")) return;
+            await Db.CreateIndexAsync("recent",
+                builder => { builder.IndexByDescending(d => d.TimeStamp); },
+                new IndexOptions
+                {
+                    DesignDocument = "default",
+                    Partitioned = false
+                }).ConfigureAwait(false);
+        }
+
 
         protected string GetDbName()
         {
@@ -125,8 +125,8 @@ namespace M5x.DEC.Infra.CouchDb
             _cachedDb = await _clt.GetOrCreateDatabaseAsync<CDoc<TStateModel>>(dbName);
             return _cachedDb;
         }
-        
-        
+
+
         protected CDoc<TStateModel> CreateCDoc(TStateModel model)
         {
             Guard.Against.Null(model, nameof(model));
@@ -154,7 +154,5 @@ namespace M5x.DEC.Infra.CouchDb
                 throw;
             }
         }
-       
-        
     }
 }

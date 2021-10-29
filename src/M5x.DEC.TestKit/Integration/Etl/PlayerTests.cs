@@ -6,12 +6,12 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration.Etl
 {
-    public abstract class PlayerTests<TAggregateId, TReadModel> : IoCTestsBase 
+    public abstract class PlayerTests<TAggregateId, TReadModel> : IoCTestsBase
         where TAggregateId : IIdentity
     {
-        protected IEventStorePlayer<TAggregateId> Player;
         protected TReadModel ExpectedState;
-        
+        protected IEventStorePlayer<TAggregateId> Player;
+
 
         protected PlayerTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
@@ -28,11 +28,5 @@ namespace M5x.DEC.TestKit.Integration.Etl
         {
             Assert.NotNull(ExpectedState);
         }
-        
-        
-        
-        
-        
-        
     }
 }

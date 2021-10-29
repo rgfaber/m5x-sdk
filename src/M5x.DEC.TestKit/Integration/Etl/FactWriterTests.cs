@@ -7,22 +7,21 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration.Etl
 {
-    public abstract class WriterTests<TWriter, TReader, TAggregateId, TFact, TReadModel, TQuery> : IoCTestsBase
-        where TWriter : IModelWriter<TAggregateId, TFact, TReadModel>
-        where TReader: IModelReader<TQuery, TReadModel>
+    public abstract class FactWriterTests<TWriter, TReader, TAggregateId, TFact, TReadModel, TQuery> : IoCTestsBase
+        where TWriter : IFactWriter<TAggregateId, TFact, TReadModel>
+        where TReader : ISingleModelReader<TQuery, TReadModel>
         where TAggregateId : IIdentity
         where TFact : IFact
         where TReadModel : IReadEntity
         where TQuery : IQuery
-    
     {
+        protected TFact Fact;
+        protected TQuery Query;
         protected TReader Reader;
         protected TWriter Writer;
-        protected TQuery Query;
-        protected TFact Fact;
 
 
-        protected WriterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
+        protected FactWriterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
 
@@ -48,7 +47,7 @@ namespace M5x.DEC.TestKit.Integration.Etl
         [Fact]
         public async Task Must_WriteFactToDb()
         {
-            var res = await Writer.UpdateAsync((TFact)Fact);
+            var res = await Writer.UpdateAsync(Fact);
             Assert.NotNull(res);
             Assert.IsType<TReadModel>(res);
             Assert.Equal(Fact.Meta.Id, res.Id);
@@ -75,7 +74,7 @@ namespace M5x.DEC.TestKit.Integration.Etl
             var deleted = await Reader.GetByIdAsync(Fact.Meta.Id);
             Assert.Null(deleted);
         }
-        
+
         [Fact]
         public void Needs_Reader()
         {

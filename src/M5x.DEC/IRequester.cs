@@ -1,13 +1,20 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using M5x.DEC.Schema;
 
 namespace M5x.DEC
 {
-    public interface IRequester<in THope, TFeedback>
-        where THope : IHope
-        where TFeedback : IFeedback
+
+    public interface IRequester: IDisposable
     {
-        Task<TFeedback> RequestAsync(THope hope, CancellationToken cancellationToken=default);
+        string Topic { get; }
+    }
+    
+    public interface IRequester<in THope, TExecutionResult>: IRequester
+        where THope : IHope
+        where TExecutionResult : IExecutionResult
+    {
+        Task<TExecutionResult> RequestAsync(THope hope, CancellationToken cancellationToken = default);
     }
 }

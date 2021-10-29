@@ -4,21 +4,22 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.Persistence
 {
-    
-    public interface IModelReader {}
-    
-    
-    public interface ISingleModelReader<in TQuery, TPayload> : IModelReader
+    public interface IModelReader
+    {
+    }
+
+
+    public interface ISingleModelReader<in TQuery, TPayload> : IModelReader<TQuery, TPayload>
         where TQuery : IQuery
-        where TPayload: IPayload 
+        where TPayload : IPayload
     {
         Task<TPayload> GetByIdAsync(string id);
     }
 
 
-    public interface IModelReader<in TQuery, TPayload> : ISingleModelReader<TQuery, TPayload>
-    where TQuery: IQuery
-    where TPayload : IPayload
+    public interface IModelReader<in TQuery, TPayload> : IModelReader
+        where TQuery : IQuery
+        where TPayload : IPayload
     {
         Task<IEnumerable<TPayload>> FindAllAsync(TQuery qry);
     }

@@ -10,17 +10,17 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.Persistence
 {
-    public interface IAsyncEventStream<TAggregate, TAggregateId>
-        where TAggregate : IAggregate<TAggregateId> where TAggregateId : IIdentity
+    
+    public interface IAsyncEventStream {}
+    
+    public interface IAsyncEventStream<TAggregate, TAggregateId> : IAsyncEventStream
+        where TAggregate : IAggregate<TAggregateId> 
+        where TAggregateId : IIdentity
     {
         Task<TAggregate> GetByIdAsync(TAggregateId id);
-
         Task SaveAsync(TAggregate aggregate);
-
         Task<IEnumerable<StoreEvent<TAggregateId>>> LoadAsync(TAggregateId id);
-
-        IAsyncEnumerable<StoreEvent<TAggregateId>> LoadAllAsync(CancellationToken cancellationToken=default);
-        
+        IAsyncEnumerable<StoreEvent<TAggregateId>> LoadAllAsync(CancellationToken cancellationToken = default);
     }
 
 
@@ -28,9 +28,8 @@ namespace M5x.DEC.Persistence
         where TAggregate : AggregateRoot<TAggregateId>, IAggregate<TAggregateId>
         where TAggregateId : IIdentity
     {
-        private readonly IEventStore eventStore;
-
         private readonly IDECBus bus;
+        private readonly IEventStore eventStore;
 
         public AsyncEventStream(IEventStore eventStore, IDECBus bus)
         {
@@ -74,7 +73,7 @@ namespace M5x.DEC.Persistence
             }
         }
 
-        public IAsyncEnumerable<StoreEvent<TAggregateId>> LoadAllAsync(CancellationToken cancellationToken=default)
+        public IAsyncEnumerable<StoreEvent<TAggregateId>> LoadAllAsync(CancellationToken cancellationToken = default)
         {
             try
             {

@@ -6,7 +6,7 @@ using Serilog;
 namespace M5x.DEC.TestKit.Tests.SuT
 {
     
-    public interface IMyWriter: IModelWriter<MyID, MyFact, MyReadModel> {}
+    public interface IMyWriter: IFactWriter<MyID, MyFact, MyReadModel> {}
     public class MyWriter : CouchWriter<MyID, MyFact, MyReadModel>, IMyWriter
     {
         public MyWriter(IMyDb store, ILogger logger) : base(store, logger)

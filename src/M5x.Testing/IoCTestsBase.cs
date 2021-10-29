@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using M5x.Testing.Interfaces;
+﻿using M5x.Testing.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
@@ -15,6 +14,12 @@ namespace M5x.Testing
             SetTestEnvironment();
             InjectDependencies(container.Services);
             Initialize();
+        }
+
+        public override void Dispose()
+        {
+            Container?.Dispose();
+            base.Dispose();
         }
 
 

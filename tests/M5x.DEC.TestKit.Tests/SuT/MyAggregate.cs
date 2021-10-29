@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Ardalis.GuardClauses;
 using M5x.DEC.ExecutionResults;
+using M5x.DEC.Schema;
 
 
 namespace M5x.DEC.TestKit.Tests.SuT

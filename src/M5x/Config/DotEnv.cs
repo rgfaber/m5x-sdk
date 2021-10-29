@@ -94,5 +94,7 @@ namespace M5x.Config
         {
             return Environment.ExpandEnvironmentVariables(variables);
         }
+
+        public static bool IsDevelopemnt = Get("ASPNETCORE_ENVIRONMENT").Equals("Development");
     }
 }

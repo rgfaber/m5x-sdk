@@ -10,10 +10,9 @@ using Serilog;
 
 namespace M5x.DEC.Infra.EventStore
 {
-
     public class EsPlayerSettings
     {
-        public Int64 Start { get; set; }
+        public long Start { get; set; }
     }
 
     public interface IEventStorePlayer<TAggregateId>
@@ -21,14 +20,14 @@ namespace M5x.DEC.Infra.EventStore
     {
         Task ReplayAsync();
     }
-    
+
     public abstract class EventStorePlayer<TAggregateId> : IEventStorePlayer<TAggregateId>
-        where TAggregateId: IIdentity, new()
+        where TAggregateId : IIdentity, new()
     {
-        private readonly IEsClient _client;
         private readonly IDECBus _bus;
-        private readonly EsPlayerSettings _settings;
+        private readonly IEsClient _client;
         private readonly ILogger _logger;
+        private readonly EsPlayerSettings _settings;
         private StreamSubscription _subscription;
 
         public EventStorePlayer(IEsClient client,
@@ -47,14 +46,14 @@ namespace M5x.DEC.Infra.EventStore
             try
             {
                 var id = new TAggregateId();
-                IEventFilter filter = StreamFilter.Prefix(id.GetIdPrefix());
-                SubscriptionFilterOptions? filterOptions = new SubscriptionFilterOptions(
-                    filter, 
-                    1U, 
+                var filter = StreamFilter.Prefix(id.GetIdPrefix());
+                var filterOptions = new SubscriptionFilterOptions(
+                    filter,
+                    1U,
                     CheckpointReached);
-                bool resolveLinkTos = false;
+                var resolveLinkTos = false;
                 _subscription = await _client.SubscribeToAllAsync(
-                    Position.Start ,
+                    Position.Start,
                     EventAppeared,
                     resolveLinkTos,
                     SubscriptionDropped,
@@ -68,9 +67,11 @@ namespace M5x.DEC.Infra.EventStore
         }
 
         private void ConfigureOperationOptions(EventStoreClientOperationOptions operationOptions)
-        { }
+        {
+        }
 
-        private Task CheckpointReached(StreamSubscription subscription, Position position, CancellationToken cancellationToken)
+        private Task CheckpointReached(StreamSubscription subscription, Position position,
+            CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -82,12 +83,11 @@ namespace M5x.DEC.Infra.EventStore
             _logger?.Debug($"Subscription [{subscription.SubscriptionId}] dropped. Reason: [{reason}] ");
         }
 
-        private Task EventAppeared(StreamSubscription subscription, 
-            ResolvedEvent resolvedEvent, 
+        private Task EventAppeared(StreamSubscription subscription,
+            ResolvedEvent resolvedEvent,
             CancellationToken cancellationToken)
         {
             return _bus.PublishAsync(resolvedEvent);
         }
     }
-
 }

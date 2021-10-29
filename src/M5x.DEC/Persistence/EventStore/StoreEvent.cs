@@ -15,8 +15,7 @@ namespace M5x.DEC.Persistence.EventStore
 
         public IEvent<TAggregateId> Event { get; }
     }
-    
-    
+
 
     // public class StoreEvent<TAggregateId, TPayload>
     //     where TAggregateId : IIdentity

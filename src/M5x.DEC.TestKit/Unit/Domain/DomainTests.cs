@@ -5,7 +5,6 @@ using M5x.DEC.Events;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 using M5x.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,11 +16,14 @@ namespace M5x.DEC.TestKit.Unit.Domain
         where TCommand : ICommand<TId>
         where TEvent : IEvent<TId>
     {
-        protected IDECBus Bus;
-        
         protected IEnumerable<TEvent> _inputEvents;
 
         protected TAggregate Aggregate;
+        protected IDECBus Bus;
+
+        public DomainTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
+        {
+        }
 
         [Fact]
         public void Needs_Aggregate()
@@ -33,10 +35,6 @@ namespace M5x.DEC.TestKit.Unit.Domain
         public void Needs_DECBus()
         {
             Assert.NotNull(Bus);
-        }
-        
-        public DomainTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
-        {
         }
 
         private void Given(params Func<IAggregateRoot, bool>[] preConditions)
@@ -65,7 +63,5 @@ namespace M5x.DEC.TestKit.Unit.Domain
             foreach (var execution in executions)
                 Assert.True(execution.Invoke(Aggregate));
         }
-
- 
     }
 }

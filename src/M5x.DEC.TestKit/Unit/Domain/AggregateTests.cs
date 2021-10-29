@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using M5x.DEC.ExecutionResults;
 using M5x.DEC.Schema;
 using M5x.Testing;
 using Xunit;
@@ -13,9 +12,9 @@ namespace M5x.DEC.TestKit.Unit.Domain
         where TAggregateId : IIdentity
         where TReadModel : IStateEntity<TAggregateId>
     {
+        protected TAggregate Aggregate;
         protected TAggregateId AggregateId;
         protected TReadModel StateModel;
-        protected TAggregate Aggregate;
 
 
         public AggregateTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
@@ -44,7 +43,8 @@ namespace M5x.DEC.TestKit.Unit.Domain
 
         protected void Given(params Func<TAggregate, bool>[] preConditions)
         {
-            if (preConditions == null) Assert.True(true);
+            if (preConditions == null) 
+                Assert.True(true);
             var result = preConditions.Aggregate(true,
                 (current,
                     preCondition) => current && preCondition.Invoke(Aggregate));
@@ -69,7 +69,5 @@ namespace M5x.DEC.TestKit.Unit.Domain
                     validation) => current && validation.Invoke(Aggregate));
             Assert.True(result);
         }
-
-
     }
 }

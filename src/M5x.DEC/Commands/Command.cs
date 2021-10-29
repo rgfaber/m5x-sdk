@@ -1,32 +1,30 @@
 ﻿using System;
-using M5x.DEC.ExecutionResults;
 using M5x.DEC.Schema;
 
 namespace M5x.DEC.Commands
 {
-    public abstract record Command<TAggregate, TAggregateId, TResult> :
-        Command<TAggregateId>,
-        ICommand<TAggregate, TAggregateId, TResult>
-        where TAggregate : IAggregateRoot<TAggregateId>
-        where TAggregateId : IIdentity
-        where TResult : IExecutionResult
-    {
-        protected Command(TAggregateId aggregateId) : base(aggregateId)
-        {
-        }
-
-        protected Command(TAggregateId aggregateId, CommandId sourceId) : base(aggregateId, sourceId)
-        {
-        }
-
-        protected Command()
-        {
-        }
-
-        protected Command(TAggregateId aggregateId, string correlationId) : base(aggregateId, correlationId)
-        {
-        }
-    }
+    // public abstract record Command<TAggregate, TAggregateId> :
+    //     Command<TAggregateId>,
+    //     ICommand<TAggregate, TAggregateId>
+    //     where TAggregate : IAggregateRoot<TAggregateId>
+    //     where TAggregateId : IIdentity
+    // {
+    //     protected Command(TAggregateId aggregateId) : base(aggregateId)
+    //     {
+    //     }
+    //
+    //     protected Command(TAggregateId aggregateId, CommandId sourceId) : base(aggregateId, sourceId)
+    //     {
+    //     }
+    //
+    //     protected Command()
+    //     {
+    //     }
+    //
+    //     protected Command(TAggregateId aggregateId, string correlationId) : base(aggregateId, correlationId)
+    //     {
+    //     }
+    // }
 
 
     public abstract record Command<TIdentity, TSourceIdentity> :
@@ -84,28 +82,28 @@ namespace M5x.DEC.Commands
     }
 
 
-    public abstract record Command<TIdentity> :
-        Command<TIdentity, ISourceID>
-        where TIdentity : IIdentity
+    public abstract record Command<TID> :
+        Command<TID, ISourceID>, ICommand<TID>
+        where TID : IIdentity
     {
         protected Command(
-            TIdentity aggregateId)
+            TID aggregateId)
             : this(aggregateId, CommandId.New)
         {
         }
 
         protected Command(
-            TIdentity aggregateId,
+            TID aggregateId,
             CommandId sourceId)
             : base(aggregateId, sourceId)
         {
         }
 
-        protected Command(TIdentity aggregateId, ISourceID sourceId) : base(aggregateId, sourceId)
+        protected Command(TID aggregateId, ISourceID sourceId) : base(aggregateId, sourceId)
         {
         }
 
-        protected Command(ISourceID sourceId, TIdentity Id) : base(sourceId, Id)
+        protected Command(ISourceID sourceId, TID Id) : base(sourceId, Id)
         {
         }
 
@@ -113,12 +111,11 @@ namespace M5x.DEC.Commands
         {
         }
 
-        protected Command(ISourceID sourceId, TIdentity Id, string correlationId) : base(sourceId, Id,
-            correlationId)
+        protected Command(ISourceID sourceId, TID Id, string correlationId) : base(sourceId, Id, correlationId)
         {
         }
 
-        protected Command(TIdentity aggregateId, string correlationId) : base(aggregateId, correlationId)
+        protected Command(TID aggregateId, string correlationId) : base(aggregateId, correlationId)
         {
         }
 
