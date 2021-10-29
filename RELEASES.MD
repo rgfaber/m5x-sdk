@@ -2,11 +2,12 @@
 
 ## October 2021
 
-### v1.10.7
+### v1.10.8
 
 - Full support for RabbitMQ Requesters, Responders, Emitters and Subscribers
 - Initiated support for Redis (using the StackExchange.Redis library)
 - initiated support for Eventstore Subscrptions and -Replay
+- Updated Dependencies 
 
 ### v1.10.4
  

@@ -4,8 +4,33 @@
 
 This is an opinionated library of various tools and classes that we have been carrying around from project to project since 2001; updating as we move along.
 
+### Motivation
+- As **a Software Engineer**
+- I need a **Library of Tools and Wrappers**
+- That **support me in the Development of Distributed Systems**
+- And that **allows Clean Dependency Management**
+
 ## M5x.DEC
 
-The M5x.DEC.* namespace contains an SDK that supports **D**omain Driven Design - **E**vent Sourcing and **C**ommand Query Responsibility Segregation and Clean Architecture using the Event/Command Handler pattern. Built in support for EventStoreDB, CouchDB and NATS. Support for Redis (in order to support in-memory read models) and RabbitMQ/MassTransit is in the pipeline.
+The M5x.DEC.* namespace contains an SDK that helps with the creation of systems that are based on
+**D**omain Driven Design - **E**vent Sourcing and **C**ommand Query Responsibility Segregation 
+using Clean Architecture with the Event/Command Handler ("mediator") pattern. 
+There is built in support for **EventStoreDB**, **CouchDB**, **NATS** and **RabbitMQ**. 
+Support for **Redis** (in order to support in-memory read models) is in the pipeline. 
+
+## RoadMap
+
+### NET 6.0
+- As of version 1.12.*, this library will support NET6.
+
+### EventFlow
+The current DEC.* implementation has many similarities with the awesome [EventFlow](https://github.com/eventflow/EventFlow) package. We are investigating the possibility to integrate it into the current programming model. The M5x.CEQS.* namespace is a first attempt.
+### MediatR
+The current DEC.* implementation uses its own *IDECBus* to implement the "mediator" pattern. We investigate te impact of using [MediatR](https://github.com/jbogard/MediatR) 
+
+
+
+
+
 
 
