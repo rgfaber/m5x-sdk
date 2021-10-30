@@ -14,7 +14,7 @@ namespace M5x.RabbitMQ
                     HostName = Config.Host,
                     UserName = Config.User,
                     Password = Config.Password,
-                    VirtualHost = Config.Host
+                    VirtualHost = Config.VHost
                 })
                 .AddTransientRMqConnection();
         }

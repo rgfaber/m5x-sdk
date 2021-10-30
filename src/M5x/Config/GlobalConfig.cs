@@ -10,5 +10,7 @@ namespace M5x.Config
     public static class EnVars
     {
         public const string M5_IS_TEST = "M5_IS_TEST";
+        public const string ASPNETCORE_ENVIRONMENT = "ASPNETCORE_ENVIRONMENT";
+        
     }
 }
