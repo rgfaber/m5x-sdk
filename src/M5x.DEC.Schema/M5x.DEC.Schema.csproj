@@ -6,11 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj"/>
+        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.1"/>
+        <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.1" />
     </ItemGroup>
     
 

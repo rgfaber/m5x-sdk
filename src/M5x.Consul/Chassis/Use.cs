@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using M5x.Consul.Agent;
 using M5x.Consul.Interfaces;
 using M5x.Swagger;
+using M5x.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;

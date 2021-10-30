@@ -20,7 +20,6 @@ namespace M5x.DEC.Schema.ValueObjects
         {
             if (TypeInfo.IsEnum && !Enum.IsDefined(Type, value))
                 throw new ArgumentException($"The value '{value}' isn't defined in enum '{Type.PrettyPrint()}'");
-
             Value = value;
         }
 

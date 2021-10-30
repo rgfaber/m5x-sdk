@@ -4,6 +4,7 @@
 
 ### v1.10.8
 
+- Added Extension Methods to create valid IDs: ID.FromAnyString(), ID.FromDecimal()
 - Full support for RabbitMQ Requesters, Responders, Emitters and Subscribers
 - Initiated support for Redis (using the StackExchange.Redis library)
 - initiated support for Eventstore Subscrptions and -Replay

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using M5x.DEC.Schema.Extensions;
 using M5x.DEC.Schema.ValueObjects;
+using M5x.Utils;
 
 namespace M5x.DEC.Schema
 {
@@ -25,6 +27,7 @@ namespace M5x.DEC.Schema
             var att = prefixAttributes[0];
             return att.Prefix;
         } // ReSharper disable StaticMemberInGenericType
+        
         private static readonly Regex NameReplace = new("Id$");
 
         // private static readonly string Name = NameReplace.Replace(typeof(T).Name, string.Empty).ToLowerInvariant();
@@ -60,10 +63,30 @@ namespace M5x.DEC.Schema
 
         public static T NewComb(string id)
         {
+            if (id.StartsWith(Name))
+                id = id.Replace($"{Name}-", "");
             var guid = new Guid(id);
             return With(guid);
         }
 
+
+        public static T FromGuidString(string id)
+        {
+            return NewComb(id);
+        }
+
+
+        public static T FromAnyString(string anyString)
+        {
+            var guid = anyString.AnyStringToGuid();
+            return With(guid);
+        }
+
+        public static T FromDecimal(decimal value)
+        {
+            var guid = value.FromDecimal();
+            return With(guid);
+        }
 
         public static T With(string value)
         {
@@ -97,7 +120,6 @@ namespace M5x.DEC.Schema
                 yield return $"Identity of type '{typeof(T).PrettyPrint()}' is null or empty";
                 yield break;
             }
-
             if (!string.Equals(value.Trim(), value, StringComparison.OrdinalIgnoreCase))
                 yield return
                     $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' contains leading and/or traling spaces";
@@ -111,10 +133,12 @@ namespace M5x.DEC.Schema
         protected Identity(string value)
             : base(value)
         {
-            var validationErrors = Validate(value).ToList();
-            if (validationErrors.Any())
-                throw new ArgumentException($"Identity is invalid: {string.Join(", ", validationErrors)}");
-
+            if (Config.IdCreationPolicy == IDCreationPolicy.Strict)
+            {
+                var validationErrors = Validate(value).ToList();
+                if (validationErrors.Any())
+                    throw new ArgumentException($"Identity is invalid: {string.Join(", ", validationErrors)}");
+            }
             _lazyGuid = new Lazy<Guid>(() => Guid.Parse(ValueValidation.Match(Value).Groups["guid"].Value));
         }
 

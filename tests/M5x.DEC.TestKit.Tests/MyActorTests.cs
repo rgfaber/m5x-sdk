@@ -2,6 +2,8 @@ using System.CodeDom;
 using System.Threading.Tasks;
 using FakeItEasy;
 using M5x.Config;
+using M5x.DEC.PubSub;
+using M5x.DEC.Schema.Common;
 using M5x.DEC.TestKit.Tests.SuT;
 using M5x.DEC.TestKit.Unit.Domain;
 using M5x.Testing;
@@ -26,6 +28,10 @@ namespace M5x.DEC.TestKit.Tests
             Actor = Container.GetRequiredService<IMyActor>();
             Feedback = MyTestContract.Feedback;
             Command = MyTestDomain.Command;
+            ID = MyID.NewComb();
+            Feedback = MyFeedback.New(TestConstants.Meta, TestConstants.CORRELATION_ID, Dummy.Empty);
+            Aggregate = MyAggregate.New((MyID)ID, MyReadModel.New(ID.Value));
+            Bus = Container.GetRequiredService<IDECBus>();
         }
 
         protected override void SetTestEnvironment()

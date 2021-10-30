@@ -20,6 +20,8 @@ namespace M5x.DEC.TestKit.Tests
         {
             Bus = Container.GetRequiredService<IDECBus>();
             Aggregate = MyTestDomain.Aggregate;
+            ID = MyID.New;
+            Bus = Container.GetRequiredService<IDECBus>();
         }
 
         protected override void SetTestEnvironment()
