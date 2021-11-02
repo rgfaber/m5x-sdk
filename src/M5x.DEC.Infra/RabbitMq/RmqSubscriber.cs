@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
+using M5x.DEC.Schema.Extensions;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -42,6 +43,7 @@ namespace M5x.DEC.Infra.RabbitMq
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger?.Debug($"[{Topic}]-SUB [{GetType().PrettyPrint()}]");
             _channel.ExchangeDeclare(Topic, ExchangeType.Fanout);
             var queueName = _channel.QueueDeclare().QueueName;
             _channel.QueueBind(queueName, Topic, "");
@@ -61,6 +63,7 @@ namespace M5x.DEC.Infra.RabbitMq
         {
             _bus.Subscribe<TFact>(HandleFactAsync);
             var fact = JsonSerializer.Deserialize<TFact>(ea.Body.Span);
+            _logger?.Debug($"[{Topic}]-RCV Fact({fact.CorrelationId})");
             return _bus.PublishAsync(fact);
         }
 

@@ -17,7 +17,7 @@ namespace M5x.DEC.Infra.RabbitMq
     public abstract class RMqRequester<THope, TFeedback> :
         IRequester<THope, TFeedback>
         where THope : class, IHope
-        where TFeedback : class, IExecutionResult
+        where TFeedback : class, IFeedback
     {
         private readonly IModel _channel;
         private readonly IConnection _connection;
@@ -67,11 +67,14 @@ namespace M5x.DEC.Infra.RabbitMq
             _props.CorrelationId = _correlationId;
             _props.ReplyTo = _rspQName;
             var body = JsonSerializer.SerializeToUtf8Bytes(hope);
+            _logger?.Debug($"[{Topic}]-REQ Hope[{hope.CorrelationId}]");
             _channel.BasicPublish("",
                 Topic,
                 _props,
                 body);
             fbk = _responseQ.Take(cancellationToken);
+            var ok = fbk.IsSuccess ? "Success" : "Failure";
+            _logger?.Debug($"[{Topic}]-FBK Feedback[{fbk.CorrelationId} -- ({ok})]");
             return Task.FromResult(fbk);
         }
         private Task RspConsumerOnReceived(object sender, BasicDeliverEventArgs ea)

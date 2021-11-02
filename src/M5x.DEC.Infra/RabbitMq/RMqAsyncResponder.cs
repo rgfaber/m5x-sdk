@@ -49,6 +49,7 @@ namespace M5x.DEC.Infra.RabbitMq
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger?.Debug($"[{Topic}]-RSP {GetType().PrettyPrint()}");
             _channel = _connection.CreateModel();
             _channel.QueueDeclare(Topic, false, false, false, null);
             _channel.BasicQos(0, 1, false);
@@ -67,18 +68,20 @@ namespace M5x.DEC.Infra.RabbitMq
             try
             {
                 var hope = JsonSerializer.Deserialize<THope>(ea.Body.Span);
+                _logger?.Debug($"[{Topic}]-RCV: Hope[{hope.CorrelationId}]");
                 feedback = await _actor.HandleAsync(ToCommand(hope));
             }
             catch (Exception e)
             {
-                _logger?.Error(e.InnerAndOuter());
-                feedback.ErrorState.Errors.Add("RabbitMQ.ResponderError", e);
+                _logger?.Error($"[{Topic}]-ERR: [{props.CorrelationId}] {e.InnerAndOuter()}");
+                feedback.ErrorState.Errors.Add(GetType().PrettyPrint(), e);
             }
             finally
             {
                 var responseBytes = JsonSerializer.SerializeToUtf8Bytes(feedback);
                 _channel.BasicPublish("", props.ReplyTo, replyProps, responseBytes);
                 _channel.BasicAck(ea.DeliveryTag, false);
+                _logger?.Debug($"[{Topic}]-RSP: [{feedback.CorrelationId}] ");
             }
         }
 

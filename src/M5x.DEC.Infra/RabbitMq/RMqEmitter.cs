@@ -12,8 +12,9 @@ using Serilog;
 
 namespace M5x.DEC.Infra.RabbitMq
 {
-    public abstract class RMqEmitter<TAggregateId, TEvent, TFact> :
-        IFactEmitter<TAggregateId, TEvent, TFact>, IDisposable
+    public abstract class RMqEmitter<TAggregateId, TEvent, TFact> 
+      : IEventHandler<TAggregateId,TEvent>, IDisposable
+//    : IFactEmitter<TAggregateId, TEvent, TFact>, IDisposable
         where TAggregateId : IIdentity
         where TEvent : IEvent<TAggregateId>
         where TFact : IFact
@@ -40,6 +41,7 @@ namespace M5x.DEC.Infra.RabbitMq
                                    times => TimeSpan.FromMilliseconds(times * _backoff));
             _connection = connection;
             _channel = _connection.CreateModel();
+            _channel.ExchangeDeclare(Topic, ExchangeType.Fanout);
         }
 
         public void Dispose()
@@ -54,8 +56,8 @@ namespace M5x.DEC.Infra.RabbitMq
 
         public Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
         {
-            _channel.ExchangeDeclare(Topic, ExchangeType.Fanout);
             var fact = ToFact(@event);
+            _logger?.Debug($"[{Topic}]-EMIT Fact[{fact.CorrelationId}]");
             var body = JsonSerializer.SerializeToUtf8Bytes(fact);
             _channel.BasicPublish(Topic, "", null, body);
             return Task.CompletedTask;

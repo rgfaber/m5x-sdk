@@ -13,7 +13,8 @@ using Serilog;
 namespace M5x.DEC.Infra.STAN
 {
     public abstract class STANEmitter<TAggregateId, TEvent, TFact>
-        : IFactEmitter<TAggregateId, TEvent, TFact>
+        : IEventHandler<TAggregateId,TEvent>, IDisposable
+        //: IFactEmitter<TAggregateId, TEvent, TFact>
         where TFact : IFact
         where TAggregateId : IIdentity
         where TEvent : IEvent<TAggregateId>
@@ -60,7 +61,6 @@ namespace M5x.DEC.Infra.STAN
                     _logMessage = $"[{Topic}]-EMIT  {fact.Meta}";
                     _logger?.Debug(_logMessage);
                 }
-
                 _conn?.Publish(Topic, fact);
                 _conn?.Flush();
             }
@@ -93,5 +93,10 @@ namespace M5x.DEC.Infra.STAN
         }
 
         protected abstract TFact ToFact(TEvent @event);
+
+        public void Dispose()
+        {
+            _conn?.Dispose();
+        }
     }
 }
