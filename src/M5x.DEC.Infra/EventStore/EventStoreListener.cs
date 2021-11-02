@@ -6,6 +6,7 @@ using EventStore.Client;
 using M5x.DEC.Events;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
+using M5x.DEC.Schema.Utils;
 using M5x.EventStore.Interfaces;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -75,7 +76,8 @@ namespace M5x.DEC.Infra.EventStore
                     EventAppeared,
                     false,
                     SubscriptionDropped,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken, filterOptions: 
+                    new SubscriptionFilterOptions( StreamFilter.Prefix( AttributeUtils.GetIdPrefix<TAggregateId>() ) ));
             }
             catch (Exception e)
             {
@@ -94,6 +96,7 @@ namespace M5x.DEC.Infra.EventStore
             CancellationToken cancellationToken)
         {
             var e = SerializationHelper.Deserialize<TAggregateId>(evt);
+            _logger?.Debug($"EventStore: Event[{e}] appeared");
             return _bus.PublishAsync(e);
         }
 
@@ -105,6 +108,7 @@ namespace M5x.DEC.Infra.EventStore
 
         private Task StopListeningAsync(CancellationToken cancellationToken)
         {
+            _logger?.Debug("EventStore: Stopped Listening");
             return Task.CompletedTask;
         }
     }
