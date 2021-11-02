@@ -3,7 +3,7 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC
 {
-    public interface IFactEmitter
+    public interface IFactEmitter : IEventHandler 
     {
         public string Topic { get; }
     }

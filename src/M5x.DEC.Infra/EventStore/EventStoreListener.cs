@@ -12,7 +12,7 @@ using Serilog;
 
 namespace M5x.DEC.Infra.EventStore
 {
-    public class EventStoreListener<TAggregateId> : BackgroundService 
+    public abstract class EventStoreListener<TAggregateId> : BackgroundService 
         where TAggregateId : IIdentity
     {
         private readonly IDECBus _bus;
@@ -24,7 +24,7 @@ namespace M5x.DEC.Infra.EventStore
         private string _logMessage;
         private Task<StreamSubscription> _subscription;
 
-        public EventStoreListener(
+        protected EventStoreListener(
             IEsClient connection,
             IDECBus bus,
             IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> handlers,
@@ -89,7 +89,9 @@ namespace M5x.DEC.Infra.EventStore
         {
         }
 
-        private Task EventAppeared(StreamSubscription sub, ResolvedEvent evt, CancellationToken cancellationToken)
+        private Task EventAppeared(StreamSubscription sub, 
+            ResolvedEvent evt, 
+            CancellationToken cancellationToken)
         {
             var e = SerializationHelper.Deserialize<TAggregateId>(evt);
             return _bus.PublishAsync(e);

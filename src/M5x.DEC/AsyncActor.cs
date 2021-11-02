@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
@@ -20,6 +21,7 @@ namespace M5x.DEC
     {
         private readonly IDECBus _bus;
         private readonly IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> _handlers;
+        private readonly IEnumerable<IFactEmitter> _emitters;
 
         protected readonly IAsyncEventStream<TAggregate, TAggregateId> Aggregates;
         protected readonly ILogger Logger;
@@ -46,7 +48,7 @@ namespace M5x.DEC
             do
             {
                 var ev = enumerator.Current.Event;
-                await EmitAsync(_handlers, ev);
+                await EmitAsync(ev);
             } while (await enumerator.MoveNextAsync());
         }
 
@@ -61,16 +63,21 @@ namespace M5x.DEC
         }
 
 
-        private Task EmitAsync(IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> handlers,
-            IEvent<TAggregateId> @event)
+        private Task EmitAsync(IEvent<TAggregateId> @event)
         {
             Guard.Against.Null(@event, nameof(@event));
             Guard.Against.Null(@event.Meta, nameof(@event.Meta));
             Guard.Against.Null(@event.EventId, nameof(@event.EventId));
             Guard.Against.NullOrWhiteSpace(@event.Meta.Id, nameof(@event.Meta.Id));
-            foreach (var handler in handlers)
-                handler.HandleAsync(@event);
-            return Task.CompletedTask;
+            return _bus.PublishAsync(@event);
+        }
+
+        protected async Task EmitEventsAsync(IEnumerable<IEvent<TAggregateId>> events)
+        {
+            foreach (var @event in events)
+            {
+                await _bus.PublishAsync(@event);
+            }
         }
 
         protected abstract Task<TFeedback> Act(TCommand cmd);

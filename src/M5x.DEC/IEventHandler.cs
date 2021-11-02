@@ -9,7 +9,7 @@ namespace M5x.DEC
     public interface IEventHandler {}
     
     
-    public interface IEventHandler<TAggregateId, TEvent> : IEventHandler
+    public interface IEventHandler<TAggregateId, in TEvent> : IEventHandler
         where TAggregateId : IIdentity
         where TEvent : IEvent<TAggregateId>
     {
