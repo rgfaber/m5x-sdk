@@ -2,6 +2,9 @@
 
 ## November 2021
 
+### v1.10.15
+- Adde Guards around RMqSubscriber
+
 ### v1.10.14
  
 - Added IBroadcaster<TID>, ICollector<TID>

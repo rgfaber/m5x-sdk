@@ -34,7 +34,7 @@
         <Compile Include="RabbitMq\RMqAsyncResponder.cs" />
         <Compile Include="RabbitMq\RMqEmitter.cs" />
         <Compile Include="RabbitMq\RMqRequester.cs" />
-        <Compile Include="RabbitMq\RmqSubscriber.cs" />
+        <Compile Include="RabbitMq\RMqSubscriber.cs" />
     </ItemGroup>
 
     <ItemGroup>

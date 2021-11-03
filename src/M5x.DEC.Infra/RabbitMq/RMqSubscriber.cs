@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
@@ -14,7 +15,7 @@ using Serilog;
 
 namespace M5x.DEC.Infra.RabbitMq
 {
-    public abstract class RmqSubscriber<TAggregateId, TFact> : BackgroundService, 
+    public abstract class RMqSubscriber<TAggregateId, TFact> : BackgroundService, 
         ISubscriber<TAggregateId, TFact>
         where TAggregateId : IIdentity
         where TFact : IFact
@@ -26,7 +27,7 @@ namespace M5x.DEC.Infra.RabbitMq
         private readonly ILogger _logger;
 
 
-        protected RmqSubscriber(
+        protected RMqSubscriber(
             IConnection connection,
             IDECBus bus,
             IEnumerable<IFactHandler<TAggregateId, TFact>> handlers,
@@ -61,16 +62,34 @@ namespace M5x.DEC.Infra.RabbitMq
 
         private Task FactReceived(object sender, BasicDeliverEventArgs ea)
         {
-            _bus.Subscribe<TFact>(HandleFactAsync);
-            var fact = JsonSerializer.Deserialize<TFact>(ea.Body.Span);
-            _logger?.Debug($"[{Topic}]-RCV Fact({fact.CorrelationId})");
-            return _bus.PublishAsync(fact);
+            try
+            {
+                Guard.Against.Null(ea, nameof(ea));
+                Guard.Against.Null(ea.Body, nameof(ea.Body));
+                _bus.Subscribe<TFact>(HandleFactAsync);
+                var fact = JsonSerializer.Deserialize<TFact>(ea.Body.Span);
+                _logger?.Debug($"[{Topic}]-RCV Fact({fact.CorrelationId})");
+                return _bus.PublishAsync(fact);
+            }
+            catch (Exception e)
+            {
+                _logger?.Error(e.InnerAndOuter());
+                return Task.CompletedTask;
+            }
         }
 
         private Task HandleFactAsync(TFact fact)
         {
-            foreach (var handler in _handlers) 
-                handler.HandleAsync(fact);
+            try
+            {
+                Guard.Against.Null(fact, nameof(fact));
+                foreach (var handler in _handlers) 
+                    handler.HandleAsync(fact);
+            }
+            catch (Exception e)
+            {
+                _logger?.Error(e.InnerAndOuter());
+            }
             return Task.CompletedTask;
         }
 
