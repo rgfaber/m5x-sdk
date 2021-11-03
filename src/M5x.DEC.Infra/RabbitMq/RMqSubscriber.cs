@@ -35,30 +35,32 @@ namespace M5x.DEC.Infra.RabbitMq
         where TAggregateId : IIdentity
         where TFact : IFact
     {
+        private readonly IConnectionFactory _connFact;
         private readonly IDECBus _bus;
         private IModel _channel;
-        private readonly IConnection _connection;
+        private IConnection _connection;
         private readonly IEnumerable<IFactHandler<TAggregateId, TFact>> _handlers;
         private readonly ILogger _logger;
 
 
         protected RMqSubscriber(
-            IConnection connection,
+            IConnectionFactory connFact,
             IDECBus bus,
             IEnumerable<IFactHandler<TAggregateId, TFact>> handlers,
             ILogger logger)
         {
-            _connection = connection;
+            _connFact = connFact;
             _bus = bus;
             _handlers = handlers;
             _logger = logger;
-            _channel = _connection.CreateModel();
         }
 
         public string Topic => GetTopic();
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
+            _connection = _connFact.CreateConnection();
+            _channel = _connection.CreateModel();
             _logger?.Debug($"[{Topic}]-SUB [{GetType().PrettyPrint()}]");
             _channel.ExchangeDeclare(Topic, ExchangeType.Fanout);
             var queueName = _channel.QueueDeclare().QueueName;
@@ -119,8 +121,8 @@ namespace M5x.DEC.Infra.RabbitMq
 
         public override void Dispose()
         {
-            _channel?.Dispose();
             _connection?.Dispose();
+            _channel?.Dispose();
             base.Dispose();
         }
     }

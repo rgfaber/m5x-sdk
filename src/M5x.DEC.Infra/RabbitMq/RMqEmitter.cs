@@ -20,28 +20,26 @@ namespace M5x.DEC.Infra.RabbitMq
         where TFact : IFact
     {
         private readonly int _backoff = 100;
-        private readonly IModel _channel;
-        private readonly IConnection _connection;
-        private readonly IRabbitMqConnectionFactory _connectionFactory;
+        private IModel _channel;
+        private IConnection _connection;
+        private readonly IConnectionFactory _connFact;
         private readonly ILogger _logger;
         private readonly int _maxRetries = Polly.Config.MaxRetries;
         private readonly AsyncRetryPolicy _retryPolicy;
 
 
         protected RMqEmitter(
-            IConnection connection,
+            IConnectionFactory connFact,
             ILogger logger,
             AsyncRetryPolicy retryPolicy = null)
         {
+            _connFact = connFact;
             _logger = logger;
             _retryPolicy = retryPolicy
                            ?? Policy
                                .Handle<Exception>()
                                .WaitAndRetryAsync(_maxRetries,
                                    times => TimeSpan.FromMilliseconds(times * _backoff));
-            _connection = connection;
-            _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(Topic, ExchangeType.Fanout);
         }
 
         public void Dispose()
@@ -56,6 +54,9 @@ namespace M5x.DEC.Infra.RabbitMq
 
         public Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
         {
+            _connection = _connFact.CreateConnection();
+            _channel = _connection.CreateModel();
+            _channel.ExchangeDeclare(Topic, ExchangeType.Fanout);
             var fact = ToFact(@event);
             _logger?.Debug($"[{Topic}]-EMIT Fact[{fact.CorrelationId}]");
             var body = JsonSerializer.SerializeToUtf8Bytes(fact);

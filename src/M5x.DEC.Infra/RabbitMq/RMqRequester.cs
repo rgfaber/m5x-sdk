@@ -19,22 +19,23 @@ namespace M5x.DEC.Infra.RabbitMq
         where THope : class, IHope
         where TFeedback : class, IFeedback
     {
-        private readonly IModel _channel;
-        private readonly IConnection _connection;
+        private IModel _channel;
+        private IConnection _connection;
+        private readonly IConnectionFactory _connFact;
         private readonly ILogger _logger;
         private readonly int _maxRetries = Polly.Config.MaxRetries;
-        private readonly IBasicProperties _props;
-        private readonly BlockingCollection<TFeedback> _responseQ;
+        private IBasicProperties _props;
+        private BlockingCollection<TFeedback> _responseQ;
         private readonly AsyncRetryPolicy _retryPolicy;
-        private readonly AsyncEventingBasicConsumer _rspConsumer;
-        private readonly string _rspQName;
+        private AsyncEventingBasicConsumer _rspConsumer;
+        private string _rspQName;
         private string _correlationId;
         private string _logMessage;
 
-        protected RMqRequester(IConnection connection,
+        protected RMqRequester(IConnectionFactory connFact,
             ILogger logger, AsyncRetryPolicy retryPolicy = null)
         {
-            _connection = connection;
+            _connFact = connFact;
             _logger = logger;
             _retryPolicy = retryPolicy
                            ?? Policy
@@ -43,7 +44,11 @@ namespace M5x.DEC.Infra.RabbitMq
                                    times => TimeSpan.FromMilliseconds(times * 100));
             // Setup RabbitMQ RPC
             // reference: https://www.rabbitmq.com/tutorials/tutorial-six-dotnet.html
-
+        }
+        public string Topic => GetTopic();
+        public Task<TFeedback> RequestAsync(THope hope, CancellationToken cancellationToken = default)
+        {
+            _connection = _connFact.CreateConnection();
             _channel = _connection.CreateModel();
             _rspConsumer = new AsyncEventingBasicConsumer(_channel);
             _props = _channel.CreateBasicProperties();
@@ -54,10 +59,7 @@ namespace M5x.DEC.Infra.RabbitMq
                 _rspConsumer,
                 _rspQName,
                 true);
-        }
-        public string Topic => GetTopic();
-        public Task<TFeedback> RequestAsync(THope hope, CancellationToken cancellationToken = default)
-        {
+
             var fbk = Activator.CreateInstance<TFeedback>();
             Guard.Against.Null(fbk, nameof(fbk));
             Guard.Against.Null(hope, nameof(hope));

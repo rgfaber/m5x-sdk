@@ -20,21 +20,22 @@ namespace M5x.DEC.Infra.RabbitMq
         where THope : IHope
         where TFeedback : IFeedback
     {
+        private readonly IConnectionFactory _connFact;
         private readonly IAsyncActor<TID, TCmd, TFeedback> _actor;
         private IModel _channel;
-        private readonly IConnection _connection;
+        private IConnection _connection;
         private readonly IRabbitMqConnectionFactory _connectionFactory;
         private readonly ILogger _logger;
         private AsyncEventingBasicConsumer _hopeConsumer;
 
         protected RMqAsyncResponder(
-            IConnection connection,
+            IConnectionFactory connFact,
             IAsyncActor<TID, TCmd, TFeedback> actor,
             ILogger logger)
         {
+            _connFact = connFact;
             _actor = actor;
             _logger = logger;
-            _connection = connection;
         }
 
 
@@ -49,6 +50,7 @@ namespace M5x.DEC.Infra.RabbitMq
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
+            _connection = _connFact.CreateConnection();
             _logger?.Debug($"[{Topic}]-RSP {GetType().PrettyPrint()}");
             _channel = _connection.CreateModel();
             _channel.QueueDeclare(Topic, false, false, false, null);

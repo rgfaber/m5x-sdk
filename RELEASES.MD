@@ -2,8 +2,12 @@
 
 ## November 2021
 
+### v1.10.17
+
+-  
+
 ### v1.10.15
-- Adde Guards around RMqSubscriber
+- Added Guards around RMqSubscriber
 
 ### v1.10.14
  
