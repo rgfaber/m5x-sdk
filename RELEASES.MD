@@ -1,5 +1,11 @@
 # Releases
 
+## November 2021
+
+### v1.10.14
+ 
+- Added IBroadcaster<TID>, ICollector<TID>
+
 ## October 2021
 
 ### v1.10.8

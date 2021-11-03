@@ -7,7 +7,7 @@
 			"path": ".git"
 		},
 		{
-			"path": "../../logatron.io/contexts/vecodis-context"
+			"path": "../../../saab-ms/dtos/contexts/truck-inbound/dtos-truck-inbound-context"
 		}
 	],
 	"settings": {}
