@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,20 @@ using Serilog;
 
 namespace M5x.DEC.Infra.RabbitMq
 {
+    public static class Guards
+    {
+        public static void NoFactHandlersRegistered<TAggregateId, TFact>( this IGuardClause clause,
+            IEnumerable<IFactHandler<TAggregateId, TFact>> handlers, string paramName=null) 
+            where TFact : IFact
+            where TAggregateId : IIdentity
+        {
+            if (handlers == null)
+                throw new ArgumentException($"No Fact Handlers Registered for {typeof(TFact).PrettyPrint()}", paramName);
+            if(!handlers.Any())
+                throw new ArgumentException($"No Fact Handlers Registered for {typeof(TFact).PrettyPrint()}", paramName);
+        }
+    }
+    
     public abstract class RMqSubscriber<TAggregateId, TFact> : BackgroundService, 
         ISubscriber<TAggregateId, TFact>
         where TAggregateId : IIdentity
@@ -82,6 +97,7 @@ namespace M5x.DEC.Infra.RabbitMq
         {
             try
             {
+                Guard.Against.NoFactHandlersRegistered(_handlers, nameof(_handlers));
                 Guard.Against.Null(fact, nameof(fact));
                 foreach (var handler in _handlers) 
                     handler.HandleAsync(fact);
