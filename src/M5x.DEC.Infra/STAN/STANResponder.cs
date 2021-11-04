@@ -74,11 +74,12 @@ namespace M5x.DEC.Infra.STAN
             return atts[0].Id;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override  Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
             }
+            return Task.CompletedTask;
         }
 
 
@@ -86,7 +87,6 @@ namespace M5x.DEC.Infra.STAN
         {
             try
             {
-                //              var request = string.Empty;
                 if (_conn.State != ConnState.CONNECTED) await WaitForConnection();
                 _logMessage = $"[{Topic}]-RSP on [{JsonSerializer.Serialize(_conn.DiscoveredServers)}]";
                 _logger?.Debug(_logMessage);
@@ -94,7 +94,6 @@ namespace M5x.DEC.Infra.STAN
                 _subscription = _conn.SubscribeAsync(Topic, async (sender, args) =>
                 {
                     if (args.ReceivedObject is not THope hope) return;
-//                    request = $"{CommandTopic} - [{req.CorrelationId}]";
                     _logger?.Debug($"[{Topic}]-REQ {JsonSerializer.Serialize(hope)}");
                     var cmd = ToCommand(hope);
                     var rsp = _actor.Handle(cmd);

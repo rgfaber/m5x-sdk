@@ -14,13 +14,13 @@ namespace M5x.DEC.Infra.CouchDb
     {
         protected readonly ILogger Logger;
 
-        protected CouchWriter(ICouchStore<TReadModel> store, ILogger logger)
+        protected CouchWriter(ICouchStore<TReadModel> couchDb, ILogger logger)
         {
-            Store = store;
+            CouchDb = couchDb;
             Logger = logger;
         }
 
-        protected ICouchStore<TReadModel> Store { get; set; }
+        protected ICouchStore<TReadModel> CouchDb { get; set; }
 
         public async Task HandleAsync(TFact fact)
         {
@@ -38,7 +38,7 @@ namespace M5x.DEC.Infra.CouchDb
 
         public async Task<TReadModel> DeleteAsync(string id)
         {
-            return await Store.DeleteAsync(id).ConfigureAwait(false);
+            return await CouchDb.DeleteAsync(id).ConfigureAwait(false);
         }
     }
 }

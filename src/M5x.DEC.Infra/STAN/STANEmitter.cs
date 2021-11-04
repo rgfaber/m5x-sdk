@@ -43,13 +43,13 @@ namespace M5x.DEC.Infra.STAN
 
         public string Topic => GetTopic();
 
-        public Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
+        public Task HandleAsync(TEvent @event)
         {
             var fact = ToFact(@event);
-            return EmitAsync(fact, cancellationToken);
+            return EmitAsync(fact);
         }
 
-        private async Task EmitAsync(TFact fact, CancellationToken cancellationToken = default)
+        private async Task EmitAsync(TFact fact)
         {
             try
             {
@@ -71,6 +71,7 @@ namespace M5x.DEC.Infra.STAN
                 throw;
             }
         }
+        
 
 
         private string GetTopic()

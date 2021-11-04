@@ -14,16 +14,21 @@ namespace M5x.DEC.TestKit.Tests.SuT
             Id = id;
         }
 
+        private MyReadModel(string id, string prev) 
+        {
+            Id = id;
+            Prev = prev;
+        }
+
         public string Id { get; set; }
         public string Prev { get; set; }
         public AggregateInfo Meta { get; set; }
         public MyPayload Content { get; set; }
         
-        
 
-        public static MyReadModel New(string id)
+        public static MyReadModel New(string id, string prev)
         {
-            return new MyReadModel(id);
+            return new MyReadModel(id,prev);
         }
 
         public MyStatus Status { get; set; }

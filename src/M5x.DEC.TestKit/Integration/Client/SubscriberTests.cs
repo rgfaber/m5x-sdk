@@ -7,11 +7,12 @@ using Xunit.Abstractions;
 namespace M5x.DEC.TestKit.Integration.Client
 {
     public abstract class SubscriberTests<
+        TConnection,
         TEmitter,
         TSubscriber,
         TAggregateId,
         TEvent,
-        TFact> : EmitterTests<TEmitter, TSubscriber, TAggregateId, TEvent, TFact>
+        TFact> : EmitterTests<TConnection,TEmitter, TSubscriber, TAggregateId, TEvent, TFact>
         where TEmitter : IFactEmitter<TAggregateId, TEvent, TFact>
         where TAggregateId : IIdentity
         where TFact : IFact

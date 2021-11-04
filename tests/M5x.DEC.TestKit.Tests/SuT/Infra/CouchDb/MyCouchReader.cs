@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CouchDB.Driver;
-using FakeItEasy;
 using M5x.DEC.Infra;
 using M5x.DEC.Infra.CouchDb;
 using M5x.DEC.Persistence;
@@ -9,7 +7,7 @@ using M5x.Serilog;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace M5x.DEC.TestKit.Tests.SuT
+namespace M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb
 {
     public static partial class Inject
     {
@@ -19,8 +17,10 @@ namespace M5x.DEC.TestKit.Tests.SuT
                 .AddConsoleLogger()
                 .AddCouchClient()
                 .AddMyDb()
-                .AddTransient<IMyReader, MyReader>(); ;
+                .AddTransient<IMyCouchReader, MyCouchReader>(); ;
         }
+        
+        
         
         public static IServiceCollection AddMyWriter(this IServiceCollection services)
         {
@@ -28,22 +28,22 @@ namespace M5x.DEC.TestKit.Tests.SuT
                 .AddConsoleLogger()
                 .AddCouchClient()
                 .AddMyDb()
-                .AddTransient<IMyWriter, MyWriter>(); ;
+                .AddTransient<IMyCouchWriter, MyCouchWriter>(); ;
         }
     }
     
     
-    public interface IMyReader: ISingleModelReader<MyPagedQry,MyReadModel> {}
+    public interface IMyCouchReader: IModelReader<MyPagedQry,MyReadModel> {}
     
-    public class MyReader: CouchReader<MyPagedQry, MyReadModel>, IMyReader
+    public class MyCouchReader: CouchReader<MyPagedQry, MyReadModel>, IMyCouchReader
     {
-        public MyReader(IMyDb db, ILogger logger) : base(db, logger)
+        public MyCouchReader(IMyCouchDb couchDb, ILogger logger) : base(couchDb, logger)
         {
         }
 
         public override async Task<IEnumerable<MyReadModel>> FindAllAsync(MyPagedQry pagedQry)
         {
-            return await Db.RetrieveRecent(pagedQry.PageNumber, pagedQry.PageSize);
+            return await CouchDb.RetrieveRecent(pagedQry.PageNumber, pagedQry.PageSize);
         }
     }
 }

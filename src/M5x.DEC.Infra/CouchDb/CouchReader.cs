@@ -10,12 +10,12 @@ namespace M5x.DEC.Infra.CouchDb
         where TQuery : Query
         where TReadModel : IReadEntity
     {
-        protected readonly ICouchStore<TReadModel> Db;
+        protected readonly ICouchStore<TReadModel> CouchDb;
         protected readonly ILogger Logger;
 
-        public CouchReader(ICouchStore<TReadModel> db, ILogger logger)
+        public CouchReader(ICouchStore<TReadModel> couchDb, ILogger logger)
         {
-            Db = db;
+            CouchDb = couchDb;
             Logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace M5x.DEC.Infra.CouchDb
 
         public async Task<TReadModel> GetByIdAsync(string id)
         {
-            return await Db.GetByIdAsync(id);
+            return await CouchDb.GetByIdAsync(id);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace M5x.DEC.Infra.Logger
 
         protected ILogger Logger { get; }
 
-        public Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
+        public Task HandleAsync(TEvent @event)
         {
             Logger.Information(JsonSerializer.Serialize(@event));
             return Task.CompletedTask;

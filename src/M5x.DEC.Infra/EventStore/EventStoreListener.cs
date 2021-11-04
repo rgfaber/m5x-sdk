@@ -87,7 +87,7 @@ namespace M5x.DEC.Infra.EventStore
             return Task.CompletedTask;
         }
 
-        private void SubscriptionDropped(StreamSubscription sub, SubscriptionDroppedReason reason, Exception? exception)
+        private void SubscriptionDropped(StreamSubscription sub, SubscriptionDroppedReason reason, Exception exception)
         {
         }
 

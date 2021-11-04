@@ -4,14 +4,9 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration
 {
-    public abstract class ConnectedTests : IoCTestsBase
+    public abstract class ConnectedTests<TConnection> : ConnectionTests<TConnection>
     {
         
-        [Fact]
-        public void Needs_Connection()
-        {
-            Assert.NotNull(Connection);
-        }
 
         [Fact]
         public void Needs_HostExecutor()

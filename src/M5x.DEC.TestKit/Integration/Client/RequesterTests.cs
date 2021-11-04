@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration.Client
 {
-    public abstract class RequesterTests<TResponder, TRequester, TID, THope, TFeedback> : ConnectedTests
+    public abstract class RequesterTests<TConnection,TResponder, TRequester, TID, THope, TFeedback> : ConnectedTests<TConnection>
         where TResponder : IResponder
         where TID : IIdentity
         where THope : IHope

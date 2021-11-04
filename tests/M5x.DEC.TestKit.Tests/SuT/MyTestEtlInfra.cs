@@ -1,6 +1,7 @@
 using CouchDB.Driver;
 using FakeItEasy;
 using M5x.DEC.Infra;
+using M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb;
 using M5x.Serilog;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
         {
             var delResult = MyTestSchema.Model;
             delResult.Prev = string.Empty;
-            var fakeDb = A.Fake<IMyDb>();
+            var fakeDb = A.Fake<IMyCouchDb>();
             var fakeCouchClient = A.Fake<ICouchClient>(); 
             A.CallTo(
                     () => fakeDb.GetByIdAsync(MyTestSchema.TestID.Value))
@@ -26,7 +27,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
                 .Returns(delResult);
             return services
                 .AddSingleton<ICouchClient>(p => fakeCouchClient)
-                .AddSingleton<IMyDb>(p => fakeDb);
+                .AddSingleton<IMyCouchDb>(p => fakeDb);
         }
 
 
@@ -35,7 +36,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
             return services?
                 .AddConsoleLogger()
                 .AddCouchClient()
-                .AddTransient<IMyDb, MyDb>();
+                .AddTransient<IMyCouchDb, MyCouchDb>();
         }
 
         public static IServiceCollection AddMyFakeWriter(this IServiceCollection services)
@@ -43,7 +44,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
             return services
                 .AddConsoleLogger()
                 .AddMyFakeDb()
-                .AddTransient<IMyWriter, MyWriter>();
+                .AddTransient<IMyCouchWriter, MyCouchWriter>();
         }
         
         

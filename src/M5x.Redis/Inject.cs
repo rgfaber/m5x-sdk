@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
 namespace M5x.Redis
@@ -12,16 +11,56 @@ namespace M5x.Redis
                 .AddSingleton(p =>
                 {
                     var opts = ConfigurationOptions.Parse(Config.ConfigString);
-                    return new ConfigurationOptions()
-                    {
-                        Ssl = Config.UseSsl,
-                        Password = Config.Password,
-                        User = Config.User,
-                        AllowAdmin = Config.AllowAdmin
-                    };
+                    opts.Ssl = Config.UseSsl;
+                    opts.Password = Config.Password;
+                    opts.User = Config.User;
+                    opts.AllowAdmin = Config.AllowAdmin;
+                    return opts;
                 })
-                .AddSingleton<IConnectionMultiplexer, ConnectionMultiplexer>()
-                ;
+                .AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
         }
+
+        public static IServiceCollection AddSingletonRedisConnection(this IServiceCollection services)
+        {
+            return services?
+                .AddRedis()
+                .AddSingleton(p =>
+                {
+                    var fact = p.GetRequiredService<IRedisConnectionFactory>();
+                    return fact.Connect();
+                });
+        }
+
+        public static IServiceCollection AddTransientRedisConnection(this IServiceCollection services)
+        {
+            return services?
+                .AddRedis()
+                .AddTransient(p =>
+                {
+                    var fact = p.GetRequiredService<IRedisConnectionFactory>();
+                    return fact.Connect();
+                });
+        }
+
+        public static IServiceCollection AddSingletonRedisDb(this IServiceCollection services)
+        {
+            return services?
+                .AddSingletonRedisConnection()
+                .AddSingleton<IRedisDb, RedisDb>();
+        }
+
+        public static IServiceCollection AddTransientRedisDb(this IServiceCollection services)
+        {
+            return services?
+                .AddTransientRedisConnection()
+                .AddTransient<IRedisDb, RedisDb>();
+
+        }
+        
+        
+        
+        
+        
+        
     }
 }

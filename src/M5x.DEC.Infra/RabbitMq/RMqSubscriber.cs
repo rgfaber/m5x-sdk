@@ -23,15 +23,13 @@ namespace M5x.DEC.Infra.RabbitMq
             where TFact : IFact
             where TAggregateId : IIdentity
         {
-            if (handlers == null)
-                throw new ArgumentException($"No Fact Handlers Registered for {typeof(TFact).PrettyPrint()}", paramName);
-            if(!handlers.Any())
+            if ( handlers == null || !handlers.Any() )  
                 throw new ArgumentException($"No Fact Handlers Registered for {typeof(TFact).PrettyPrint()}", paramName);
         }
     }
     
-    public abstract class RMqSubscriber<TAggregateId, TFact> : BackgroundService, 
-        ISubscriber<TAggregateId, TFact>
+    public abstract class RMqSubscriber<TAggregateId, TFact> 
+        : BackgroundService, ISubscriber<TAggregateId, TFact>
         where TAggregateId : IIdentity
         where TFact : IFact
     {
@@ -116,6 +114,13 @@ namespace M5x.DEC.Infra.RabbitMq
             while (!stoppingToken.IsCancellationRequested)
             { }
             return Task.CompletedTask;
+        }
+
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            _connection?.Close();
+            _channel?.Close();
+            return base.StopAsync(cancellationToken);
         }
 
 

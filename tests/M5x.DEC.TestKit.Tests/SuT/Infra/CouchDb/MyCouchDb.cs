@@ -3,21 +3,20 @@ using CouchDB.Driver;
 using CouchDB.Driver.Options;
 using Flurl.Http.Configuration;
 using M5x.DEC.Infra.CouchDb;
-using Polly.Retry;
 using Serilog;
 
-namespace M5x.DEC.TestKit.Tests.SuT
+namespace M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb
 {
     
-    public interface IMyDb: ICouchStore<MyReadModel> {}
+    public interface IMyCouchDb: ICouchStore<MyReadModel> {}
     
-    public class MyDb: CouchStore<MyReadModel,MyID>, IMyDb
+    public class MyCouchDb: CouchStore<MyReadModel,MyID>, IMyCouchDb
     {
-        public MyDb(ICouchClient client, ILogger logger) : base(client, logger)
+        public MyCouchDb(ICouchClient client, ILogger logger) : base(client, logger)
         {
         }
 
-        public MyDb(string dbName,
+        public MyCouchDb(string dbName,
             string connectionString,
             Action<CouchOptionsBuilder> couchSettingsFunc,
             Action<ClientFlurlHttpSettings> flurlSettingsFunc) : base(dbName,

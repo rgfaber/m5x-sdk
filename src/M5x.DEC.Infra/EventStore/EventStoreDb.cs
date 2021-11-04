@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,7 +52,7 @@ namespace M5x.DEC.Infra.EventStore
         }
 
         public async IAsyncEnumerable<StoreEvent<TAggregateId>> ReadAllEventsAsync<TAggregateId>(
-            CancellationToken cancellationToken = default)
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
             where TAggregateId : IIdentity
         {
             var ret = new List<StoreEvent<TAggregateId>>();

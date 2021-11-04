@@ -48,37 +48,41 @@ namespace M5x.DEC.Infra.RabbitMq
         public string Topic => GetTopic();
         public Task<TFeedback> RequestAsync(THope hope, CancellationToken cancellationToken = default)
         {
-            _connection = _connFact.CreateConnection();
-            _channel = _connection.CreateModel();
-            _rspConsumer = new AsyncEventingBasicConsumer(_channel);
-            _props = _channel.CreateBasicProperties();
-            _rspQName = _channel.QueueDeclare().QueueName;
-            _responseQ = new BlockingCollection<TFeedback>();
-            _rspConsumer.Received += RspConsumerOnReceived;
-            _channel.BasicConsume(
-                _rspConsumer,
-                _rspQName,
-                true);
+            return _retryPolicy.ExecuteAsync(() =>
+            {
+                _connection = _connFact.CreateConnection();
+                _channel = _connection.CreateModel();
+                _rspConsumer = new AsyncEventingBasicConsumer(_channel);
+                _props = _channel.CreateBasicProperties();
+                _rspQName = _channel.QueueDeclare().QueueName;
+                _responseQ = new BlockingCollection<TFeedback>();
+                _rspConsumer.Received += RspConsumerOnReceived;
+                _channel.BasicConsume(
+                    _rspConsumer,
+                    _rspQName,
+                    true);
 
-            var fbk = Activator.CreateInstance<TFeedback>();
-            Guard.Against.Null(fbk, nameof(fbk));
-            Guard.Against.Null(hope, nameof(hope));
-            Guard.Against.NullOrEmpty(hope.CorrelationId, nameof(hope.CorrelationId));
-            _correlationId = hope.CorrelationId;
-            _correlationId = GuidUtils.NewGuid;
-            _props.CorrelationId = _correlationId;
-            _props.ReplyTo = _rspQName;
-            var body = JsonSerializer.SerializeToUtf8Bytes(hope);
-            _logger?.Debug($"[{Topic}]-REQ Hope[{hope.CorrelationId}]");
-            _channel.BasicPublish("",
-                Topic,
-                _props,
-                body);
-            fbk = _responseQ.Take(cancellationToken);
-            var ok = fbk.IsSuccess ? "Success" : "Failure";
-            _logger?.Debug($"[{Topic}]-FBK Feedback[{fbk.CorrelationId} -- ({ok})]");
-            return Task.FromResult(fbk);
+                var fbk = Activator.CreateInstance<TFeedback>();
+                Guard.Against.Null(fbk, nameof(fbk));
+                Guard.Against.Null(hope, nameof(hope));
+                Guard.Against.NullOrEmpty(hope.CorrelationId, nameof(hope.CorrelationId));
+                _correlationId = hope.CorrelationId;
+                _correlationId = GuidUtils.NewGuid;
+                _props.CorrelationId = _correlationId;
+                _props.ReplyTo = _rspQName;
+                var body = JsonSerializer.SerializeToUtf8Bytes(hope);
+                _logger?.Debug($"[{Topic}]-REQ Hope[{hope.CorrelationId}]");
+                _channel.BasicPublish("",
+                    Topic,
+                    _props,
+                    body);
+                fbk = _responseQ.Take(cancellationToken);
+                var ok = fbk.IsSuccess ? "Success" : "Failure";
+                _logger?.Debug($"[{Topic}]-FBK Feedback[{fbk.CorrelationId} -- ({ok})]");
+                return Task.FromResult(fbk);
+            });
         }
+        
         private Task RspConsumerOnReceived(object sender, BasicDeliverEventArgs ea)
         {
             var body = ea.Body;

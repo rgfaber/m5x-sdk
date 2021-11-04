@@ -17,10 +17,10 @@ namespace M5x.DEC
         protected EventToFact(IDECBus bus)
         {
             _bus = bus;
-            _bus.Subscribe<TEvent>( evt=> HandleAsync(evt));
+            _bus.Subscribe<TEvent>(HandleAsync);
         }
         
-        public Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
+        public Task HandleAsync(TEvent @event)
         {
             var fact = ToFact(@event);
             return _bus.PublishAsync(fact);

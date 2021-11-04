@@ -2,9 +2,9 @@
 
 ## November 2021
 
-### v1.10.17
-
--  
+### v1.10.18
+- Reader and Writer support for Redis  
+- Dependency Updates for Dapper, KubernetesClient, MudBlazor, Twilio, Serilog e.a
 
 ### v1.10.15
 - Added Guards around RMqSubscriber

@@ -81,7 +81,17 @@ namespace M5x.Config
 
         public static string Get(string name)
         {
-            return Environment.GetEnvironmentVariable(name);
+            var s = Environment.GetEnvironmentVariable(name);
+            if (string.IsNullOrWhiteSpace(s)) return s;
+            if (s.StartsWith('"'))
+            {
+                s = s.Split('"')[1];
+            }
+            if (s.StartsWith("'"))
+            {
+                s = s.Split('"')[1];
+            }
+            return s;
         }
 
         public static string Set(string name, object value)

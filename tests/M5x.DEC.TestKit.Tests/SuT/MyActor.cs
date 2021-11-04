@@ -40,13 +40,13 @@ namespace M5x.DEC.TestKit.Tests.SuT
         }
 
         public MyActor(
+            IBroadcaster<MyID> caster,
             IMyEventStream aggregates,
             IDECBus bus,
-            IEnumerable<IEventHandler<MyID, IEvent<MyID>>> handlers,
-            ILogger logger) : base(aggregates,
+            IEnumerable<IEventHandler<MyID, IEvent<MyID>>> handlers) : base(caster,
+            aggregates,
             bus,
-            handlers,
-            logger)
+            handlers)
         {
         }
     }

@@ -102,6 +102,7 @@ namespace M5x.DEC.Infra.RabbitMq
             _connection?.Dispose();
             base.Dispose();
         }
+        
 
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

@@ -21,22 +21,20 @@ namespace M5x.DEC
     {
         private readonly IDECBus _bus;
         private readonly IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> _handlers;
-        private readonly IEnumerable<IFactEmitter> _emitters;
 
+        private readonly IBroadcaster<TAggregateId> _caster;
         protected readonly IAsyncEventStream<TAggregate, TAggregateId> Aggregates;
-        protected readonly ILogger Logger;
-
 
         protected AsyncActor(
+            IBroadcaster<TAggregateId> caster,
             IAsyncEventStream<TAggregate, TAggregateId> aggregates,
             IDECBus bus,
-            IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> handlers,
-            ILogger logger)
+            IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> handlers)
         {
+            _caster = caster;
             Aggregates = aggregates;
             _bus = bus;
             _handlers = handlers;
-            Logger = logger;
         }
 
 

@@ -1,5 +1,6 @@
 using CouchDB.Driver;
 using FakeItEasy;
+using M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb;
 using M5x.Serilog;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,8 +13,8 @@ namespace M5x.DEC.TestKit.Tests.SuT
             return services
                 .AddConsoleLogger()
                 .AddMyDb()
-                .AddTransient<IMyReader, MyReader>()
-                .AddTransient<IMySingletonReader, MySingletonReader>(); ;
+                .AddTransient<IMyCouchReader, MyCouchReader>()
+                .AddTransient<IMyCouchSingletonReader, MyCouchSingletonReader>(); ;
         }
         
         
@@ -22,8 +23,8 @@ namespace M5x.DEC.TestKit.Tests.SuT
             return services
                 .AddConsoleLogger()
                 .AddMyFakeDb()
-                .AddTransient<IMyReader, MyReader>()
-                .AddTransient<IMySingletonReader, MySingletonReader>(); ;
+                .AddTransient<IMyCouchReader, MyCouchReader>()
+                .AddTransient<IMyCouchSingletonReader, MyCouchSingletonReader>(); ;
         }
         
         

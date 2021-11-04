@@ -104,9 +104,9 @@ namespace M5x.DEC.TestKit.Integration.Etl
             var delRsp = await Writer.DeleteAsync(Event.Meta.Id);
             Assert.NotNull(delRsp);
             Assert.Equal(Event.Meta.Id, delRsp.Id);
-            Assert.True(string.IsNullOrWhiteSpace(delRsp.Prev));
+            Assert.True(!string.IsNullOrWhiteSpace(delRsp.Prev));
             var deleted = await Reader.GetByIdAsync(Event.Meta.Id);
-            Assert.Null(deleted);
+            Assert.True( string.IsNullOrWhiteSpace(deleted.Id));
         }
 
         

@@ -7,8 +7,8 @@ using Xunit.Abstractions;
 namespace M5x.DEC.TestKit.Integration.Cmd
 {
 
-    public abstract class ResponderTests<TResponder, TRequester, TID, THope, TFeedback> :
-        RequesterTests<TResponder, TRequester, TID, THope, TFeedback>
+    public abstract class ResponderTests<TConnection,TResponder, TRequester, TID, THope, TFeedback> :
+        RequesterTests<TConnection,TResponder, TRequester, TID, THope, TFeedback>
         where TResponder : IResponder
         where TID : IIdentity
         where THope : IHope

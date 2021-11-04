@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../../../saab-ms/dtos/contexts/truck-inbound/dtos-truck-inbound-context"
+		},
+		{
+			"path": "../../../saab-ms/dtos/contexts/trabudis"
 		}
 	],
 	"settings": {}

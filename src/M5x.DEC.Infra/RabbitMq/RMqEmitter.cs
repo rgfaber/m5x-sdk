@@ -7,14 +7,12 @@ using M5x.DEC.Schema;
 using Polly;
 using Polly.Retry;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Core.DependencyInjection.Services;
 using Serilog;
 
 namespace M5x.DEC.Infra.RabbitMq
 {
     public abstract class RMqEmitter<TAggregateId, TEvent, TFact> 
       : IEventHandler<TAggregateId,TEvent>, IDisposable
-//    : IFactEmitter<TAggregateId, TEvent, TFact>, IDisposable
         where TAggregateId : IIdentity
         where TEvent : IEvent<TAggregateId>
         where TFact : IFact
@@ -25,7 +23,6 @@ namespace M5x.DEC.Infra.RabbitMq
         private readonly IConnectionFactory _connFact;
         private readonly ILogger _logger;
         private readonly int _maxRetries = Polly.Config.MaxRetries;
-        private readonly AsyncRetryPolicy _retryPolicy;
 
 
         protected RMqEmitter(
@@ -35,11 +32,6 @@ namespace M5x.DEC.Infra.RabbitMq
         {
             _connFact = connFact;
             _logger = logger;
-            _retryPolicy = retryPolicy
-                           ?? Policy
-                               .Handle<Exception>()
-                               .WaitAndRetryAsync(_maxRetries,
-                                   times => TimeSpan.FromMilliseconds(times * _backoff));
         }
 
         public void Dispose()
@@ -52,7 +44,7 @@ namespace M5x.DEC.Infra.RabbitMq
         public string Topic => GetTopic();
 
 
-        public Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
+        public Task HandleAsync(TEvent @event)
         {
             _connection = _connFact.CreateConnection();
             _channel = _connection.CreateModel();

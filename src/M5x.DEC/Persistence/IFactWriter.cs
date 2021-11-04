@@ -26,7 +26,7 @@ namespace M5x.DEC.Persistence
         where TReadModel : IReadEntity
     {
 
-        Task<TReadModel> UpdateAsync(TEvent @event);
+        Task<TReadModel> UpdateAsync(TEvent evt);
         Task<TReadModel> DeleteAsync(string id);
     }
     

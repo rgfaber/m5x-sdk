@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Ardalis.GuardClauses;
 using M5x.DEC.Commands;
@@ -5,10 +6,11 @@ using M5x.DEC.Events;
 using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
-using Serilog;
+
 
 namespace M5x.DEC
 {
+    [Obsolete("Please use AsyncActor instead")]
     public abstract class
         Actor<TAggregate, TAggregateId, TCommand, TFeedback>
         : IActor<TAggregateId, TCommand, TFeedback>
@@ -21,19 +23,19 @@ namespace M5x.DEC
 
         private readonly IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> _handlers;
 
+        private readonly IBroadcaster<TAggregateId> _caster;
         protected readonly IEventStream<TAggregate, TAggregateId> Aggregates;
-        protected readonly ILogger Logger;
 
         protected Actor(
+            IBroadcaster<TAggregateId> caster,
             IEventStream<TAggregate, TAggregateId> aggregates,
             IDECBus bus,
-            IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> handlers,
-            ILogger logger)
+            IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> handlers)
         {
+            _caster = caster;
             Aggregates = aggregates;
             _bus = bus;
             _handlers = handlers;
-            Logger = logger;
         }
 
 
@@ -66,4 +68,6 @@ namespace M5x.DEC
     {
         TFeedback Handle(TCommand cmd);
     }
+    
+    
 }

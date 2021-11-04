@@ -1,4 +1,5 @@
 using System;
+using M5x.Extensions;
 
 namespace M5x.DEC.Schema.Utils
 {
@@ -28,6 +29,12 @@ namespace M5x.DEC.Schema.Utils
         {
             var attrs = (EndpointAttribute[])typeof(T).GetCustomAttributes(typeof(EndpointAttribute), true);
             return attrs.Length > 0 ? attrs[0].Endpoint : throw new Exception($"No [Endpoint] Defined on {typeof(T)}!");
+        }
+
+        public static int GetDbInt32<TReadModel>()
+        {
+            return GetDbName<TReadModel>()
+                .ToInt32();
         }
     }
 }

@@ -78,7 +78,7 @@ namespace M5x.DEC.Infra.EventStore
 
         private void SubscriptionDropped(StreamSubscription subscription
             , SubscriptionDroppedReason reason
-            , Exception? exception)
+            , Exception exception)
         {
             _logger?.Debug($"Subscription [{subscription.SubscriptionId}] dropped. Reason: [{reason}] ");
         }

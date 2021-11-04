@@ -30,7 +30,7 @@ namespace M5x.DEC.TestKit.Tests
             Command = MyTestDomain.Command;
             ID = MyID.NewComb();
             Feedback = MyFeedback.New(TestConstants.Meta, TestConstants.CORRELATION_ID, Dummy.Empty);
-            Aggregate = MyAggregate.New((MyID)ID, MyReadModel.New(ID.Value));
+            Aggregate = MyAggregate.New((MyID)ID, MyReadModel.New(ID.Value, ID.Value));
             Bus = Container.GetRequiredService<IDECBus>();
         }
 

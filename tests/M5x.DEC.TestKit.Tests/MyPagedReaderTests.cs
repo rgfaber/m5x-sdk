@@ -4,6 +4,7 @@ using Bogus;
 using M5x.Config;
 using M5x.DEC.TestKit.Integration.Qry;
 using M5x.DEC.TestKit.Tests.SuT;
+using M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb;
 using M5x.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
@@ -13,7 +14,7 @@ namespace M5x.DEC.TestKit.Tests
     
     
     
-    public class MyPagedReaderTests: EnumerableReaderTests<IMyReader, MyPagedQry, MyReadModel>
+    public class MyPagedReaderTests: EnumerableReaderTests<IMyCouchReader, MyPagedQry, MyReadModel>
     {
 
         
@@ -25,7 +26,7 @@ namespace M5x.DEC.TestKit.Tests
         protected override void Initialize()
         {
             Query = MyTestContract.PagedQry;
-            Reader = Container.GetRequiredService<IMyReader>();;
+            Reader = Container.GetRequiredService<IMyCouchReader>();;
         }
 
         protected override void SetTestEnvironment()

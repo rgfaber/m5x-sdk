@@ -8,6 +8,7 @@ using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
 using M5x.DEC.Schema.Utils;
 using M5x.Testing;
+using Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.Internal;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -15,11 +16,12 @@ using Xunit.Abstractions;
 namespace M5x.DEC.TestKit.Integration.Cmd
 {
     public abstract class EmitterTests<
+        TConnection,
         TEmitter,
         TSubscriber,
         TAggregateId,
         TEvent,
-        TFact> : ConnectedTests
+        TFact> : ConnectedTests<TConnection>
         where TEmitter : IFactEmitter<TAggregateId,TEvent,TFact>
         where TAggregateId : IIdentity
         where TFact : IFact
@@ -104,7 +106,7 @@ namespace M5x.DEC.TestKit.Integration.Cmd
             {
                 await subHost.StartAsync(cs.Token);
                 Output?.WriteLine($"Emitting Fact: {TestFacts.OutFact}");
-                await Emitter.HandleAsync(TestEvents.OutEvent, cs.Token).ConfigureAwait(false);
+                await Emitter.HandleAsync(TestEvents.OutEvent).ConfigureAwait(false);
             }
             catch (Exception e)
             {

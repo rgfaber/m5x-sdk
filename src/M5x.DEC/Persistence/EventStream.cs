@@ -7,7 +7,7 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.Persistence
 {
-    [Obsolete("Use AsyncEventStream Instead")]
+    [Obsolete("Please use AsyncEventStream Instead")]
     public abstract class EventStream<TAggregate, TAggregateId> 
         : IEventStream<TAggregate, TAggregateId>
         where TAggregate : AggregateRoot<TAggregateId>, IAggregate<TAggregateId>
@@ -100,6 +100,7 @@ namespace M5x.DEC.Persistence
     public interface IEventStream {}
 
 
+    [Obsolete("Please use AsyncEventStream instead")]
     public interface IEventStream<TAggregate, TAggregateId> : IEventStream
         where TAggregate : IAggregate<TAggregateId> 
         where TAggregateId : IIdentity

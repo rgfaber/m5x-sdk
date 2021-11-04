@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration.Client
 {
-    public abstract class QueryClientTests<TClient, TQuery, TResponse> : ConnectedTests
+    public abstract class QueryClientTests<TClient, TQuery, TResponse> : ConnectedTests<TClient>
         where TClient : Http.IQueryClient<TQuery, TResponse>
         where TQuery : IQuery
         where TResponse : IResponse

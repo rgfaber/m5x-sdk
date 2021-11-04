@@ -190,5 +190,17 @@ namespace M5x.Extensions
             foreach (var t in hash) sb.Append(t.ToString("X2"));
             return sb.ToString();
         }
+
+        public static int ToInt32(this string value)
+        {
+            // step 1, calculate MD5 hash from input
+            var md5 = MD5.Create();
+            var inputBytes = Encoding.ASCII.GetBytes(value);
+            var hash = md5.ComputeHash(inputBytes);
+            
+            // step2, use BitConverter to convert the hash to integer
+            return BitConverter.ToInt32(hash);
+
+        }
     }
 }

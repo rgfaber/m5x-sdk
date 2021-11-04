@@ -52,11 +52,12 @@ namespace M5x.DEC.Infra.STAN
         public string Topic => GetTopic();
 
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
             }
+            return Task.CompletedTask;
         }
 
 

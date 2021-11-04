@@ -1,4 +1,5 @@
 using FakeItEasy;
+using M5x.DEC.Events;
 using M5x.DEC.Schema;
 using M5x.Serilog;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,8 @@ namespace M5x.DEC.TestKit.Tests.SuT
         public static MyCommand Command = MyCommand.New(AggregateInfo.New(MyTestSchema.TestID.Value),
             MyTestSchema.TEST_CORRELATION_ID,
             MyTestSchema.Payload);
+
+        public static MyEvent Event  = MyEvent.New(Command);
 
         public static IServiceCollection AddMyFakeActor(this IServiceCollection services)
         {
