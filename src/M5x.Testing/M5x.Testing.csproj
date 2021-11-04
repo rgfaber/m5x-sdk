@@ -33,7 +33,7 @@
         <PackageReference Include="xunit.analyzers" Version="0.10.0" />
         <PackageReference Include="xunit.assert" Version="2.4.1" />
         <PackageReference Include="xunit.core" Version="2.4.1" />
-        <PackageReference Include="XunitXml.TestLogger" Version="3.0.66" />
+        <PackageReference Include="XunitXml.TestLogger" Version="3.0.70" />
     </ItemGroup>
 
     <ItemGroup>

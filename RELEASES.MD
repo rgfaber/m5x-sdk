@@ -2,7 +2,7 @@
 
 ## November 2021
 
-### v1.10.18
+### v1.10.20
 - Reader and Writer support for Redis  
 - Dependency Updates for Dapper, KubernetesClient, MudBlazor, Twilio, Serilog e.a
 
