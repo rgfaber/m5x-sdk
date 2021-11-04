@@ -26,22 +26,25 @@ namespace M5x.DEC.TestKit.Integration.Etl
         }
 
         [Fact]
-        public void Needs_Fact()
+        public Task Needs_Fact()
         {
             Assert.NotNull(Fact);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Query()
+        public Task Needs_Query()
         {
             Assert.NotNull(Query);
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Needs_Writer()
+        public Task Needs_Writer()
         {
             Assert.NotNull(Writer);
+            return Task.CompletedTask;
         }
 
         [Fact]
@@ -76,9 +79,10 @@ namespace M5x.DEC.TestKit.Integration.Etl
         }
 
         [Fact]
-        public void Needs_Reader()
+        public Task Needs_Reader()
         {
             Assert.NotNull(Reader);
+            return Task.CompletedTask;
         }
     }
 }

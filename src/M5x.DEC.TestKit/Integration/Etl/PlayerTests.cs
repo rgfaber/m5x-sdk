@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using M5x.DEC.Infra.EventStore;
 using M5x.DEC.Schema;
 using M5x.Testing;
@@ -18,15 +19,17 @@ namespace M5x.DEC.TestKit.Integration.Etl
         }
 
         [Fact]
-        public void Needs_Player()
+        public Task Needs_Player()
         {
             Assert.NotNull(Player);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_ExpectedState()
+        public Task Needs_ExpectedState()
         {
             Assert.NotNull(ExpectedState);
+            return Task.CompletedTask;
         }
     }
 }

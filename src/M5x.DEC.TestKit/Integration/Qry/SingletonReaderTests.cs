@@ -20,17 +20,18 @@ namespace M5x.DEC.TestKit.Integration.Qry
 
 
         [Fact]
-        public void Must_QueryMustBeSingletonQuery()
+        public Task Must_QueryMustBeSingletonQuery()
         {
             try
             {
-                Assert.True(Query is SingletonQuery);
+                Assert.IsAssignableFrom<SingletonQuery>(Query);
             }
             catch (Exception e)
             {
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 

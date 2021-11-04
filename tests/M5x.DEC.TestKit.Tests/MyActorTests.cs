@@ -5,10 +5,13 @@ using M5x.Config;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema.Common;
 using M5x.DEC.TestKit.Tests.SuT;
+using M5x.DEC.TestKit.Tests.SuT.Domain;
+using M5x.DEC.TestKit.Tests.SuT.Infra.RabbitMq;
 using M5x.DEC.TestKit.Unit.Domain;
+using M5x.RabbitMQ;
+using M5x.Serilog;
 using M5x.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute.Routing.Handlers;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -16,8 +19,10 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Tests
 {
-    public class MyActorTests : ActorTests<IMyActor, 
-        MyAggregate, MyID, MyCommand, MyFeedback>
+    public class MyActorTests : ActorTests<
+        IMyActor, 
+        MyAggregate, 
+        MyID, MyCommand, MyFeedback, IMyBroadcaster>
     {
         public MyActorTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
@@ -32,7 +37,9 @@ namespace M5x.DEC.TestKit.Tests
             Feedback = MyFeedback.New(TestConstants.Meta, TestConstants.CORRELATION_ID, Dummy.Empty);
             Aggregate = MyAggregate.New((MyID)ID, MyReadModel.New(ID.Value, ID.Value));
             Bus = Container.GetRequiredService<IDECBus>();
+            Caster = Container.GetRequiredService<IMyBroadcaster>();
         }
+
 
         protected override void SetTestEnvironment()
         {
@@ -41,7 +48,12 @@ namespace M5x.DEC.TestKit.Tests
 
         protected override void InjectDependencies(IServiceCollection services)
         {
-            services.AddMyFakeActor();
+            services
+                .AddSingletonRMq()
+                .AddConsoleLogger()
+                .AddMyBroadcaster()
+                .AddMyEventEmitter()
+                .AddMyFakeActor();
         }
 
 
@@ -55,7 +67,7 @@ namespace M5x.DEC.TestKit.Tests
         {
             var cmd = (MyCommand)Command;
             cmd.Payload = null;
-            var res = await Actor.HandleAsync(cmd).ConfigureAwait(false);
+            var res = await ((IMyActor)Actor).HandleAsync(cmd).ConfigureAwait(false);
             res.IsSuccess.ShouldBe(false);
         }
         

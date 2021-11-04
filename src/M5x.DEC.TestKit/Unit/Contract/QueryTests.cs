@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
 using M5x.DEC.Schema.Utils;
@@ -26,7 +27,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
 
 
         [Fact]
-        public void Must_HaveQry()
+        public Task Must_HaveQry()
         {
             try
             {
@@ -37,10 +38,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_QueryMustBeOfTypeTQuery()
+        public Task Must_QueryMustBeOfTypeTQuery()
         {
             try
             {
@@ -51,11 +53,12 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Must_ResponseMustBeOfTypeTResponse()
+        public Task Must_ResponseMustBeOfTypeTResponse()
         {
             try
             {
@@ -66,10 +69,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_QueryMustBeDeserializable()
+        public Task Must_QueryMustBeDeserializable()
         {
             try
             {
@@ -82,10 +86,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_DeserializedQueryMustBeOfTypeTQuery()
+        public Task Must_DeserializedQueryMustBeOfTypeTQuery()
         {
             try
             {
@@ -98,11 +103,12 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Must_HaveRsp()
+        public Task Must_HaveRsp()
         {
             try
             {
@@ -113,11 +119,12 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Must_RspMustBeOfTypeTResponse()
+        public Task Must_RspMustBeOfTypeTResponse()
         {
             try
             {
@@ -128,11 +135,12 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Must_ResponseMustBeDeserializable()
+        public Task Must_ResponseMustBeDeserializable()
         {
             try
             {
@@ -145,10 +153,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_DeserializedResponseMustBeOfTypeTResponse()
+        public Task Must_DeserializedResponseMustBeOfTypeTResponse()
         {
             try
             {
@@ -161,10 +170,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_OriginalResponseMustBeEqualToDeserializedResponse()
+        public Task Must_OriginalResponseMustBeEqualToDeserializedResponse()
         {
             try
             {
@@ -177,6 +187,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
     }
 }

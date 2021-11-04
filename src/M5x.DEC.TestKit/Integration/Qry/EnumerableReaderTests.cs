@@ -21,17 +21,18 @@ namespace M5x.DEC.TestKit.Integration.Qry
         }
 
         [Fact]
-        public void Must_QueryMustBeMultiQuery()
+        public Task Must_QueryMustBeMultiQuery()
         {
             try
             {
-                Assert.True(Query is MultiQuery);
+                Assert.IsAssignableFrom<MultiQuery>(Query);
             }
             catch (Exception e)
             {
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 

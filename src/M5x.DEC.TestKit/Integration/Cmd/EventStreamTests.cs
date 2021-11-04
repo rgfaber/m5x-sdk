@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using M5x.DEC.Persistence;
 using M5x.DEC.Schema;
 using M5x.DEC.TestKit.Unit.Domain;
@@ -23,31 +24,35 @@ namespace M5x.DEC.TestKit.Integration.Cmd
         }
         
         [Fact]
-        public void Needs_Actor()
+        public Task Needs_Actor()
         {
             Assert.NotNull(Actor);
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Needs_Connection()
+        public Task Needs_Connection()
         {
             Assert.NotNull(Connection);
+            return Task.CompletedTask;
         }
         
         public object Connection;
 
         [Fact]
-        public void Needs_EventStream()
+        public Task Needs_EventStream()
         {
             Assert.NotNull(EventStream);
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Must_EventStreamMustBeAssignableFromTEventStream()
+        public Task Must_EventStreamMustBeAssignableFromTEventStream()
         {
             Assert.IsAssignableFrom<TEventStream>(EventStream);
+            return Task.CompletedTask;
         }
         
         

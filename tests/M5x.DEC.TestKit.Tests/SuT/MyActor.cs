@@ -6,6 +6,7 @@ using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
+using M5x.DEC.TestKit.Tests.SuT.Domain;
 using Serilog;
 
 namespace M5x.DEC.TestKit.Tests.SuT
@@ -40,7 +41,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
         }
 
         public MyActor(
-            IBroadcaster<MyID> caster,
+            IMyBroadcaster caster,
             IMyEventStream aggregates,
             IDECBus bus,
             IEnumerable<IEventHandler<MyID, IEvent<MyID>>> handlers) : base(caster,

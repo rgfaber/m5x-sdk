@@ -12,11 +12,11 @@ namespace M5x.DEC.PubSub
 
     public abstract class Broadcaster<TID> : IBroadcaster<TID> where TID : IIdentity
     {
-        private readonly IDECBus _bus;
-        protected Broadcaster(IDECBus bus)
+        protected IDECBus Mediator;
+        protected Broadcaster(IDECBus mediator)
         {
-            _bus = bus;
-            _bus.Subscribe<IEvent<TID>>(BroadcastAsync);
+            Mediator = mediator;
+            Mediator.Subscribe<IEvent<TID>>(BroadcastAsync);
         }
         public abstract Task BroadcastAsync(IEvent<TID> evt);
     }

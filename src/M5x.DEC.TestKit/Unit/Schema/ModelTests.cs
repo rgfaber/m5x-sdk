@@ -1,6 +1,8 @@
 using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 using M5x.DEC.Schema;
+using M5x.DEC.Schema.Utils;
 using M5x.Testing;
 using Xunit;
 using Xunit.Abstractions;
@@ -20,27 +22,24 @@ namespace M5x.DEC.TestKit.Unit.Schema
         protected abstract TReadModel CreateModel();
 
         [Fact]
-        public void Needs_DbName()
+        public Task Needs_DbName()
         {
-            var name = GetDbName();
+            var name = AttributeUtils.GetDbName<TReadModel>();
             Assert.False(string.IsNullOrWhiteSpace(name));
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Must_ModelMustBeDeserializable()
+        public Task Must_ModelMustBeDeserializable()
         {
             var s = JsonSerializer.SerializeToUtf8Bytes(Model);
             var des = JsonSerializer.Deserialize<TReadModel>(s);
             Assert.NotNull(des);
             Assert.IsType<TReadModel>(des);
+            return Task.CompletedTask;
         }
-
-        private string GetDbName()
-        {
-            var atts = (DbNameAttribute[])typeof(TReadModel).GetCustomAttributes(typeof(DbNameAttribute), true);
-            if (atts.Length == 0) throw new Exception($"Attribute [DbName] is missing on {typeof(TReadModel)}");
-            return atts[0].DbName;
-        }
+        
+        
     }
 }

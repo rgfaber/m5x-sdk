@@ -19,18 +19,20 @@ namespace M5x.DEC.TestKit.Integration.Client
         }
 
         [Fact]
-        public void Needs_Client()
+        public Task Needs_Client()
         {
             Assert.NotNull(_client);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public async Task Must_ReturnResponse()
+        public Task Must_ReturnResponse()
         {
             var qry = CreateQuery();
-            var res = await _client.Post(qry);
+            var res = _client.Post(qry).Result;
             Assert.NotNull(res);
             Assert.IsType<TResponse>(res);
+            return Task.CompletedTask;
         }
 
         protected abstract TQuery CreateQuery();

@@ -1,7 +1,9 @@
 using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
+using M5x.DEC.Schema.Utils;
 using M5x.Testing;
 using Shouldly;
 using Xunit;
@@ -24,7 +26,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
         }
 
         [Fact]
-        public void Needs_Hope()
+        public Task Needs_Hope()
         {
             try
             {
@@ -35,11 +37,12 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Should_HopeMustBeOfTypeTHope()
+        public Task Should_HopeMustBeOfTypeTHope()
         {
             try
             {
@@ -50,11 +53,12 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Needs_Feedback()
+        public Task Needs_Feedback()
         {
             try
             {
@@ -65,10 +69,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Should_FeedBackMustBeOfTypeTFeedback()
+        public Task Should_FeedBackMustBeOfTypeTFeedback()
         {
             try
             {
@@ -79,14 +84,15 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_HopeMustHaveTopic()
+        public Task Must_HopeMustHaveTopic()
         {
             try
             {
-                _attributedHopeTopic = GetAttributedHopeTopic();
+                _attributedHopeTopic = AttributeUtils.GetTopic<THope>();
                 Assert.False(string.IsNullOrWhiteSpace(_attributedHopeTopic));
             }
             catch (Exception e)
@@ -94,14 +100,15 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_HaveCorrectTopic()
+        public Task Must_HaveCorrectTopic()
         {
             try
             {
-                _attributedHopeTopic = GetAttributedHopeTopic();
+                _attributedHopeTopic = AttributeUtils.GetTopic<THope>();
                 ExpectedHopeTopic = GetExpectedHopeTopic();
                 Assert.Equal(ExpectedHopeTopic, _attributedHopeTopic);
             }
@@ -110,19 +117,15 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         protected abstract string GetExpectedHopeTopic();
 
 
-        protected string GetAttributedHopeTopic()
-        {
-            var attrs = (TopicAttribute[])typeof(THope).GetCustomAttributes(typeof(TopicAttribute), true);
-            return attrs.Length > 0 ? attrs[0].Id : $"No Topic Defined on {typeof(THope)}!";
-        }
 
         [Fact]
-        public void Must_HopeMustBeDeserializable()
+        public Task Must_HopeMustBeDeserializable()
         {
             try
             {
@@ -135,11 +138,12 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Must_DeserializedHopeMustBeTHope()
+        public Task Must_DeserializedHopeMustBeTHope()
         {
             try
             {
@@ -152,10 +156,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_OriginalHopeMustBeEqualToDeserializedHope()
+        public Task Must_OriginalHopeMustBeEqualToDeserializedHope()
         {
             try
             {
@@ -168,10 +173,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_FeedbackMustBeDeserializable()
+        public Task Must_FeedbackMustBeDeserializable()
         {
             try
             {
@@ -184,10 +190,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_DeserializedFeedbackMustBeOfTypeTFeedback()
+        public Task Must_DeserializedFeedbackMustBeOfTypeTFeedback()
         {
             try
             {
@@ -200,11 +207,12 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Must_OriginalFeedbackMustBeEqualToDeserializedFeedback()
+        public Task Must_OriginalFeedbackMustBeEqualToDeserializedFeedback()
         {
             try
             {
@@ -217,6 +225,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
     }
 }

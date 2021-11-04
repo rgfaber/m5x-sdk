@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using M5x.DEC.Persistence;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
@@ -22,22 +23,23 @@ namespace M5x.DEC.TestKit.Integration.Qry
 
 
         [Fact]
-        public void Must_QueryMustBeOfTypeTQuery()
+        public Task Must_QueryMustBeOfTypeTQuery()
         {
             try
             {
-                Assert.IsType<TQuery>(Query);
+                Assert.IsAssignableFrom<TQuery>(Query);
             }
             catch (Exception e)
             {
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Needs_Reader()
+        public Task Needs_Reader()
         {
             try
             {
@@ -48,10 +50,11 @@ namespace M5x.DEC.TestKit.Integration.Qry
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Query()
+        public Task Needs_Query()
         {
             try
             {
@@ -62,6 +65,7 @@ namespace M5x.DEC.TestKit.Integration.Qry
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
     }
 }

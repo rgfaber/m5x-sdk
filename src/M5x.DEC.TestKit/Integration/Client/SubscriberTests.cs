@@ -19,7 +19,7 @@ namespace M5x.DEC.TestKit.Integration.Client
         where TEvent : IEvent<TAggregateId>
         where TSubscriber : ISubscriber<TAggregateId, TFact>
     {
-        public SubscriberTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
+        protected SubscriberTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using M5x.DEC.Events;
 using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
@@ -21,15 +22,17 @@ namespace M5x.DEC.TestKit.Unit.Domain
         protected IDECBus Bus;
         
         [Fact]
-        public void Must_IDMustBeAssignableFromTAggregateId()
+        public Task Must_IDMustBeAssignableFromTAggregateId()
         {
             Assert.IsAssignableFrom<TAggregateId>(ID);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_ID()
+        public Task Needs_ID()
         {
             Assert.NotNull(ID);
+            return Task.CompletedTask;
         }
         
         
@@ -44,22 +47,25 @@ namespace M5x.DEC.TestKit.Unit.Domain
 
 
         [Fact]
-        public void Needs_Aggregate()
+        public Task Needs_Aggregate()
         {
             Assert.NotNull(Aggregate);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_AggregateMustBeAssignableFromTAggregate()
+        public Task Must_AggregateMustBeAssignableFromTAggregate()
         {
             Assert.IsAssignableFrom<TAggregate>(Aggregate);
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Needs_DECBus()
+        public Task Needs_DECBus()
         {
             Assert.NotNull(Bus);
+            return Task.CompletedTask;
         }
 
         protected void GivenInputEvents(params IEvent<TAggregateId>[] events)

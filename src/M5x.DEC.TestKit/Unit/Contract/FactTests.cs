@@ -1,7 +1,9 @@
 using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
+using M5x.DEC.Schema.Utils;
 using M5x.Testing;
 using Shouldly;
 using Xunit;
@@ -21,7 +23,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
         }
 
         [Fact]
-        public void Needs_Fact()
+        public Task Needs_Fact()
         {
             try
             {
@@ -32,10 +34,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Should_FactShouldBeOfTypeTFact()
+        public Task Should_FactShouldBeOfTypeTFact()
         {
             try
             {
@@ -46,14 +49,15 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Should_FactMustHaveTopic()
+        public Task Should_FactMustHaveTopic()
         {
             try
             {
-                _attributedFactTopic = GetAttributedFactTopic();
+                _attributedFactTopic = AttributeUtils.GetTopic<TFact>();
                 Assert.False(string.IsNullOrWhiteSpace(_attributedFactTopic));
             }
             catch (Exception e)
@@ -61,14 +65,15 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_HaveExpectedFactTopic()
+        public Task Must_HaveExpectedFactTopic()
         {
             try
             {
-                _attributedFactTopic = GetAttributedFactTopic();
+                _attributedFactTopic = AttributeUtils.GetTopic<TFact>();
                 ExpectedFactTopic = GetExpectedFactTopic();
                 Assert.Equal(ExpectedFactTopic, _attributedFactTopic);
             }
@@ -77,16 +82,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         protected abstract string GetExpectedFactTopic();
 
-        private static string GetAttributedFactTopic()
-        {
-            var atts = (TopicAttribute[])typeof(TFact).GetCustomAttributes(typeof(TopicAttribute), true);
-            if (atts.Length == 0) throw new Exception($"Attribute 'Topic' is not defined on {typeof(TFact)}!");
-            return atts[0].Id;
-        }
 
 
         [Fact]

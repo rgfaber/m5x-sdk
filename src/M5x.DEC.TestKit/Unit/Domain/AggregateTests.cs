@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using M5x.DEC.Schema;
 using M5x.Testing;
 using Xunit;
@@ -23,21 +24,24 @@ namespace M5x.DEC.TestKit.Unit.Domain
 
 
         [Fact]
-        public void Needs_Aggregate()
+        public Task Needs_Aggregate()
         {
             Assert.NotNull(Aggregate);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_AggregateId()
+        public Task Needs_AggregateId()
         {
             Assert.NotNull(AggregateId);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_StateModel()
+        public Task Needs_StateModel()
         {
             Assert.NotNull(StateModel);
+            return Task.CompletedTask;
         }
 
 

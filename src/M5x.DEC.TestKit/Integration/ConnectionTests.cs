@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using M5x.Testing;
 using Xunit;
 using Xunit.Abstractions;
@@ -9,16 +10,18 @@ namespace M5x.DEC.TestKit.Integration
         protected object Connection;
 
         [Fact]
-        public void Needs_Connection()
+        public Task Needs_Connection()
         {
             Assert.NotNull(Connection);
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Must_ConnectionMustBeAssignableFromTConnection()
+        public Task Must_ConnectionBeOfTypeTConnection()
         {
             Assert.IsAssignableFrom<TConnection>(Connection);
+            return Task.CompletedTask;
         }
 
 

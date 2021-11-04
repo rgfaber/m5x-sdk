@@ -19,9 +19,10 @@ namespace M5x.DEC.TestKit.Integration.Client
         }
 
         [Fact]
-        public void Needs_Client()
+        public Task Needs_Client()
         {
             Assert.NotNull(_client);
+            return Task.CompletedTask;
         }
 
         [Fact]

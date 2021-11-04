@@ -28,53 +28,61 @@ namespace M5x.DEC.TestKit.Integration.Etl
         }
 
         [Fact]
-        public void Needs_Reader()
+        public Task Needs_Reader()
         {
             Assert.NotNull(Reader);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_ReaderMustBeAssignableFromTReader()
+        public Task Must_ReaderMustBeAssignableFromTReader()
         {
             Assert.IsAssignableFrom<TReader>(Reader);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Event()
+        public Task Needs_Event()
         {
             Assert.NotNull(Event);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_EventMustBeAssignableFromTEvent()
+        public Task Must_EventMustBeAssignableFromTEvent()
         {
             Assert.IsAssignableFrom<TEvent>(Event);
+            return Task.CompletedTask;
         }
         
         [Fact]
-        public void Needs_Query()
+        public Task Needs_Query()
         {
             Assert.NotNull(Query);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_QueryMustBeAssignableFromTQuery()
+        public Task Must_QueryMustBeAssignableFromTQuery()
         {
             Assert.IsAssignableFrom<TQuery>(Query);
+            return Task.CompletedTask;
         }
         
 
 
         [Fact]
-        public void Needs_Writer()
+        public Task Needs_Writer()
         {
             Assert.NotNull(Writer);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_WriterMustBeAssignableFromTWriter()
+        public Task Must_WriterMustBeAssignableFromTWriter()
         {
             Assert.IsAssignableFrom<TWriter>(Writer);
+            return Task.CompletedTask;
         }
         
 
@@ -108,9 +116,6 @@ namespace M5x.DEC.TestKit.Integration.Etl
             var deleted = await Reader.GetByIdAsync(Event.Meta.Id);
             Assert.True( string.IsNullOrWhiteSpace(deleted.Id));
         }
-
-        
-        
         
     }
 }

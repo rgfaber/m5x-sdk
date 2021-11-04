@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using M5x.DEC.Commands;
 using M5x.DEC.Events;
 using M5x.DEC.PubSub;
@@ -26,15 +27,17 @@ namespace M5x.DEC.TestKit.Unit.Domain
         }
 
         [Fact]
-        public void Needs_Aggregate()
+        public Task Needs_Aggregate()
         {
             Assert.NotNull(Aggregate);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_DECBus()
+        public Task Needs_DECBus()
         {
             Assert.NotNull(Bus);
+            return Task.CompletedTask;
         }
 
         private void Given(params Func<IAggregateRoot, bool>[] preConditions)

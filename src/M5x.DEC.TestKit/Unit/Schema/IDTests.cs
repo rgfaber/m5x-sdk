@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using M5x.DEC.Schema;
 using M5x.Testing;
 using Xunit;
@@ -14,9 +15,10 @@ namespace M5x.DEC.TestKit.Unit.Schema
         }
 
         [Fact]
-        public void Must_HaveID()
+        public Task Must_HaveID()
         {
             Assert.NotNull(ID);
+            return Task.CompletedTask;
         }
 
         protected override void Initialize()

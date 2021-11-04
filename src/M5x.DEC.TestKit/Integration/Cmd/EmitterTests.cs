@@ -41,57 +41,66 @@ namespace M5x.DEC.TestKit.Integration.Cmd
         }
         
         [Fact]
-        public void Needs_DECBus()
+        public Task Needs_DECBus()
         {
             Assert.NotNull(Bus);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_OutFact()
+        public Task Needs_OutFact()
         {
             Assert.NotNull(TestFacts.OutFact);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Emitter()
+        public Task Needs_Emitter()
         {
             Assert.NotNull(Emitter);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Subscriber()
+        public Task Needs_Subscriber()
         {
             Assert.NotNull(Subscriber);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Logger()
+        public Task Needs_Logger()
         {
             Assert.NotNull(Logger);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_FactHandler()
+        public Task Needs_FactHandler()
         {
             Assert.NotNull(FactHandler);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_EmitterMustHaveTopic()
+        public Task Must_EmitterMustHaveTopic()
         {
             Assert.False(string.IsNullOrWhiteSpace(Emitter.Topic));
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_EmitterMustHaveFactTopic()
+        public Task Must_EmitterMustHaveFactTopic()
         {
             Assert.Equal(Emitter.Topic, AttributeUtils.GetTopic<TFact>());
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_OutEvent()
+        public Task Needs_OutEvent()
         {
             Assert.NotNull(TestEvents.OutEvent);
+            return Task.CompletedTask;
         }
 
         [Fact]

@@ -34,71 +34,82 @@ namespace M5x.DEC.TestKit.Integration.Client
 
 
         [Fact]
-        public void Needs_Feedback()
+        public Task Needs_Feedback()
         {
             Assert.NotNull(Feedback);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_FeedbackMustBeTypeTFeedback()
+        public Task Must_FeedbackMustBeTypeTFeedback()
         {
             Assert.IsType<TFeedback>(Feedback);
+            return Task.CompletedTask;
         }
         
         
         [Fact]
-        public void Needs_ID()
+        public Task Needs_ID()
         {
             Assert.NotNull(Id);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_IDMustBeTypeTID()
+        public Task Must_IDMustBeTypeTID()
         {
             Assert.IsType<TID>(Id);
+            return Task.CompletedTask;
         }
 
 
         [Fact]
-        public void Needs_Responder()
+        public Task Needs_Responder()
         {
             Assert.NotNull(Responder);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Requester()
+        public Task Needs_Requester()
         {
             Assert.NotNull(Requester);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Logger()
+        public Task Needs_Logger()
         {
             Assert.NotNull(Logger);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_ResponderMustBeAssignableFromTResponder()
+        public Task Must_ResponderMustBeAssignableFromTResponder()
         {
             Assert.IsAssignableFrom<TResponder>(Responder);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_RequesterMustBeAssignableFromTRequester()
+        public Task Must_RequesterMustBeAssignableFromTRequester()
         {
             Assert.IsAssignableFrom<TRequester>(Requester);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Hope()
+        public Task Needs_Hope()
         {
             Assert.NotNull(Hope);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_HopeMustBeOfTypeTHope()
+        public Task Must_HopeMustBeOfTypeTHope()
         {
             Assert.IsType<THope>(Hope);
+            return Task.CompletedTask;
         }
         
         
@@ -128,30 +139,6 @@ namespace M5x.DEC.TestKit.Integration.Client
                 await _responder.StopAsync(cs.Token).ConfigureAwait(false);
             }
         }        
-        
-        
-        // public class TheFactHandler : IHopHandler<TID, THope>
-        // {
-        //     public Task HandleAsync(TFact fact)
-        //     {
-        //         EmitterTests<,,,,>.TestFacts.InFact = fact;
-        //         Assert.True(EmitterTests<,,,,>.TestFacts.OutFact.CorrelationId == EmitterTests<,,,,>.TestFacts.InFact.CorrelationId);
-        //         return Task.CompletedTask;
-        //     }
-        // }
-        //
-        // public static class TestFacts
-        // {
-        //     public static TFact InFact;
-        //     public static TFact OutFact;
-        // }
-        //
-        // public static class TestEvents
-        // {
-        //     public static TEvent OutEvent;
-        // }
-        
-        
  
     }
 }

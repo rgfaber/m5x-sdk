@@ -3,6 +3,7 @@
 ## November 2021
 
 ### v1.10.20
+- Improved DEC TestKit
 - Reader and Writer support for Redis  
 - Dependency Updates for Dapper, KubernetesClient, MudBlazor, Twilio, Serilog e.a
 

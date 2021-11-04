@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Threading.Tasks;
 using M5x.DEC.Schema;
 using M5x.Testing;
 using Xunit;
@@ -29,47 +30,54 @@ namespace M5x.DEC.TestKit.Unit.Domain
 
 
         [Fact]
-        public void Needs_CorrelationId()
+        public Task Needs_CorrelationId()
         {
             Assert.NotNull(CorrelationId);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Command()
+        public Task Needs_Command()
         {
             Assert.NotNull(Command);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Hope()
+        public Task Needs_Hope()
         {
             Assert.NotNull(Hope);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Feedback()
+        public Task Needs_Feedback()
         {
             Assert.NotNull(Feedback);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Fact()
+        public Task Needs_Fact()
         {
             Assert.NotNull(Fact);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_Event()
+        public Task Needs_Event()
         {
             Assert.NotNull(Event);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Must_EventMustBeDeserializable()
+        public Task Must_EventMustBeDeserializable()
         {
             var s = JsonSerializer.SerializeToUtf8Bytes(Event);
             var res = JsonSerializer.Deserialize<TEvent>(s);
             Assert.NotNull(res);
+            return Task.CompletedTask;
         }
     }
 }

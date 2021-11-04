@@ -39,15 +39,17 @@ namespace M5x.DEC.TestKit.Integration
         }
 
         [Fact]
-        public void Needs_Database()
+        public Task Needs_Database()
         {
             Assert.NotNull(Database);
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public void Needs_ReadModel()
+        public Task Needs_ReadModel()
         {
             Assert.NotNull(ReadModel);
+            return Task.CompletedTask;
         }
     }
 }
