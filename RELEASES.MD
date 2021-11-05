@@ -2,6 +2,9 @@
 
 ## November 2021
 
+### v1.10.21
+- Added Support for EtlWriter / TestKit for Redis and CouchDB
+
 ### v1.10.20
 - Improved DEC TestKit
 - Reader and Writer support for Redis  

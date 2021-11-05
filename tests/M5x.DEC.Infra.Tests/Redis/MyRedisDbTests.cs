@@ -9,9 +9,9 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.Infra.Tests.Redis
 {
-    public class MyRedisDbDbTests : RedisDbTests<MyReadModel>
+    public class MyRedisDbTests : RedisDbTests<MyReadModel>
     {
-        public MyRedisDbDbTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
+        public MyRedisDbTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
 

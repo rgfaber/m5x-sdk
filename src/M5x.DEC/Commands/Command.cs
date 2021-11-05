@@ -70,8 +70,8 @@ namespace M5x.DEC.Commands
             CorrelationId = correlationId;
         }
 
-        public TSourceIdentity SourceId { get; }
-        public TIdentity AggregateId { get; }
+        public TSourceIdentity SourceId { get; set; }
+        public TIdentity AggregateId { get; set; }
 
         public ISourceID GetSourceId()
         {

@@ -21,13 +21,20 @@ namespace M5x.DEC.Persistence
         Task<TReadModel> DeleteAsync(string id);
     }
 
-    public interface IEventWriter<TID, TEvent, TReadModel> : IEventHandler<TID, TEvent>
-        where TEvent : IEvent<TID> where TID : IIdentity
-        where TReadModel : IReadEntity
+    public interface IEventWriter<TID, TEvent, TModel> : IEventHandler<TID, TEvent>
+        where TEvent : IEvent<TID> 
+        where TID : IIdentity
+        where TModel : IReadEntity
     {
+        Task<TModel> UpdateAsync(TEvent evt);
+        Task<TModel> DeleteAsync(string id);
+    }
 
-        Task<TReadModel> UpdateAsync(TEvent evt);
-        Task<TReadModel> DeleteAsync(string id);
+
+    public interface IEtlWriter<in TEvent, TModel> : IEventHandler<IIdentity, TEvent>
+        where TEvent : IEvent<IIdentity>
+        where TModel : IReadEntity
+    {
     }
     
     

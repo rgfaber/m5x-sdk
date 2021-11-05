@@ -1,26 +1,33 @@
 using System.Threading.Tasks;
 using M5x.DEC.Events;
+using M5x.DEC.Infra;
 using M5x.DEC.Persistence;
 using M5x.DEC.Schema;
 using M5x.Testing;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration.Etl
 {
-    public abstract class EventWriterTests<TWriter, TReader, TID, TEvent, TReadModel, TQuery> : IoCTestsBase
-        where TWriter : IEventWriter<TID, TEvent, TReadModel>
+    public abstract class EventWriterTests<
+        TWriter, 
+        TInterpreter,
+        TReader, 
+        TEvent, 
+        TReadModel, 
+        TQuery> : IoCTestsBase
+        where TWriter : IEtlWriter<TEvent, TReadModel>
         where TReader : ISingleModelReader<TQuery, TReadModel>
-        where TID : IIdentity
         where TReadModel : IReadEntity
         where TQuery : IQuery
-        where TEvent : IEvent<TID>
-
+        where TEvent : IEvent<IIdentity>
+        where TInterpreter: IInterpreter<TReadModel, TEvent>
     {
-        protected IEvent<TID> Event;
+        protected IEvent<IIdentity> Event;
         protected IQuery Query;
         protected ISingleModelReader<TQuery,TReadModel> Reader;
-        protected IEventWriter<TID, TEvent, TReadModel> Writer;
+        protected IEtlWriter<TEvent, TReadModel> Writer;
         protected IReadEntity Model;
         
         protected EventWriterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
@@ -89,7 +96,8 @@ namespace M5x.DEC.TestKit.Integration.Etl
         [Fact]
         public async Task Must_WriteFactToDb()
         {
-            var res = await Writer.UpdateAsync((TEvent)Event);
+            await Writer.HandleAsync((TEvent)Event);
+            var res = await Reader.GetByIdAsync(Event.Meta.Id);
             Assert.NotNull(res);
             Assert.IsType<TReadModel>(res);
             Assert.Equal(Event.Meta.Id, res.Id);
@@ -105,17 +113,20 @@ namespace M5x.DEC.TestKit.Integration.Etl
             Assert.Equal(Event.Meta.Id, rsp.Id);
         }
 
+
         [Fact]
-        public async Task Must_DeleteFromDb()
+        public Task Needs_Interpreter()
         {
-            await Must_ExistInDb();
-            var delRsp = await Writer.DeleteAsync(Event.Meta.Id);
-            Assert.NotNull(delRsp);
-            Assert.Equal(Event.Meta.Id, delRsp.Id);
-            Assert.True(!string.IsNullOrWhiteSpace(delRsp.Prev));
-            var deleted = await Reader.GetByIdAsync(Event.Meta.Id);
-            Assert.True( string.IsNullOrWhiteSpace(deleted.Id));
+            Assert.NotNull(Interpreter);
+            return Task.CompletedTask;
         }
-        
+
+        [Fact]
+        public void Must_InterpreterMustBeAssignableToTInterpreter()
+        {
+            Interpreter.ShouldBeAssignableTo<TInterpreter>();
+        }
+
+        public object Interpreter { get; set; }
     }
 }
