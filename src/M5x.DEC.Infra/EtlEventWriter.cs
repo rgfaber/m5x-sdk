@@ -36,7 +36,6 @@ namespace M5x.DEC.Infra
             Transform(@event);
             await LoadAsync();
         }
-
         public abstract Task<TModel> DeleteAsync(string id);
     }
 }

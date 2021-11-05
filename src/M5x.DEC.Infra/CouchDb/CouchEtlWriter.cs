@@ -11,7 +11,7 @@ namespace M5x.DEC.Infra.CouchDb
         where TEvent : IEvent<IIdentity>
 
     {
-        private ICouchStore<TModel> CouchDb;
+        protected ICouchStore<TModel> CouchDb;
 
         protected CouchEtlWriter(IInterpreter<TModel, TEvent> interpreter, 
             ICouchStore<TModel> couchDb) : base(interpreter)
@@ -30,5 +30,10 @@ namespace M5x.DEC.Infra.CouchDb
             return await CouchDb.GetByIdAsync(@event.Meta.Id);
         }
 
+        public override Task<TModel> DeleteAsync(string id)
+        {
+            Guard.Against.NullOrEmpty(id, nameof(id));
+            return CouchDb.DeleteAsync(id);
+        }
     }
 }
