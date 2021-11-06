@@ -11,23 +11,25 @@ using Xunit.Abstractions;
 namespace M5x.DEC.TestKit.Integration.Etl
 {
     public abstract class EventWriterTests<
+        TID,
         TWriter, 
         TInterpreter,
         TReader, 
         TEvent, 
         TReadModel, 
         TQuery> : IoCTestsBase
-        where TWriter : IEtlWriter<TEvent, TReadModel>
+        where TWriter : IEtlWriter<TID,TEvent, TReadModel>
         where TReader : ISingleModelReader<TQuery, TReadModel>
         where TReadModel : IReadEntity
         where TQuery : IQuery
-        where TEvent : IEvent<IIdentity>
+        where TEvent : IEvent<TID>
         where TInterpreter: IInterpreter<TReadModel, TEvent>
+        where TID : IIdentity
     {
         protected IEvent<IIdentity> Event;
         protected IQuery Query;
         protected ISingleModelReader<TQuery,TReadModel> Reader;
-        protected IEtlWriter<TEvent, TReadModel> Writer;
+        protected IEtlWriter<TID, TEvent, TReadModel> Writer;
         protected IReadEntity Model;
         
         protected EventWriterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)

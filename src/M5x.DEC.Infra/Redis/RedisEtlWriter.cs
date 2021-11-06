@@ -7,10 +7,11 @@ using M5x.Redis;
 
 namespace M5x.DEC.Infra.Redis
 {
-    public abstract class RedisEtlEventWriter<TEvent, TReadModel> 
-        : EtlEventWriter<TEvent,TReadModel>
-        where TEvent : IEvent<IIdentity>
+    public abstract class RedisEtlWriter<TID,TEvent, TReadModel> 
+        : EtlEventWriter<TID,TEvent,TReadModel>
+        where TEvent : IEvent<TID>
         where TReadModel : IReadEntity
+        where TID : IIdentity
     {
         protected readonly IRedisDb Redis;
 
@@ -47,7 +48,7 @@ namespace M5x.DEC.Infra.Redis
         
         
 
-        protected RedisEtlEventWriter(IRedisDb redis, IInterpreter<TReadModel, TEvent> interpreter) : base(interpreter)
+        protected RedisEtlWriter(IRedisDb redis, IInterpreter<TReadModel, TEvent> interpreter) : base(interpreter)
         {
             Redis = redis;
         }

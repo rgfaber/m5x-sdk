@@ -7,10 +7,11 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.Infra
 {
-    public abstract class EtlEventWriter<TEvent, TModel> 
-        : IEtlWriter<TEvent, TModel>
+    public abstract class EtlEventWriter<TID, TEvent, TModel> 
+        : IEtlWriter<TID,TEvent, TModel>
         where TModel : IReadEntity
-        where TEvent : IEvent<IIdentity>
+        where TEvent : IEvent<TID>
+        where TID : IIdentity
     {
         private readonly IInterpreter<TModel, TEvent> _interpreter;
 

@@ -13,7 +13,8 @@ using Xunit.Abstractions;
 namespace M5x.DEC.TestKit.Tests
 {
     public class MyRedisWriterTests :
-    EventWriterTests<IMyRedisEventWriter, IMyInterpreter, IMySingletonRedisReader, MyEvent, MyReadModel,
+    EventWriterTests<MyID,
+        IMyRedisEventWriter, IMyInterpreter, IMySingletonRedisReader, MyEvent, MyReadModel,
         MySingletonQuery>
     {
         public MyRedisWriterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)

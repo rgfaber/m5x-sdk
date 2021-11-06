@@ -6,7 +6,7 @@ namespace M5x.DEC
 {
     public static class Guards
     {
-        public static void BadEvent(this IGuardClause clause, IEvent<IIdentity> evt)
+        public static void BadEvent<TID>(this IGuardClause clause, IEvent<TID> evt) where TID : IIdentity
         {
             Guard.Against.Null(evt, nameof(evt));
             Guard.Against.Null(evt.Meta, nameof(evt.Meta));

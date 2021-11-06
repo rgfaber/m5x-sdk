@@ -12,11 +12,11 @@ namespace M5x.DEC.TestKit.Tests.SuT.Infra.Redis
 {
     
     
-    public interface IMyRedisEventWriter :  IEtlWriter<MyEvent,MyReadModel>
+    public interface IMyRedisEventWriter :  IEtlWriter<MyID,MyEvent,MyReadModel>
     {
     }
     
-    internal class MyRedisEtlEventWriter : RedisEtlEventWriter<MyEvent, MyReadModel>, IMyRedisEventWriter
+    internal class MyRedisEtlWriter : RedisEtlWriter<MyID,MyEvent, MyReadModel>, IMyRedisEventWriter
     {
         // public async Task<MyReadModel> UpdateAsync(MyEvent evt)
         // {
@@ -51,7 +51,7 @@ namespace M5x.DEC.TestKit.Tests.SuT.Infra.Redis
         //     return Model;
         // }
 
-        public MyRedisEtlEventWriter(IRedisDb redis,
+        public MyRedisEtlWriter(IRedisDb redis,
             IInterpreter<MyReadModel, MyEvent> interpreter) : base(redis,
             interpreter)
         {

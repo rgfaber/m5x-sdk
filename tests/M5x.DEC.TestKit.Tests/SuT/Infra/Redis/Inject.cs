@@ -7,7 +7,7 @@ namespace M5x.DEC.TestKit.Tests.SuT.Infra.Redis
         public static IServiceCollection AddMyRedisWriter(this IServiceCollection services)
         {
             return services?
-                .AddTransient<IMyRedisEventWriter, MyRedisEtlEventWriter>();
+                .AddTransient<IMyRedisEventWriter, MyRedisEtlWriter>();
         }
 
         public static IServiceCollection AddMyRedisReaders(this IServiceCollection services)

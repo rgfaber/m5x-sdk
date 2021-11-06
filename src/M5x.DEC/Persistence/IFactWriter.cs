@@ -31,9 +31,10 @@ namespace M5x.DEC.Persistence
     }
 
 
-    public interface IEtlWriter<in TEvent, TModel> : IEventHandler<IIdentity, TEvent>
-        where TEvent : IEvent<IIdentity>
+    public interface IEtlWriter<TID, in TEvent, TModel> : IEventHandler<TID, TEvent>
+        where TEvent : IEvent<TID>
         where TModel : IReadEntity
+        where TID : IIdentity
     {
     }
     

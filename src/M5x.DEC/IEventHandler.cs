@@ -7,9 +7,9 @@ namespace M5x.DEC
 {
     public interface IEventHandler {}
 
-    public interface IEventHandler<TAggregateId, in TEvent> : IEventHandler
-        where TAggregateId : IIdentity
-        where TEvent : IEvent<TAggregateId>
+    public interface IEventHandler<TID, in TEvent> : IEventHandler
+        where TID : IIdentity
+        where TEvent : IEvent<TID>
     {
         Task HandleAsync(TEvent @event);
     }
