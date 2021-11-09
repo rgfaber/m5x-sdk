@@ -11,8 +11,8 @@ namespace M5x.DEC.TestKit.Integration
         {
             Assert.NotNull(Executor);
         }
-        
-        protected IHostExecutor Executor { get; set; }
+
+        protected IHostExecutor Executor;
 
 
         protected ConnectedTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)

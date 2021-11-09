@@ -1,6 +1,7 @@
 using FakeItEasy;
 using M5x.DEC.Events;
 using M5x.DEC.Schema;
+using M5x.DEC.TestKit.Tests.SuT.Domain;
 using M5x.Serilog;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +19,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
         public static IServiceCollection AddMyFakeActor(this IServiceCollection services)
         {
             var aFakeEventStream = A.Fake<IMyEventStream>();
-            var aFakeEmitter = A.Fake<IMyEmitter>();
+            var aFakeEmitter = A.Fake<IMyEventEmitter>();
             return services?
                 .AddConsoleLogger()
                 .AddDECBus()
@@ -30,7 +31,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
         public static IServiceCollection AddMyActor(this IServiceCollection services)
         {
             var aFakeEventStream = A.Fake<IMyEventStream>();
-            var aFakeEmitter = A.Fake<IMyEmitter>();
+            var aFakeEmitter = A.Fake<IMyEventEmitter>();
             return services?
                 .AddConsoleLogger()
                 .AddDECBus()

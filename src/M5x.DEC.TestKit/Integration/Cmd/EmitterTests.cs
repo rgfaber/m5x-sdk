@@ -9,6 +9,7 @@ using M5x.DEC.Schema.Extensions;
 using M5x.DEC.Schema.Utils;
 using M5x.Testing;
 using Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,8 +29,10 @@ namespace M5x.DEC.TestKit.Integration.Cmd
         where TEvent : IEvent<TAggregateId>
         where TSubscriber : ISubscriber<TAggregateId, TFact>
     {
+        
         protected IDECBus Bus;
-        protected IFactEmitter<TAggregateId,TEvent,TFact> Emitter;
+//        protected IFactEmitter<TAggregateId,TEvent,TFact> Emitter;
+        protected object Emitter;
         protected IFactHandler<TAggregateId, TFact> FactHandler;
         protected ILogger Logger;
         protected ISubscriber<TAggregateId,TFact> Subscriber;
@@ -85,14 +88,16 @@ namespace M5x.DEC.TestKit.Integration.Cmd
         [Fact]
         public Task Must_EmitterMustHaveTopic()
         {
-            Assert.False(string.IsNullOrWhiteSpace(Emitter.Topic));
+            Assert.False(string.IsNullOrWhiteSpace(((TEmitter)Emitter).Topic));
             return Task.CompletedTask;
         }
 
         [Fact]
         public Task Must_EmitterMustHaveFactTopic()
         {
-            Assert.Equal(Emitter.Topic, AttributeUtils.GetTopic<TFact>());
+            Assert.Equal(
+                ((IFactEmitter<TAggregateId,TEvent,TFact>)Emitter).Topic, 
+                AttributeUtils.GetTopic<TFact>());
             return Task.CompletedTask;
         }
 
@@ -115,7 +120,7 @@ namespace M5x.DEC.TestKit.Integration.Cmd
             {
                 await subHost.StartAsync(cs.Token);
                 Output?.WriteLine($"Emitting Fact: {TestFacts.OutFact}");
-                await Emitter.HandleAsync(TestEvents.OutEvent).ConfigureAwait(false);
+                await ((IFactEmitter<TAggregateId,TEvent,TFact>)Emitter).HandleAsync(TestEvents.OutEvent).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -128,6 +133,11 @@ namespace M5x.DEC.TestKit.Integration.Cmd
                 await subHost.StopAsync(cs.Token).ConfigureAwait(false);
             }
         }
+        
+        
+        
+        
+        
         
         public class TheFactHandler : IFactHandler<TAggregateId, TFact>
         {
@@ -149,5 +159,13 @@ namespace M5x.DEC.TestKit.Integration.Cmd
         {
             public static TEvent OutEvent;
         }
+        
     }
+    
+
+    
+ 
+    
+    
+    
 }

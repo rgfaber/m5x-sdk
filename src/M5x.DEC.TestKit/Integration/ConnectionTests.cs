@@ -21,7 +21,8 @@ namespace M5x.DEC.TestKit.Integration
         [Fact]
         public Task Must_ConnectionBeOfTypeTConnection()
         {
-            Connection.ShouldBeAssignableTo<TConnection>();
+            Assert.IsAssignableFrom<TConnection>(Connection);
+//            Connection.ShouldBeAssignableTo<TConnection>();
             return Task.CompletedTask;
         }
 
