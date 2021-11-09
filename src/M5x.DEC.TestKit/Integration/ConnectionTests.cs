@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using M5x.Testing;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ namespace M5x.DEC.TestKit.Integration
         [Fact]
         public Task Must_ConnectionBeOfTypeTConnection()
         {
-            Assert.IsAssignableFrom<TConnection>(Connection);
+            Connection.ShouldBeAssignableTo<TConnection>();
             return Task.CompletedTask;
         }
 
