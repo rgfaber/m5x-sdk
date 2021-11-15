@@ -13,9 +13,9 @@ using Xunit.Abstractions;
 namespace M5x.DEC.TestKit.Tests
 {
     public class MyRedisWriterTests :
-    EventWriterTests<MyID,
-        IMyRedisEventWriter, IMyInterpreter, IMySingletonRedisReader, MyEvent, MyReadModel,
-        MySingletonQuery>
+        EventWriterTests<MyID,
+            IMyRedisEventWriter, IMyInterpreter, IMySingletonRedisReader, MyEvent, MyReadModel,
+            MySingletonQuery>
     {
         public MyRedisWriterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
@@ -32,7 +32,6 @@ namespace M5x.DEC.TestKit.Tests
 
         protected override void SetTestEnvironment()
         {
-            
         }
 
         protected override void InjectDependencies(IServiceCollection services)
@@ -51,15 +50,15 @@ namespace M5x.DEC.TestKit.Tests
             do
             {
                 var cmd = faker.Current;
-                if(cmd==null) continue;
+                if (cmd == null) continue;
                 var evt = MyEvent.New(cmd);
                 await Writer.HandleAsync(evt);
-                var exp = await Reader.GetByIdAsync(@evt.Meta.Id);
+                var exp = await Reader.GetByIdAsync(evt.Meta.Id);
                 exp.Content.ShouldBeEquivalentTo(evt.Payload);
             } while (faker.MoveNext());
         }
-        
-        
+
+
         [Fact]
         public async Task Should_BeAbleToWrite10000Events()
         {
@@ -67,17 +66,12 @@ namespace M5x.DEC.TestKit.Tests
             do
             {
                 var cmd = faker.Current;
-                if(cmd==null) continue;
+                if (cmd == null) continue;
                 var evt = MyEvent.New(cmd);
                 await Writer.HandleAsync(evt);
-                var exp = await Reader.GetByIdAsync(@evt.Meta.Id);
+                var exp = await Reader.GetByIdAsync(evt.Meta.Id);
                 exp.Content.ShouldBeEquivalentTo(evt.Payload);
             } while (faker.MoveNext());
         }
-
-        
-        
-        
-        
     }
 }

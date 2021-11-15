@@ -10,6 +10,7 @@ namespace M5x.RabbitMQ
         public static string Password = DotEnv.Get(EnVars.RABBITMQ_PWD) ?? "guest";
         public static int Port = Convert.ToInt32(DotEnv.Get(EnVars.RABBITMQ_PORT) ?? "5672");
         public static string VHost = DotEnv.Get(EnVars.RABBITMQ_VHOST) ?? "/";
+
         public static bool DispatchConsumerAsync =
             Convert.ToBoolean(DotEnv.Get(EnVars.RABBITMQ_DISPATCH_CONSUMER_ASYNC));
     }

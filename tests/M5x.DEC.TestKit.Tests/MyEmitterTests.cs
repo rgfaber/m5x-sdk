@@ -59,6 +59,5 @@ namespace M5x.DEC.TestKit.Tests
                 .AddMyEventEmitter()
                 .AddMySubscriber();
         }
-
     }
 }

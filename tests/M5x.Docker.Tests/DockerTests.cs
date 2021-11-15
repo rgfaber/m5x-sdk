@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using M5x.Docker.Interfaces;
 using M5x.Docker.Models;
 using M5x.Testing;
@@ -19,7 +18,6 @@ namespace M5x.Docker.Tests
 
         protected override void Initialize()
         {
-        
         }
 
         protected override void SetTestEnvironment()

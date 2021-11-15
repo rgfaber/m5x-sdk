@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using M5x.DEC.Schema;
@@ -39,7 +38,5 @@ namespace M5x.DEC.TestKit.Unit.Schema
             Assert.IsType<TReadModel>(des);
             return Task.CompletedTask;
         }
-        
-        
     }
 }

@@ -18,27 +18,28 @@ namespace M5x.DEC.Infra.RabbitMq
 {
     public static class Guards
     {
-        public static void NoFactHandlersRegistered<TAggregateId, TFact>( this IGuardClause clause,
-            IEnumerable<IFactHandler<TAggregateId, TFact>> handlers, string paramName=null) 
+        public static void NoFactHandlersRegistered<TAggregateId, TFact>(this IGuardClause clause,
+            IEnumerable<IFactHandler<TAggregateId, TFact>> handlers, string paramName = null)
             where TFact : IFact
             where TAggregateId : IIdentity
         {
-            if ( handlers == null || !handlers.Any() )  
-                throw new ArgumentException($"No Fact Handlers Registered for {typeof(TFact).PrettyPrint()}", paramName);
+            if (handlers == null || !handlers.Any())
+                throw new ArgumentException($"No Fact Handlers Registered for {typeof(TFact).PrettyPrint()}",
+                    paramName);
         }
     }
-    
-    public abstract class RMqSubscriber<TAggregateId, TFact> 
+
+    public abstract class RMqSubscriber<TAggregateId, TFact>
         : BackgroundService, ISubscriber<TAggregateId, TFact>
         where TAggregateId : IIdentity
         where TFact : IFact
     {
-        private readonly IConnectionFactory _connFact;
         private readonly IDECBus _bus;
-        private IModel _channel;
-        private IConnection _connection;
+        private readonly IConnectionFactory _connFact;
         private readonly IEnumerable<IFactHandler<TAggregateId, TFact>> _handlers;
         private readonly ILogger _logger;
+        private IModel _channel;
+        private IConnection _connection;
 
 
         protected RMqSubscriber(
@@ -67,6 +68,21 @@ namespace M5x.DEC.Infra.RabbitMq
             consumer.Received += FactReceived;
             _channel.BasicConsume(queueName, true, consumer);
             return Task.CompletedTask;
+        }
+
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            _connection?.Close();
+            _channel?.Close();
+            return base.StopAsync(cancellationToken);
+        }
+
+
+        public override void Dispose()
+        {
+            _connection?.Dispose();
+            _channel?.Dispose();
+            base.Dispose();
         }
 
         private string GetTopic()
@@ -99,36 +115,24 @@ namespace M5x.DEC.Infra.RabbitMq
             {
                 Guard.Against.NoFactHandlersRegistered(_handlers, nameof(_handlers));
                 Guard.Against.Null(fact, nameof(fact));
-                foreach (var handler in _handlers) 
+                foreach (var handler in _handlers)
                     handler.HandleAsync(fact);
             }
             catch (Exception e)
             {
                 _logger?.Error(e.InnerAndOuter());
             }
+
             return Task.CompletedTask;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
-            { }
+            {
+            }
+
             return Task.CompletedTask;
-        }
-
-        public override Task StopAsync(CancellationToken cancellationToken)
-        {
-            _connection?.Close();
-            _channel?.Close();
-            return base.StopAsync(cancellationToken);
-        }
-
-
-        public override void Dispose()
-        {
-            _connection?.Dispose();
-            _channel?.Dispose();
-            base.Dispose();
         }
     }
 }

@@ -5,16 +5,16 @@ using EventStore.Client;
 
 namespace M5x.EventStore.Interfaces
 {
-  /// <summary>
-  ///     The client used to manage persistent subscriptions in the EventStoreDB.
-  /// </summary>
-  /// <footer>
-  ///     <a href="https://www.google.com/search?q=EventStore.Client.EventStorePersistentSubscriptionsClient">
-  ///         `EventStorePersistentSubscriptionsClient`
-  ///         on google.com
-  ///     </a>
-  /// </footer>
-  public interface IEsPersistentSubscriptionsClient : IEsClientBase
+    /// <summary>
+    ///     The client used to manage persistent subscriptions in the EventStoreDB.
+    /// </summary>
+    /// <footer>
+    ///     <a href="https://www.google.com/search?q=EventStore.Client.EventStorePersistentSubscriptionsClient">
+    ///         `EventStorePersistentSubscriptionsClient`
+    ///         on google.com
+    ///     </a>
+    /// </footer>
+    public interface IEsPersistentSubscriptionsClient : IEsClientBase
     {
         public Task CreateAsync(
             string streamName,

@@ -6,7 +6,7 @@ namespace M5x.DEC.Schema
         {
         }
 
-        protected SingletonQuery(string id,string correlationId) : base(correlationId)
+        protected SingletonQuery(string id, string correlationId) : base(correlationId)
         {
             Id = id;
             CorrelationId = correlationId;

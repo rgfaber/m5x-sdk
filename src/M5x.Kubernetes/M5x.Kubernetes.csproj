@@ -6,12 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="KubernetesClient" Version="6.0.23" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+        <PackageReference Include="KubernetesClient" Version="6.0.24"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove=".kubernetes.env" />
+        <None Remove=".kubernetes.env"/>
         <EmbeddedResource Include=".env">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>

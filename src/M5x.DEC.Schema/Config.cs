@@ -1,18 +1,15 @@
 using System;
 using M5x.Config;
 
-
 namespace M5x.DEC.Schema
 {
-
-
     public enum IDCreationPolicy
     {
         Strict = 1,
         Liberal = 2
     }
-    
-    
+
+
     public static class Config
     {
         public static IDCreationPolicy IdCreationPolicy =
@@ -23,6 +20,4 @@ namespace M5x.DEC.Schema
     {
         public const string DEC_ID_CREATION_POLICY = "DEC_ID_CREATION_POLICY";
     }
-    
-    
 }

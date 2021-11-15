@@ -197,10 +197,9 @@ namespace M5x.Extensions
             var md5 = MD5.Create();
             var inputBytes = Encoding.ASCII.GetBytes(value);
             var hash = md5.ComputeHash(inputBytes);
-            
+
             // step2, use BitConverter to convert the hash to integer
             return BitConverter.ToInt32(hash);
-
         }
     }
 }

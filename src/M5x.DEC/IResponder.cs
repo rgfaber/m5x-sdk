@@ -8,8 +8,8 @@ namespace M5x.DEC
     {
         string Topic { get; }
     }
-    
-    public interface IResponder<TID, THope, TCmd, TFeedback> :  IResponder
+
+    public interface IResponder<TID, THope, TCmd, TFeedback> : IResponder
         where TID : IIdentity
         where THope : IHope
         where TCmd : ICommand<TID>

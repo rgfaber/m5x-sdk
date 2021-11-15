@@ -13,7 +13,7 @@ using Serilog;
 
 namespace M5x.DEC.Infra.STAN
 {
-    public abstract class STANAsyncResponder<TID, THope, TCmd, TFeedback> 
+    public abstract class STANAsyncResponder<TID, THope, TCmd, TFeedback>
         : BackgroundService, IResponder<TID, THope, TCmd, TFeedback>
         where TID : IIdentity
         where THope : IHope
@@ -83,6 +83,7 @@ namespace M5x.DEC.Infra.STAN
                 _logger.Fatal(_logMessage);
                 _subscription.DrainAsync();
             }
+
             return Task.CompletedTask;
         }
 
@@ -105,9 +106,9 @@ namespace M5x.DEC.Infra.STAN
             while (!stoppingToken.IsCancellationRequested)
             {
             }
+
             return Task.CompletedTask;
         }
-
 
 
         protected abstract TCmd ToCommand(THope hope);

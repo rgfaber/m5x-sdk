@@ -23,7 +23,6 @@ namespace M5x.DEC.Infra.STAN
         private string _logMessage;
 
 
-
         protected STANRequester(IEncodedConnection conn, ILogger logger, AsyncRetryPolicy retryPolicy = null)
         {
             _conn = conn;

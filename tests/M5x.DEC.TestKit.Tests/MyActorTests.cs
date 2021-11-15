@@ -1,6 +1,4 @@
-using System.CodeDom;
 using System.Threading.Tasks;
-using FakeItEasy;
 using M5x.Config;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema.Common;
@@ -16,12 +14,11 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-
 namespace M5x.DEC.TestKit.Tests
 {
     public class MyActorTests : ActorTests<
-        IMyActor, 
-        MyAggregate, 
+        IMyActor,
+        MyAggregate,
         MyID, MyCommand, MyFeedback, IMyBroadcaster>
     {
         public MyActorTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
@@ -38,7 +35,6 @@ namespace M5x.DEC.TestKit.Tests
             Aggregate = MyAggregate.New((MyID)ID, MyReadModel.New(ID.Value, ID.Value));
             Bus = Container.GetRequiredService<IDECBus>();
             Caster = Container.GetRequiredService<IMyBroadcaster>();
-            
         }
 
 
@@ -71,10 +67,5 @@ namespace M5x.DEC.TestKit.Tests
             var res = await ((IMyActor)Actor).HandleAsync(cmd).ConfigureAwait(false);
             res.IsSuccess.ShouldBe(false);
         }
-        
-        
-        
-        
-        
     }
 }

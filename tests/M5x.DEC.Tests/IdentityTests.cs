@@ -1,15 +1,12 @@
 using System;
-using System.CodeDom;
 using M5x.DEC.Schema;
 using M5x.Testing;
-using MappedTfsoApi.Soap.InvoiceService;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace M5x.DEC.Tests
 {
-    
     [IDPrefix(Prefix)]
     public record TestID : Identity<TestID>
     {
@@ -17,13 +14,15 @@ namespace M5x.DEC.Tests
 
         public TestID(string value) : base(value)
         {
-            
         }
-
     }
 
     public class IdentityTests : IoCTestsBase
     {
+        public IdentityTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
+        {
+        }
+
         [Fact]
         public void Should_IdentityMustGiveErrorIfEmpty()
         {
@@ -70,31 +69,17 @@ namespace M5x.DEC.Tests
                 Assert.True(false);
             }
         }
-        
-        
-       
-        
-        
-        
-        
-
-        public IdentityTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
-        {
-        }
 
         protected override void Initialize()
         {
-            
         }
 
         protected override void SetTestEnvironment()
         {
-            
         }
 
         protected override void InjectDependencies(IServiceCollection services)
         {
-            
         }
     }
 }

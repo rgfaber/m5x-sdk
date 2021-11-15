@@ -6,16 +6,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.OpenApi" Version="1.2.3"/>
-        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="13.13.2"/>
-        <PackageReference Include="NSwag.Core" Version="13.13.2"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.3"/>
+        <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
+        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="13.14.4" />
+        <PackageReference Include="NSwag.Core" Version="13.14.4" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\M5x.AsciiArt\M5x.AsciiArt.csproj"/>
-        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj"/>
+        <ProjectReference Include="..\M5x.AsciiArt\M5x.AsciiArt.csproj" />
+        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj" />
     </ItemGroup>
 
 </Project>

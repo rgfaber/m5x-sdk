@@ -8,8 +8,6 @@ using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
 using M5x.DEC.Schema.Utils;
 using M5x.Testing;
-using Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.Internal;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -23,26 +21,25 @@ namespace M5x.DEC.TestKit.Integration.Cmd
         TAggregateId,
         TEvent,
         TFact> : ConnectedTests<TConnection>
-        where TEmitter : IFactEmitter<TAggregateId,TEvent,TFact>
+        where TEmitter : IFactEmitter<TAggregateId, TEvent, TFact>
         where TAggregateId : IIdentity
         where TFact : IFact
         where TEvent : IEvent<TAggregateId>
         where TSubscriber : ISubscriber<TAggregateId, TFact>
     {
-        
         protected IDECBus Bus;
+
 //        protected IFactEmitter<TAggregateId,TEvent,TFact> Emitter;
         protected object Emitter;
         protected IFactHandler<TAggregateId, TFact> FactHandler;
         protected ILogger Logger;
-        protected ISubscriber<TAggregateId,TFact> Subscriber;
-        
+        protected ISubscriber<TAggregateId, TFact> Subscriber;
 
 
         public EmitterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
-        
+
         [Fact]
         public Task Needs_DECBus()
         {
@@ -96,7 +93,7 @@ namespace M5x.DEC.TestKit.Integration.Cmd
         public Task Must_EmitterMustHaveFactTopic()
         {
             Assert.Equal(
-                ((IFactEmitter<TAggregateId,TEvent,TFact>)Emitter).Topic, 
+                ((IFactEmitter<TAggregateId, TEvent, TFact>)Emitter).Topic,
                 AttributeUtils.GetTopic<TFact>());
             return Task.CompletedTask;
         }
@@ -120,7 +117,8 @@ namespace M5x.DEC.TestKit.Integration.Cmd
             {
                 await subHost.StartAsync(cs.Token);
                 Output?.WriteLine($"Emitting Fact: {TestFacts.OutFact}");
-                await ((IFactEmitter<TAggregateId,TEvent,TFact>)Emitter).HandleAsync(TestEvents.OutEvent).ConfigureAwait(false);
+                await ((IFactEmitter<TAggregateId, TEvent, TFact>)Emitter).HandleAsync(TestEvents.OutEvent)
+                    .ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -133,12 +131,8 @@ namespace M5x.DEC.TestKit.Integration.Cmd
                 await subHost.StopAsync(cs.Token).ConfigureAwait(false);
             }
         }
-        
-        
-        
-        
-        
-        
+
+
         public class TheFactHandler : IFactHandler<TAggregateId, TFact>
         {
             public Task HandleAsync(TFact fact)
@@ -159,13 +153,5 @@ namespace M5x.DEC.TestKit.Integration.Cmd
         {
             public static TEvent OutEvent;
         }
-        
     }
-    
-
-    
- 
-    
-    
-    
 }

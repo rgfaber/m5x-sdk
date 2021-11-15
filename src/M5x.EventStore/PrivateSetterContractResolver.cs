@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-
 namespace M5x.EventStore
 {
     public class PrivateSetterContractResolver : DefaultContractResolver

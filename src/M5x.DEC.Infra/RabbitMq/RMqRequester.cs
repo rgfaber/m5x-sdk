@@ -19,18 +19,18 @@ namespace M5x.DEC.Infra.RabbitMq
         where THope : class, IHope
         where TFeedback : class, IFeedback
     {
-        private IModel _channel;
-        private IConnection _connection;
         private readonly IConnectionFactory _connFact;
         private readonly ILogger _logger;
         private readonly int _maxRetries = Polly.Config.MaxRetries;
-        private IBasicProperties _props;
-        private BlockingCollection<TFeedback> _responseQ;
         private readonly AsyncRetryPolicy _retryPolicy;
-        private AsyncEventingBasicConsumer _rspConsumer;
-        private string _rspQName;
+        private IModel _channel;
+        private IConnection _connection;
         private string _correlationId;
         private string _logMessage;
+        private IBasicProperties _props;
+        private BlockingCollection<TFeedback> _responseQ;
+        private AsyncEventingBasicConsumer _rspConsumer;
+        private string _rspQName;
 
         protected RMqRequester(IConnectionFactory connFact,
             ILogger logger, AsyncRetryPolicy retryPolicy = null)
@@ -45,7 +45,9 @@ namespace M5x.DEC.Infra.RabbitMq
             // Setup RabbitMQ RPC
             // reference: https://www.rabbitmq.com/tutorials/tutorial-six-dotnet.html
         }
+
         public string Topic => GetTopic();
+
         public Task<TFeedback> RequestAsync(THope hope, CancellationToken cancellationToken = default)
         {
             return _retryPolicy.ExecuteAsync(() =>
@@ -82,7 +84,14 @@ namespace M5x.DEC.Infra.RabbitMq
                 return Task.FromResult(fbk);
             });
         }
-        
+
+        public void Dispose()
+        {
+            _channel?.Dispose();
+            _connection?.Dispose();
+            _responseQ?.Dispose();
+        }
+
         private Task RspConsumerOnReceived(object sender, BasicDeliverEventArgs ea)
         {
             var body = ea.Body;
@@ -91,19 +100,13 @@ namespace M5x.DEC.Infra.RabbitMq
                 _responseQ.Add(rsp);
             return Task.CompletedTask;
         }
+
         private string GetTopic()
         {
             var attrs = (TopicAttribute[])typeof(THope).GetCustomAttributes(typeof(TopicAttribute), true);
             return attrs.Length > 0
                 ? attrs[0].Id
                 : throw new ArgumentException($"No Topic Defined on {typeof(THope)}!");
-        }
-
-        public void Dispose()
-        {
-            _channel?.Dispose();
-            _connection?.Dispose();
-            _responseQ?.Dispose();
         }
     }
 }

@@ -9,29 +9,34 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Unit.Domain
 {
-    public abstract class ActorTests<TActor, TAggregate, TId, TCommand, TFeedback, TBroadcaster> 
+    public abstract class ActorTests<TActor, TAggregate, TId, TCommand, TFeedback, TBroadcaster>
         : IoCTestsBase
         where TActor : IAsyncActor<TId, TCommand, TFeedback>
         where TFeedback : IFeedback
         where TAggregate : IAggregateRoot
         where TId : IIdentity
         where TCommand : ICommand<TId>
-        where TBroadcaster: IBroadcaster<TId>
+        where TBroadcaster : IBroadcaster<TId>
 
     {
-        protected IIdentity ID;
 //        protected IAsyncActor<TId,TCommand,TFeedback> Actor;
         protected object Actor;
+        protected IAggregateRoot Aggregate;
+
+        protected IDECBus Bus;
         protected ICommand Command;
         protected IFeedback Feedback;
-        protected IAggregateRoot Aggregate;
+        protected IIdentity ID;
 
         protected ActorTests(ITestOutputHelper output,
             IoCTestContainer container) : base(output, container)
         {
         }
-        
-        
+
+
+        protected object Caster { get; set; }
+
+
         [Fact]
         public Task Needs_Broadcaster()
         {
@@ -45,13 +50,7 @@ namespace M5x.DEC.TestKit.Unit.Domain
             Caster.ShouldBeAssignableTo<TBroadcaster>();
             return Task.CompletedTask;
         }
-       
-        
-        protected object Caster { get; set; }
 
-        
-        
-        
 
         [Fact]
         public Task Needs_DECBus()
@@ -59,10 +58,6 @@ namespace M5x.DEC.TestKit.Unit.Domain
             Assert.NotNull(Bus);
             return Task.CompletedTask;
         }
-
-        protected IDECBus Bus;
-        
-        
 
 
         [Fact]
@@ -106,7 +101,7 @@ namespace M5x.DEC.TestKit.Unit.Domain
             Assert.IsType<TId>(ID);
             return Task.CompletedTask;
         }
-        
+
 
         [Fact]
         public Task Must_ActorMustBeAssignableFromTActor()

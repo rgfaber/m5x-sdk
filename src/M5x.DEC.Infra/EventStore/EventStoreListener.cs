@@ -13,7 +13,7 @@ using Serilog;
 
 namespace M5x.DEC.Infra.EventStore
 {
-    public abstract class EventStoreListener<TAggregateId> : BackgroundService 
+    public abstract class EventStoreListener<TAggregateId> : BackgroundService
         where TAggregateId : IIdentity
     {
         private readonly IDECBus _bus;
@@ -42,6 +42,7 @@ namespace M5x.DEC.Infra.EventStore
             while (!stoppingToken.IsCancellationRequested)
             {
             }
+
             return Task.CompletedTask;
         }
 
@@ -76,14 +77,15 @@ namespace M5x.DEC.Infra.EventStore
                     EventAppeared,
                     false,
                     SubscriptionDropped,
-                    cancellationToken: cancellationToken, filterOptions: 
-                    new SubscriptionFilterOptions( StreamFilter.Prefix( AttributeUtils.GetIdPrefix<TAggregateId>() ) ));
+                    cancellationToken: cancellationToken, filterOptions:
+                    new SubscriptionFilterOptions(StreamFilter.Prefix(AttributeUtils.GetIdPrefix<TAggregateId>())));
             }
             catch (Exception e)
             {
                 _logger?.Fatal($"::EXCEPTION {e.Message})");
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -91,8 +93,8 @@ namespace M5x.DEC.Infra.EventStore
         {
         }
 
-        private Task EventAppeared(StreamSubscription sub, 
-            ResolvedEvent evt, 
+        private Task EventAppeared(StreamSubscription sub,
+            ResolvedEvent evt,
             CancellationToken cancellationToken)
         {
             var e = SerializationHelper.Deserialize<TAggregateId>(evt);

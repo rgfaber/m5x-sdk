@@ -1,10 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using M5x.DEC.Persistence;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
-using M5x.DEC.TestKit.Integration.Cmd;
 using M5x.Testing;
 using Serilog;
 using Xunit;
@@ -12,20 +10,20 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration.Client
 {
-    public abstract class RequesterTests<TConnection,TResponder, TRequester, TID, THope, TFeedback> : ConnectedTests<TConnection>
+    public abstract class
+        RequesterTests<TConnection, TResponder, TRequester, TID, THope, TFeedback> : ConnectedTests<TConnection>
         where TResponder : IResponder
         where TID : IIdentity
         where THope : IHope
         where TFeedback : IFeedback
-        where TRequester: IRequester<THope,TFeedback>
+        where TRequester : IRequester<THope, TFeedback>
     {
-        protected ILogger Logger;
-        protected IRequester<THope,TFeedback> Requester;
-        protected IResponder Responder;
+        protected IFeedback Feedback;
         protected IHope Hope;
         protected IIdentity Id;
-        protected IFeedback Feedback;
-        
+        protected ILogger Logger;
+        protected IRequester<THope, TFeedback> Requester;
+        protected IResponder Responder;
 
 
         public RequesterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
@@ -46,8 +44,8 @@ namespace M5x.DEC.TestKit.Integration.Client
             Assert.IsType<TFeedback>(Feedback);
             return Task.CompletedTask;
         }
-        
-        
+
+
         [Fact]
         public Task Needs_ID()
         {
@@ -111,8 +109,8 @@ namespace M5x.DEC.TestKit.Integration.Client
             Assert.IsType<THope>(Hope);
             return Task.CompletedTask;
         }
-        
-        
+
+
         [Fact]
         public async Task Should_ResponderShouldRespondToHope()
         {
@@ -138,7 +136,6 @@ namespace M5x.DEC.TestKit.Integration.Client
                 cs.Cancel();
                 await _responder.StopAsync(cs.Token).ConfigureAwait(false);
             }
-        }        
- 
+        }
     }
 }

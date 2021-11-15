@@ -26,7 +26,6 @@ namespace M5x.DEC.Infra.STAN
         private string _logMessage;
         private IAsyncSubscription _subscription;
 
-        
 
         protected STANResponder(IEncodedConnection conn,
             IActor<TID, TCmd, TFeedback> actor,
@@ -74,11 +73,12 @@ namespace M5x.DEC.Infra.STAN
             return atts[0].Id;
         }
 
-        protected override  Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
             }
+
             return Task.CompletedTask;
         }
 

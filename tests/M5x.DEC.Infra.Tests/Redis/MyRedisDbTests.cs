@@ -32,5 +32,8 @@ namespace M5x.DEC.Infra.Tests.Redis
             services
                 .AddSingletonRedisDb();
         }
+        
+        
+        
     }
 }

@@ -10,11 +10,12 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.Persistence
 {
-    
-    public interface IAsyncEventStream {}
-    
+    public interface IAsyncEventStream
+    {
+    }
+
     public interface IAsyncEventStream<TAggregate, TAggregateId> : IAsyncEventStream
-        where TAggregate : IAggregate<TAggregateId> 
+        where TAggregate : IAggregate<TAggregateId>
         where TAggregateId : IIdentity
     {
         Task<TAggregate> GetByIdAsync(TAggregateId id);

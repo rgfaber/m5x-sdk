@@ -1,22 +1,15 @@
-using System;
-using System.Threading.Tasks;
-using Ardalis.GuardClauses;
 using M5x.DEC.Infra;
 using M5x.DEC.Infra.Redis;
 using M5x.DEC.Persistence;
-using M5x.DEC.Schema.Extensions;
 using M5x.Redis;
-
 
 namespace M5x.DEC.TestKit.Tests.SuT.Infra.Redis
 {
-    
-    
-    public interface IMyRedisEventWriter :  IEtlWriter<MyID,MyEvent,MyReadModel>
+    public interface IMyRedisEventWriter : IEtlWriter<MyID, MyEvent, MyReadModel>
     {
     }
-    
-    internal class MyRedisEtlWriter : RedisEtlWriter<MyID,MyEvent, MyReadModel>, IMyRedisEventWriter
+
+    internal class MyRedisEtlWriter : RedisEtlWriter<MyID, MyEvent, MyReadModel>, IMyRedisEventWriter
     {
         // public async Task<MyReadModel> UpdateAsync(MyEvent evt)
         // {

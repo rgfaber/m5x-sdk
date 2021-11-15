@@ -13,17 +13,17 @@ using Serilog;
 namespace M5x.DEC.Infra.STAN
 {
     public abstract class STANEmitter<TAggregateId, TEvent, TFact>
-        : IEventHandler<TAggregateId,TEvent>, IDisposable
+        : IEventHandler<TAggregateId, TEvent>, IDisposable
         //: IFactEmitter<TAggregateId, TEvent, TFact>
         where TFact : IFact
         where TAggregateId : IIdentity
         where TEvent : IEvent<TAggregateId>
     {
+        private readonly int _backoff = 100;
         private readonly IEncodedConnection _conn;
         private readonly ILogger _logger;
         private readonly int _maxRetries = Polly.Config.MaxRetries;
         private readonly AsyncRetryPolicy _retryPolicy;
-        private readonly int _backoff = 100;
         private string _logMessage;
 
 
@@ -43,6 +43,11 @@ namespace M5x.DEC.Infra.STAN
 
         public string Topic => GetTopic();
 
+        public void Dispose()
+        {
+            _conn?.Dispose();
+        }
+
         public Task HandleAsync(TEvent @event)
         {
             var fact = ToFact(@event);
@@ -61,6 +66,7 @@ namespace M5x.DEC.Infra.STAN
                     _logMessage = $"[{Topic}]-EMIT  {fact.Meta}";
                     _logger?.Debug(_logMessage);
                 }
+
                 _conn?.Publish(Topic, fact);
                 _conn?.Flush();
             }
@@ -71,7 +77,6 @@ namespace M5x.DEC.Infra.STAN
                 throw;
             }
         }
-        
 
 
         private string GetTopic()
@@ -94,10 +99,5 @@ namespace M5x.DEC.Infra.STAN
         }
 
         protected abstract TFact ToFact(TEvent @event);
-
-        public void Dispose()
-        {
-            _conn?.Dispose();
-        }
     }
 }

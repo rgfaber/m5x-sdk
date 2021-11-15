@@ -1,24 +1,18 @@
 using System;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoBogus;
-using Bogus;
 using EventStore.Client;
-using FakeItEasy;
 using M5x.Config;
 using M5x.DEC.Schema.Extensions;
 using M5x.EventStore.Interfaces;
 using M5x.Serilog;
 using M5x.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace M5x.EventStore.Tests
 {
-
     public static class Inject
     {
         public static IServiceCollection AddEsSubscriber(this IServiceCollection services)
@@ -33,12 +27,12 @@ namespace M5x.EventStore.Tests
     }
 
 
-    public class EsPersistentSubscriptionClientTests: IoCTestsBase
+    public class EsPersistentSubscriptionClientTests : IoCTestsBase
     {
         private IEsPersistentSubscriptionsClient _clt;
-        private IHostExecutor _host;
         private IEsEmitter _emitter;
         private Uuid _eventId;
+        private IHostExecutor _host;
 
         public EsPersistentSubscriptionClientTests(ITestOutputHelper output,
             IoCTestContainer container) : base(output,
@@ -104,8 +98,7 @@ namespace M5x.EventStore.Tests
         {
             DotEnv.FromEmbedded();
         }
-        
-        
+
 
         protected override void InjectDependencies(IServiceCollection services)
         {
@@ -126,7 +119,6 @@ namespace M5x.EventStore.Tests
         {
             var events = TestData.EventData(Guid.NewGuid());
             Assert.NotNull(events);
-
         }
 
         [Fact]
@@ -135,11 +127,5 @@ namespace M5x.EventStore.Tests
             _eventId = Uuid.Parse(TestConstants.Guid.ToString());
             Assert.NotNull(_eventId);
         }
-        
-        
-        
-        
-        
-        
     }
 }

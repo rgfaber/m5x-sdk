@@ -16,10 +16,5 @@ namespace M5x.DEC.TestKit.Tests.SuT.Infra.Redis
                 .AddTransient<IMyRedisReader, MyRedisReader>()
                 .AddTransient<IMySingletonRedisReader, MySingletonRedisReader>();
         }
-
     }
-
-
 }
-
-    

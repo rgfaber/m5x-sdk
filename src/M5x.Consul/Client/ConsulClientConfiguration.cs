@@ -33,7 +33,8 @@ namespace M5x.Consul.Client
             "Use of DisableServerCertificateValidation should be converted to setting the HttpHandler's ServerCertificateCustomValidationCallback in the ConsulClient constructor" +
             "This property will be removed when 0.8.0 is released.", false)]
 #else
-        [Obsolete("Use of DisableServerCertificateValidation should be converted to setting the WebRequestHandler's ServerCertificateValidationCallback in the ConsulClient constructor" +
+        [Obsolete(
+            "Use of DisableServerCertificateValidation should be converted to setting the WebRequestHandler's ServerCertificateValidationCallback in the ConsulClient constructor" +
             "This property will be removed when 0.8.0 is released.", false)]
 #endif
         public bool DisableServerCertificateValidation
@@ -66,7 +67,8 @@ namespace M5x.Consul.Client
             "Use of HttpAuth should be converted to setting the HttpHandler's Credential property in the ConsulClient constructor" +
             "This property will be removed when 0.8.0 is released.", false)]
 #else
-        [Obsolete("Use of HttpAuth should be converted to setting the WebRequestHandler's Credential property in the ConsulClient constructor" +
+        [Obsolete(
+            "Use of HttpAuth should be converted to setting the WebRequestHandler's Credential property in the ConsulClient constructor" +
             "This property will be removed when 0.8.0 is released.", false)]
 #endif
         public NetworkCredential HttpAuth
@@ -95,7 +97,8 @@ namespace M5x.Consul.Client
             "Use of ClientCertificate should be converted to adding to the HttpHandler's ClientCertificates list in the ConsulClient constructor." +
             "This property will be removed when 0.8.0 is released.", false)]
 #else
-        [Obsolete("Use of ClientCertificate should be converted to adding to the WebRequestHandler's ClientCertificates list in the ConsulClient constructor." +
+        [Obsolete(
+            "Use of ClientCertificate should be converted to adding to the WebRequestHandler's ClientCertificates list in the ConsulClient constructor." +
             "This property will be removed when 0.8.0 is released.", false)]
 #endif
         public X509Certificate2 ClientCertificate

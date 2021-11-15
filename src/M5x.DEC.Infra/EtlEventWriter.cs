@@ -4,11 +4,10 @@ using M5x.DEC.Events;
 using M5x.DEC.Persistence;
 using M5x.DEC.Schema;
 
-
 namespace M5x.DEC.Infra
 {
-    public abstract class EtlEventWriter<TID, TEvent, TModel> 
-        : IEtlWriter<TID,TEvent, TModel>
+    public abstract class EtlEventWriter<TID, TEvent, TModel>
+        : IEtlWriter<TID, TEvent, TModel>
         where TModel : IReadEntity
         where TEvent : IEvent<TID>
         where TID : IIdentity
@@ -16,10 +15,19 @@ namespace M5x.DEC.Infra
         private readonly IInterpreter<TModel, TEvent> _interpreter;
 
         protected TModel Model;
+
         protected EtlEventWriter(
-            IInterpreter<TModel,TEvent> interpreter)
+            IInterpreter<TModel, TEvent> interpreter)
         {
             _interpreter = interpreter;
+        }
+
+        public async Task HandleAsync(TEvent @event)
+        {
+            Guard.Against.BadEvent(@event);
+            Model = await ExtractAsync(@event);
+            Transform(@event);
+            await LoadAsync();
         }
 
         protected abstract Task<TModel> ExtractAsync(TEvent @event);
@@ -29,14 +37,7 @@ namespace M5x.DEC.Infra
         {
             Model = _interpreter.Interpret(@event, Model);
         }
-        
-        public async Task HandleAsync(TEvent @event)
-        {
-            Guard.Against.BadEvent(@event);
-            Model = await ExtractAsync(@event);
-            Transform(@event);
-            await LoadAsync();
-        }
+
         public abstract Task<TModel> DeleteAsync(string id);
     }
 }

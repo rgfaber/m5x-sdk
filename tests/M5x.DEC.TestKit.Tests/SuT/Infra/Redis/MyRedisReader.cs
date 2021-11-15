@@ -26,8 +26,8 @@ namespace M5x.DEC.TestKit.Tests.SuT.Infra.Redis
             {
                 rsp.Add(enumerator.Current.Value);
             } while (enumerator.MoveNextAsync() != default);
+
             return Task.FromResult(rsp.AsEnumerable());
         }
-
     }
 }

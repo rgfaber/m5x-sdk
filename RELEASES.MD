@@ -2,19 +2,26 @@
 
 ## November 2021
 
+### v1.11.0
+- Dependency Updates 
+- Redis Tests
+
 ### v1.10.21
+
 - Added Support for EtlWriter / TestKit for Redis and CouchDB
 
 ### v1.10.20
+
 - Improved DEC TestKit
-- Reader and Writer support for Redis  
+- Reader and Writer support for Redis
 - Dependency Updates for Dapper, KubernetesClient, MudBlazor, Twilio, Serilog e.a
 
 ### v1.10.15
+
 - Added Guards around RMqSubscriber
 
 ### v1.10.14
- 
+
 - Added IBroadcaster<TID>, ICollector<TID>
 
 ## October 2021
@@ -25,14 +32,15 @@
 - Full support for RabbitMQ Requesters, Responders, Emitters and Subscribers
 - Initiated support for Redis (using the StackExchange.Redis library)
 - initiated support for Eventstore Subscrptions and -Replay
-- Updated Dependencies 
+- Updated Dependencies
 
 ### v1.10.4
- 
+
 - initiated support for RabbitMQ in M5x.DEC.Infra
-- updated dependencies 
+- updated dependencies
 
 ### v1.10.3
+
 - moved to github.com and publishes now to Nuget.Org
 - Updated Dependencies
 

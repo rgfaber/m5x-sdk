@@ -13,7 +13,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
         {
         }
 
-        public static MyFeedback New(AggregateInfo meta, string correlationId, Dummy payload=null)
+        public static MyFeedback New(AggregateInfo meta, string correlationId, Dummy payload = null)
         {
             payload ??= Dummy.Empty;
             return new MyFeedback(meta, correlationId, payload);

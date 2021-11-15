@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Polly.Retry;
 using RabbitMQ.Client;
 using Serilog;
-using YamlDotNet.Serialization;
 
 namespace M5x.DEC.TestKit.Tests.SuT.Infra.RabbitMq
 {
@@ -18,7 +17,7 @@ namespace M5x.DEC.TestKit.Tests.SuT.Infra.RabbitMq
     }
 
 
-    internal class MyEventEmitter : RMqEmitter<MyID,MyEvent,MyFact>, IMyEventEmitter
+    internal class MyEventEmitter : RMqEmitter<MyID, MyEvent, MyFact>, IMyEventEmitter
     {
         public MyEventEmitter(
             IConnectionFactory connFact,

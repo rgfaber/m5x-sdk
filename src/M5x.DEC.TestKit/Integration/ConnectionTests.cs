@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using M5x.Testing;
-using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,6 +8,11 @@ namespace M5x.DEC.TestKit.Integration
     public abstract class ConnectionTests<TConnection> : IoCTestsBase
     {
         protected object Connection;
+
+
+        protected ConnectionTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
+        {
+        }
 
         [Fact]
         public Task Needs_Connection()
@@ -25,11 +29,5 @@ namespace M5x.DEC.TestKit.Integration
 //            Connection.ShouldBeAssignableTo<TConnection>();
             return Task.CompletedTask;
         }
-
-
-        protected ConnectionTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
-        {
-        }
-
     }
 }

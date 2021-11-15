@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using M5x.DEC.PubSub;
 using M5x.DEC.TestKit.Tests.SuT;
 using M5x.DEC.TestKit.Unit.Domain;
@@ -26,7 +25,6 @@ namespace M5x.DEC.TestKit.Tests
 
         protected override void SetTestEnvironment()
         {
-            
         }
 
         protected override void InjectDependencies(IServiceCollection services)
@@ -38,14 +36,8 @@ namespace M5x.DEC.TestKit.Tests
         public void Should_ValidMyCommandShouldTriggerMyEvent()
         {
             GivenInputEvents();
-            WhenCommand( agg => agg.Execute(MyTestDomain.Command));
-            ThenOutputEvent<MyEvent>(evt =>
-            {
-                evt.Payload.ShouldBeEquivalentTo(MyTestDomain.Command.Payload);
-            });
+            WhenCommand(agg => agg.Execute(MyTestDomain.Command));
+            ThenOutputEvent<MyEvent>(evt => { evt.Payload.ShouldBeEquivalentTo(MyTestDomain.Command.Payload); });
         }
-        
-        
-        
     }
 }

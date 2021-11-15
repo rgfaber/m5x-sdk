@@ -6,7 +6,6 @@ using Bogus;
 using EventStore.Client;
 using M5x.Testing;
 
-
 namespace M5x.EventStore.Tests
 {
     public static class TestData
@@ -14,15 +13,17 @@ namespace M5x.EventStore.Tests
         public const string StreamName = TestConstants.Id;
         public const string GroupName = TestConstants.GroupName;
 
-        public static readonly MyPayload TestPayload = new MyPayload(TestConstants.Id, TestConstants.GroupName);
-
-        public static EventData EventData(Guid eventId) 
-            => new (
-                Uuid.FromGuid(eventId),
-                MyFactType,
-            JsonSerializer.SerializeToUtf8Bytes(TestPayload));
+        public static readonly MyPayload TestPayload = new(TestConstants.Id, TestConstants.GroupName);
 
         public static string MyFactType => typeof(MyFact).AssemblyQualifiedName;
+
+        public static EventData EventData(Guid eventId)
+        {
+            return new(
+                Uuid.FromGuid(eventId),
+                MyFactType,
+                JsonSerializer.SerializeToUtf8Bytes(TestPayload));
+        }
 
 
         public record MyFact
@@ -33,8 +34,8 @@ namespace M5x.EventStore.Tests
                 Id = id;
                 Payload = payload;
             }
-            
-            
+
+
             public string Id { get; }
             public byte[] Payload { get; }
         }
@@ -49,13 +50,10 @@ namespace M5x.EventStore.Tests
             }
 
             public string Id { get; }
-            public string Name { get; } 
+            public string Name { get; }
         }
-        
-        
-        
-        
-        
+
+
         public static class Fakers
         {
             public static Faker<MyFact> MyFact => new AutoFaker<MyFact>()

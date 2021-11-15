@@ -5,16 +5,16 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.Infra.CouchDb
 {
-    public abstract class CouchEtlWriter<TID,TEvent, TModel> 
-        : EtlEventWriter<TID,TEvent, TModel>
-        where TModel : IReadEntity 
+    public abstract class CouchEtlWriter<TID, TEvent, TModel>
+        : EtlEventWriter<TID, TEvent, TModel>
+        where TModel : IReadEntity
         where TEvent : IEvent<TID>
         where TID : IIdentity
 
     {
         protected ICouchStore<TModel> CouchDb;
 
-        protected CouchEtlWriter(IInterpreter<TModel, TEvent> interpreter, 
+        protected CouchEtlWriter(IInterpreter<TModel, TEvent> interpreter,
             ICouchStore<TModel> couchDb) : base(interpreter)
         {
             CouchDb = couchDb;

@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace M5x.DEC.PubSub
 {
-
-    public interface IDECBus : IDisposable 
+    public interface IDECBus : IDisposable
     {
         void Subscribe<T>(Action<T> handler);
 

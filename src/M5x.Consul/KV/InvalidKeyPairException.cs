@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace M5x.Consul.KV
 {
@@ -23,8 +24,8 @@ namespace M5x.Consul.KV
         }
 #if !(CORECLR || PORTABLE || PORTABLE40)
         protected InvalidKeyPairException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context)
+            SerializationInfo info,
+            StreamingContext context) : base(info, context)
         {
         }
 #endif

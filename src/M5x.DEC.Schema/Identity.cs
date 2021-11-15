@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using M5x.DEC.Schema.Extensions;
 using M5x.DEC.Schema.ValueObjects;
@@ -27,7 +26,7 @@ namespace M5x.DEC.Schema
             var att = prefixAttributes[0];
             return att.Prefix;
         } // ReSharper disable StaticMemberInGenericType
-        
+
         private static readonly Regex NameReplace = new("Id$");
 
         // private static readonly string Name = NameReplace.Replace(typeof(T).Name, string.Empty).ToLowerInvariant();
@@ -120,6 +119,7 @@ namespace M5x.DEC.Schema
                 yield return $"Identity of type '{typeof(T).PrettyPrint()}' is null or empty";
                 yield break;
             }
+
             if (!string.Equals(value.Trim(), value, StringComparison.OrdinalIgnoreCase))
                 yield return
                     $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' contains leading and/or traling spaces";
@@ -139,6 +139,7 @@ namespace M5x.DEC.Schema
                 if (validationErrors.Any())
                     throw new ArgumentException($"Identity is invalid: {string.Join(", ", validationErrors)}");
             }
+
             _lazyGuid = new Lazy<Guid>(() => Guid.Parse(ValueValidation.Match(Value).Groups["guid"].Value));
         }
 

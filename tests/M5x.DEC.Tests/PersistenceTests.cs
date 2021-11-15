@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Threading.Tasks;
 using FakeItEasy;
 using M5x.DEC.Persistence;
 using M5x.DEC.Persistence.EventStore;
@@ -72,7 +71,6 @@ namespace M5x.DEC.Tests
 
         protected override void Initialize()
         {
-            
         }
 
         protected override void SetTestEnvironment()

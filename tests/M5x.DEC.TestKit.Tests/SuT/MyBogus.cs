@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using AutoBogus;
 using Bogus;
 using M5x.DEC.Schema;
@@ -12,8 +11,8 @@ namespace M5x.DEC.TestKit.Tests.SuT
         {
             public static Faker<MyHope> Hope => new AutoFaker<MyHope>()
                 .RuleFor(h => h.AggregateId, () => MyTestSchema.TestID.Value)
-                .RuleFor(h => h.Payload, (() => MyTestSchema.Payload))
-                .RuleFor(h => h.CorrelationId, (() => MyTestSchema.TEST_CORRELATION_ID));
+                .RuleFor(h => h.Payload, () => MyTestSchema.Payload)
+                .RuleFor(h => h.CorrelationId, () => MyTestSchema.TEST_CORRELATION_ID);
 
             public static Faker<MyFeedback> Feedback => new AutoFaker<MyFeedback>()
                 .RuleFor(f => f.Meta, () => MyTestSchema.Meta);
@@ -31,14 +30,13 @@ namespace M5x.DEC.TestKit.Tests.SuT
             public static Faker<MyFact> Fact => new AutoFaker<MyFact>()
                 .RuleFor(f => f.Meta, () => MyTestSchema.Meta)
                 .RuleFor(f => f.Payload, () => MyTestSchema.Payload)
-                .RuleFor(f => f.CorrelationId, (() => MyTestSchema.TEST_CORRELATION_ID));
-
+                .RuleFor(f => f.CorrelationId, () => MyTestSchema.TEST_CORRELATION_ID);
         }
 
         public static class Schema
         {
-
             public static MyID ID => MyID.New;
+
             public static Faker<MyPayload> Payload => new AutoFaker<MyPayload>()
                 .RuleFor(x => x.Id, () => MyTestSchema.TestID.Value)
                 .RuleFor(x => x.Name, () => "Jane Doe")
@@ -49,10 +47,9 @@ namespace M5x.DEC.TestKit.Tests.SuT
                 .RuleFor(x => x.Content, c => Payload);
 
             public static Faker<AggregateInfo> Meta => new AutoFaker<AggregateInfo>()
-                .RuleFor(m => m.Id, (() => MyTestSchema.TestID.Value))
-                .RuleFor(m => m.Version, (() => -1))
+                .RuleFor(m => m.Id, () => MyTestSchema.TestID.Value)
+                .RuleFor(m => m.Version, () => -1)
                 .RuleFor(m => m.Status, () => 0);
-
         }
 
 
@@ -61,18 +58,13 @@ namespace M5x.DEC.TestKit.Tests.SuT
             public static Faker<MyCommand> Command => new AutoFaker<MyCommand>()
                 .RuleFor(x => x.AggregateId, MyTestSchema.TestID)
                 .RuleFor(x => x.CorrelationId, MyTestSchema.TEST_CORRELATION_ID)
-                .RuleFor(x => x.Payload,MyTestSchema.Payload);
+                .RuleFor(x => x.Payload, MyTestSchema.Payload);
 
             public static Faker<MyCommand> UniqueCommand => new AutoFaker<MyCommand>()
-                .RuleFor(x=>x.AggregateId, () => Schema.ID);
+                .RuleFor(x => x.AggregateId, () => Schema.ID);
 
             public static Faker<MyAggregate> Aggregate => new AutoFaker<MyAggregate>()
                 .RuleFor(x => x.Id, () => MyTestSchema.TestID);
         }
-        
-        
- 
-
-
     }
 }

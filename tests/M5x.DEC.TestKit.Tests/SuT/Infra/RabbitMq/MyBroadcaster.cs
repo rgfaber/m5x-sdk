@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace M5x.DEC.TestKit.Tests.SuT.Infra.RabbitMq
 {
-
-
     public static partial class Inject
     {
         public static IServiceCollection AddMyBroadcaster(this IServiceCollection services)
@@ -16,9 +14,9 @@ namespace M5x.DEC.TestKit.Tests.SuT.Infra.RabbitMq
                 .AddTransient<IMyBroadcaster, MyBroadcaster>();
         }
     }
-    
-    
-    internal class MyBroadcaster: Broadcaster<MyID>, IMyBroadcaster
+
+
+    internal class MyBroadcaster : Broadcaster<MyID>, IMyBroadcaster
     {
         private readonly IMyEventEmitter _myEventEmitter;
 
@@ -35,6 +33,4 @@ namespace M5x.DEC.TestKit.Tests.SuT.Infra.RabbitMq
             return Task.CompletedTask;
         }
     }
-
-
 }

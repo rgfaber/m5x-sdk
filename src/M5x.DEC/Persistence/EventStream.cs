@@ -8,7 +8,7 @@ using M5x.DEC.Schema;
 namespace M5x.DEC.Persistence
 {
     [Obsolete("Please use AsyncEventStream Instead")]
-    public abstract class EventStream<TAggregate, TAggregateId> 
+    public abstract class EventStream<TAggregate, TAggregateId>
         : IEventStream<TAggregate, TAggregateId>
         where TAggregate : AggregateRoot<TAggregateId>, IAggregate<TAggregateId>
         where TAggregateId : IIdentity
@@ -97,12 +97,14 @@ namespace M5x.DEC.Persistence
         }
     }
 
-    public interface IEventStream {}
+    public interface IEventStream
+    {
+    }
 
 
     [Obsolete("Please use AsyncEventStream instead")]
     public interface IEventStream<TAggregate, TAggregateId> : IEventStream
-        where TAggregate : IAggregate<TAggregateId> 
+        where TAggregate : IAggregate<TAggregateId>
         where TAggregateId : IIdentity
     {
         TAggregate GetById(TAggregateId id);

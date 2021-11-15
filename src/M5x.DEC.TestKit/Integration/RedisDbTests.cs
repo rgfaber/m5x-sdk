@@ -9,15 +9,14 @@ namespace M5x.DEC.TestKit.Integration
 {
     public abstract class RedisDbTests<TReadModel> : ConnectionTests<IConnectionMultiplexer>
     {
-        protected object Factory;
-        
         public IRedisDb Database;
-        
-        public object ReadModel { get; set; }
+        protected object Factory;
 
         public RedisDbTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
+
+        public object ReadModel { get; set; }
 
         [Fact]
         public Task Must_ReadModelMustBeAssignableFromTReadModel()
@@ -34,7 +33,7 @@ namespace M5x.DEC.TestKit.Integration
             var expectedValue = "My TestValue";
             Database.DB.StringSetAsync(key, expectedValue);
             var value = Database.DB.StringGetAsync(key).Result;
-            Assert.Equal(expectedValue, (string)value);
+            Assert.Equal(expectedValue, value);
             return Task.CompletedTask;
         }
 

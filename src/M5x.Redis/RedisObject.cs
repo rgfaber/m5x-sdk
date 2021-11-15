@@ -152,11 +152,11 @@ namespace M5x.Redis
 
         public static RedisValue ToRedisValue(object element)
         {
-            if (element == null) 
+            if (element == null)
                 return RedisValue.Null;
-            if (element is byte[] b) 
+            if (element is byte[] b)
                 return b;
-            if (element is RedisValue x) 
+            if (element is RedisValue x)
                 return x;
             if (element is IConvertible _) return ConvertToRedisValue(element);
             return JsonSerializer.Serialize(element);
@@ -222,7 +222,7 @@ namespace M5x.Redis
                 case ushort b: return (uint)b;
                 case uint b: return b;
                 case ulong b: return b;
-                case Enum b: 
+                case Enum b:
                     return Convert.ToInt32(b);
                 default:
                     throw new Exception("Unsupported type");

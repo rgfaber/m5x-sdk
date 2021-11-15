@@ -43,7 +43,7 @@ dotnet nuget delete "M5x.MailKit" $version -k $api_key -s $source --non-interact
 dotnet nuget delete "M5x.MediatR" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.Minio" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.MongoDB" $version -k $api_key -s $source --non-interactive
-dotnet nuget delete "M5x.MudBlazor" $version -k $api_key -s $source --non-interactive
+#dotnet nuget delete "M5x.MudBlazor" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.Nats" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.NBomber" $version -k $api_key -s $source --non-interactive
 #dotnet nuget delete "M5x.Nats.TestKit" $version -k $api_key -s $source --non-interactive

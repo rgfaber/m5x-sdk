@@ -10,9 +10,9 @@
         <Description>Macula CAS Abstraction</Description>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="GSS.Authentication.CAS.AspNetCore" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0"/>
+        <PackageReference Include="GSS.Authentication.CAS.AspNetCore" Version="5.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
         <PackageReference Include="System.Security.Claims" Version="4.3.0"/>
     </ItemGroup>
 </Project>

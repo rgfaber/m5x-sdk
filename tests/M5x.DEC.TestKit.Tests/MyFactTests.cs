@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using M5x.DEC.Schema;
 using M5x.DEC.TestKit.Tests.SuT;
 using M5x.DEC.TestKit.Unit.Contract;
@@ -8,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Tests
 {
-    public class MyFactTests: FactTests<MyFact>
+    public class MyFactTests : FactTests<MyFact>
     {
         public MyFactTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
@@ -23,12 +22,10 @@ namespace M5x.DEC.TestKit.Tests
 
         protected override void SetTestEnvironment()
         {
-            
         }
 
         protected override void InjectDependencies(IServiceCollection services)
         {
-            
         }
 
         protected override string GetExpectedFactTopic()

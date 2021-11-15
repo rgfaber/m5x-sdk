@@ -6,11 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using Serilog;
 
-
 namespace M5x.DEC.TestKit.Tests.SuT
 {
-
-
     public static class Inject
     {
         public static IServiceCollection AddMySubscriber(this IServiceCollection services)
@@ -19,8 +16,8 @@ namespace M5x.DEC.TestKit.Tests.SuT
                 .AddHostedService<MySubscriber>();
         }
     }
-    
-    
+
+
     public class MySubscriber : RMqSubscriber<MyID, MyFact>
     {
         public MySubscriber(IConnectionFactory connFact,

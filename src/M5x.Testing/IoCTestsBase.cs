@@ -16,15 +16,15 @@ namespace M5x.Testing
             Initialize();
         }
 
+
+        protected IoCTestContainer Container { get; }
+        protected ITestHelper TestHelper { get; }
+
         public override void Dispose()
         {
             Container?.Dispose();
             base.Dispose();
         }
-
-
-        protected IoCTestContainer Container { get; }
-        protected ITestHelper TestHelper { get; }
 
         protected abstract void Initialize();
         protected abstract void SetTestEnvironment();

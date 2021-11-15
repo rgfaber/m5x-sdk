@@ -9,7 +9,7 @@ using Serilog;
 
 namespace M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb
 {
-    public static partial class Inject
+    public static class Inject
     {
         public static IServiceCollection AddMyReader(this IServiceCollection services)
         {
@@ -17,25 +17,28 @@ namespace M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb
                 .AddConsoleLogger()
                 .AddCouchClient()
                 .AddMyDb()
-                .AddTransient<IMyCouchReader, MyCouchReader>(); ;
+                .AddTransient<IMyCouchReader, MyCouchReader>();
+            ;
         }
-        
-        
-        
+
+
         public static IServiceCollection AddMyWriter(this IServiceCollection services)
         {
             return services
                 .AddConsoleLogger()
                 .AddCouchClient()
                 .AddMyDb()
-                .AddTransient<IMyCouchWriter, MyCouchWriter>(); ;
+                .AddTransient<IMyCouchWriter, MyCouchWriter>();
+            ;
         }
     }
-    
-    
-    public interface IMyCouchReader: IModelReader<MyPagedQry,MyReadModel> {}
-    
-    public class MyCouchReader: CouchReader<MyPagedQry, MyReadModel>, IMyCouchReader
+
+
+    public interface IMyCouchReader : IModelReader<MyPagedQry, MyReadModel>
+    {
+    }
+
+    public class MyCouchReader : CouchReader<MyPagedQry, MyReadModel>, IMyCouchReader
     {
         public MyCouchReader(IMyCouchDb couchDb, ILogger logger) : base(couchDb, logger)
         {

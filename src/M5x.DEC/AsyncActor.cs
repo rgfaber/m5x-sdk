@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
@@ -8,7 +7,6 @@ using M5x.DEC.Events;
 using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
-using Serilog;
 
 namespace M5x.DEC
 {
@@ -20,9 +18,9 @@ namespace M5x.DEC
         where TFeedback : IFeedback
     {
         private readonly IDECBus _bus;
-        private readonly IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> _handlers;
 
         private readonly IBroadcaster<TAggregateId> _caster;
+        private readonly IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> _handlers;
         protected readonly IAsyncEventStream<TAggregate, TAggregateId> Aggregates;
 
         protected AsyncActor(
@@ -72,10 +70,7 @@ namespace M5x.DEC
 
         protected async Task EmitEventsAsync(IEnumerable<IEvent<TAggregateId>> events)
         {
-            foreach (var @event in events)
-            {
-                await _bus.PublishAsync(@event);
-            }
+            foreach (var @event in events) await _bus.PublishAsync(@event);
         }
 
         protected abstract Task<TFeedback> Act(TCommand cmd);
@@ -88,8 +83,10 @@ namespace M5x.DEC
             return Task.CompletedTask;
         }
     }
-    
-    public interface IAsyncActor {}
+
+    public interface IAsyncActor
+    {
+    }
 
     public interface IAsyncActor<TAggregateId, in TCommand, TFeedback> : IAsyncActor
         where TCommand : ICommand<TAggregateId>

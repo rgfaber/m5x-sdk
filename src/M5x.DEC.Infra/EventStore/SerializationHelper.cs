@@ -6,7 +6,6 @@ using M5x.DEC.Persistence.EventStore;
 using M5x.DEC.Schema;
 using M5x.EventStore;
 using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace M5x.DEC.Infra.EventStore
 {
@@ -27,7 +26,7 @@ namespace M5x.DEC.Infra.EventStore
                 // //     Type.GetType(eventType), settings);
                 //
                 // // var settings = new JsonSerializerSettings {ContractResolver = new PrivateSetterContractResolver()};
-           //     return (IEvent<TAggregateId>)JsonSerializer.Deserialize(data, Type.GetType(eventType));
+                //     return (IEvent<TAggregateId>)JsonSerializer.Deserialize(data, Type.GetType(eventType));
                 // //  JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data),
                 // // Type.GetType(eventType), settings);
             }

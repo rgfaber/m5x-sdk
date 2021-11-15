@@ -6,8 +6,9 @@ namespace M5x.DEC.Snapshot
     {
     }
 
-    public interface IAggregateSnapshot<TAggregate, TIdentity> : IAggregateSnapshot
-        where TAggregate : IAggregateRoot<TIdentity> where TIdentity : IIdentity
+    public interface IAggregateSnapshot<TAggregate, TID> : IAggregateSnapshot
+        where TAggregate : IAggregateRoot<TID>
+        where TID : IIdentity
     {
     }
 }

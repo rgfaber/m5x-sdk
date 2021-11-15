@@ -20,7 +20,16 @@ namespace M5x.DEC.TestKit.Unit.Domain
         protected IAggregate<TAggregateId> Aggregate;
 
         protected IDECBus Bus;
-        
+
+
+        protected IIdentity ID;
+
+
+        protected EventingTests(ITestOutputHelper output, IoCTestContainer container) : base(
+            output, container)
+        {
+        }
+
         [Fact]
         public Task Must_IDMustBeAssignableFromTAggregateId()
         {
@@ -33,16 +42,6 @@ namespace M5x.DEC.TestKit.Unit.Domain
         {
             Assert.NotNull(ID);
             return Task.CompletedTask;
-        }
-        
-        
-        protected IIdentity ID;
-
-
-
-        protected EventingTests(ITestOutputHelper output, IoCTestContainer container) : base(
-            output, container)
-        {
         }
 
 
@@ -73,8 +72,8 @@ namespace M5x.DEC.TestKit.Unit.Domain
             if (events == null) return;
             foreach (var @event in events)
             {
-                var root = ((IEventSourcingAggregate<TAggregateId>)Aggregate);
-                var version = root.Version+1;
+                var root = (IEventSourcingAggregate<TAggregateId>)Aggregate;
+                var version = root.Version + 1;
                 root.ApplyEvent(@event, version);
             }
         }

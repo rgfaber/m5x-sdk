@@ -17,10 +17,10 @@ namespace M5x.DEC.Infra.STAN
         where TAggregateId : IIdentity
         where TFact : IFact
     {
+        private readonly IDECBus _bus;
         private readonly IEnumerable<IFactHandler<TAggregateId, TFact>> _handlers;
         private readonly ILogger _logger;
         protected readonly IEncodedConnection Conn;
-        private readonly IDECBus _bus;
         private string _logMessage;
         private IAsyncSubscription _subscription;
 
@@ -57,6 +57,7 @@ namespace M5x.DEC.Infra.STAN
             while (!stoppingToken.IsCancellationRequested)
             {
             }
+
             return Task.CompletedTask;
         }
 
@@ -111,7 +112,7 @@ namespace M5x.DEC.Infra.STAN
                 await _subscription.DrainAsync();
             }
         }
-        
+
         private Task HandleFactAsync(TFact fact)
         {
             foreach (var handler in _handlers)
@@ -119,6 +120,7 @@ namespace M5x.DEC.Infra.STAN
                 _logger?.Debug($"[{Topic}]-FACT {fact.Meta.Id} \n\t- HND [{handler.GetType()}]");
                 handler.HandleAsync(fact);
             }
+
             return Task.CompletedTask;
         }
 

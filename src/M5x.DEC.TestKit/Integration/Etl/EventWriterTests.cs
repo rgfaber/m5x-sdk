@@ -12,29 +12,31 @@ namespace M5x.DEC.TestKit.Integration.Etl
 {
     public abstract class EventWriterTests<
         TID,
-        TWriter, 
+        TWriter,
         TInterpreter,
-        TReader, 
-        TEvent, 
-        TReadModel, 
+        TReader,
+        TEvent,
+        TReadModel,
         TQuery> : IoCTestsBase
-        where TWriter : IEtlWriter<TID,TEvent, TReadModel>
+        where TWriter : IEtlWriter<TID, TEvent, TReadModel>
         where TReader : ISingleModelReader<TQuery, TReadModel>
         where TReadModel : IReadEntity
         where TQuery : IQuery
         where TEvent : IEvent<TID>
-        where TInterpreter: IInterpreter<TReadModel, TEvent>
+        where TInterpreter : IInterpreter<TReadModel, TEvent>
         where TID : IIdentity
     {
         protected IEvent<IIdentity> Event;
-        protected IQuery Query;
-        protected ISingleModelReader<TQuery,TReadModel> Reader;
-        protected IEtlWriter<TID, TEvent, TReadModel> Writer;
         protected IReadEntity Model;
-        
+        protected IQuery Query;
+        protected ISingleModelReader<TQuery, TReadModel> Reader;
+        protected IEtlWriter<TID, TEvent, TReadModel> Writer;
+
         protected EventWriterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
+
+        public object Interpreter { get; set; }
 
         [Fact]
         public Task Needs_Reader()
@@ -63,7 +65,7 @@ namespace M5x.DEC.TestKit.Integration.Etl
             Assert.IsAssignableFrom<TEvent>(Event);
             return Task.CompletedTask;
         }
-        
+
         [Fact]
         public Task Needs_Query()
         {
@@ -77,7 +79,6 @@ namespace M5x.DEC.TestKit.Integration.Etl
             Assert.IsAssignableFrom<TQuery>(Query);
             return Task.CompletedTask;
         }
-        
 
 
         [Fact]
@@ -93,7 +94,7 @@ namespace M5x.DEC.TestKit.Integration.Etl
             Assert.IsAssignableFrom<TWriter>(Writer);
             return Task.CompletedTask;
         }
-        
+
 
         [Fact]
         public async Task Must_WriteFactToDb()
@@ -128,7 +129,5 @@ namespace M5x.DEC.TestKit.Integration.Etl
         {
             Interpreter.ShouldBeAssignableTo<TInterpreter>();
         }
-
-        public object Interpreter { get; set; }
     }
 }

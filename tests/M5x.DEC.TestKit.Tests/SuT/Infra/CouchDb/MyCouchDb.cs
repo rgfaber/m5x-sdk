@@ -7,10 +7,11 @@ using Serilog;
 
 namespace M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb
 {
-    
-    public interface IMyCouchDb: ICouchStore<MyReadModel> {}
-    
-    public class MyCouchDb: CouchStore<MyReadModel,MyID>, IMyCouchDb
+    public interface IMyCouchDb : ICouchStore<MyReadModel>
+    {
+    }
+
+    public class MyCouchDb : CouchStore<MyReadModel, MyID>, IMyCouchDb
     {
         public MyCouchDb(ICouchClient client, ILogger logger) : base(client, logger)
         {

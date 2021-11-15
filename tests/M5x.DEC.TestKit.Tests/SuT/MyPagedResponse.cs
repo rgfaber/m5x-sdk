@@ -3,9 +3,8 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.TestKit.Tests.SuT
 {
-    public record MyPagedResponse: PagedResponse<MyReadModel>
+    public record MyPagedResponse : PagedResponse<MyReadModel>
     {
-
         public MyPagedResponse()
         {
         }
@@ -18,7 +17,7 @@ namespace M5x.DEC.TestKit.Tests.SuT
         {
         }
 
-        private MyPagedResponse(string correlationId, int pageNumber, IEnumerable<MyReadModel> payload) 
+        private MyPagedResponse(string correlationId, int pageNumber, IEnumerable<MyReadModel> payload)
             : base(correlationId, pageNumber, payload)
         {
         }

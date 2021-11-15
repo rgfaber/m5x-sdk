@@ -2,13 +2,14 @@ using M5x.DEC.Schema;
 
 namespace M5x.DEC.TestKit.Tests.SuT
 {
-    public record MyPagedQry: PagedQuery
+    public record MyPagedQry : PagedQuery
     {
         public MyPagedQry()
         {
         }
 
-        private MyPagedQry(string correlationId, int pageNumber, int pageSize) : base(correlationId, pageNumber, pageSize)
+        private MyPagedQry(string correlationId, int pageNumber, int pageSize) : base(correlationId, pageNumber,
+            pageSize)
         {
         }
 

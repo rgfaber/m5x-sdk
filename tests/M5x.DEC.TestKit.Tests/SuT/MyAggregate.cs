@@ -4,19 +4,21 @@ using Ardalis.GuardClauses;
 using M5x.DEC.ExecutionResults;
 using M5x.DEC.Schema;
 
-
 namespace M5x.DEC.TestKit.Tests.SuT
 {
-    public class MyAggregate: AggregateRoot<MyID, MyReadModel, MyStatus>, 
-        IExecute<MyCommand>, 
+    public class MyAggregate : AggregateRoot<MyID, MyReadModel, MyStatus>,
+        IExecute<MyCommand>,
         IApply<MyEvent>
     {
-
         public MyAggregate()
         {
         }
 
         public MyAggregate(MyID id, MyReadModel model) : base(id, model)
+        {
+        }
+
+        public void Apply(MyEvent evt)
         {
         }
 
@@ -39,11 +41,6 @@ namespace M5x.DEC.TestKit.Tests.SuT
                 });
                 return ExecutionResult.Failed(errors);
             }
-        }
-
-        public void Apply(MyEvent evt)
-        {
-            
         }
 
         protected override MyReadModel CreateModel()

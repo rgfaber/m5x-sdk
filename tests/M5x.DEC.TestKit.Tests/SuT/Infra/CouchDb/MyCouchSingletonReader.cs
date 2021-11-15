@@ -6,9 +6,9 @@ using Serilog;
 
 namespace M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb
 {
-
-    
-    public interface IMyCouchSingletonReader: ISingleModelReader<MySingletonQuery, MyReadModel> {}
+    public interface IMyCouchSingletonReader : ISingleModelReader<MySingletonQuery, MyReadModel>
+    {
+    }
 
     internal class MyCouchSingletonReader : CouchReader<MySingletonQuery, MyReadModel>, IMyCouchSingletonReader
     {

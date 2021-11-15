@@ -3,26 +3,27 @@ using M5x.DEC.Persistence;
 using M5x.DEC.Schema;
 using M5x.DEC.TestKit.Unit.Domain;
 using M5x.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace M5x.DEC.TestKit.Integration.Cmd
 {
-    public abstract class EventStreamTests<TAggregate, TAggregateId, TEventStream, TActor> : EventingTests<TAggregate, TAggregateId>
+    public abstract class
+        EventStreamTests<TAggregate, TAggregateId, TEventStream, TActor> : EventingTests<TAggregate, TAggregateId>
         where TAggregateId : IIdentity
         where TAggregate : IAggregate<TAggregateId>
         where TEventStream : IAsyncEventStream<TAggregate, TAggregateId>
-        where TActor: IAsyncActor
+        where TActor : IAsyncActor
     {
-        protected IAsyncEventStream<TAggregate, TAggregateId> EventStream;
-        
         protected IAsyncActor Actor;
-        
+
+        public object Connection;
+        protected IAsyncEventStream<TAggregate, TAggregateId> EventStream;
+
         public EventStreamTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
-        
+
         [Fact]
         public Task Needs_Actor()
         {
@@ -37,8 +38,6 @@ namespace M5x.DEC.TestKit.Integration.Cmd
             Assert.NotNull(Connection);
             return Task.CompletedTask;
         }
-        
-        public object Connection;
 
         [Fact]
         public Task Needs_EventStream()
@@ -54,8 +53,5 @@ namespace M5x.DEC.TestKit.Integration.Cmd
             Assert.IsAssignableFrom<TEventStream>(EventStream);
             return Task.CompletedTask;
         }
-        
-        
-        
     }
 }

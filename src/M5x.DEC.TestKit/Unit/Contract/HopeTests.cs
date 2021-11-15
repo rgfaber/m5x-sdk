@@ -37,6 +37,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -53,6 +54,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -69,6 +71,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -84,6 +87,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -100,6 +104,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -117,11 +122,11 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
         protected abstract string GetExpectedHopeTopic();
-
 
 
         [Fact]
@@ -138,6 +143,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -156,6 +162,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -173,6 +180,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -190,6 +198,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -207,6 +216,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -225,6 +235,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
     }

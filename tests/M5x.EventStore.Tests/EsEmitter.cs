@@ -9,8 +9,8 @@ namespace M5x.EventStore.Tests
     {
         Task<IWriteResult> EmitAsync(string streamName, IEnumerable<EventData> events);
     }
-    
-    
+
+
     internal class EsEmitter : IEsEmitter
     {
         private readonly IEsClient _client;
@@ -19,11 +19,10 @@ namespace M5x.EventStore.Tests
         {
             _client = client;
         }
-        
+
         public Task<IWriteResult> EmitAsync(string streamName, IEnumerable<EventData> events)
         {
-             return _client.AppendToStreamAsync(streamName, StreamState.Any, events);
+            return _client.AppendToStreamAsync(streamName, StreamState.Any, events);
         }
-
     }
 }

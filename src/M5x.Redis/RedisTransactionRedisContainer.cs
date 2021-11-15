@@ -6,12 +6,11 @@ using StackExchange.Redis;
 
 namespace M5x.Redis
 {
+    public interface IRedisTransactionDb : ISimpleRedisDb
+    {
+    }
 
 
-    public interface IRedisTransactionDb : ISimpleRedisDb {}
-    
-    
-    
     public class RedisTransactionDb : IRedisTransactionDb
     {
         private readonly string _keyNameSpace;

@@ -54,13 +54,6 @@ namespace M5x.Redis
             return services?
                 .AddTransientRedisConnection()
                 .AddTransient<IRedisDb, RedisDb>();
-
         }
-        
-        
-        
-        
-        
-        
     }
 }

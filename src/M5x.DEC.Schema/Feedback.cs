@@ -32,6 +32,7 @@ namespace M5x.DEC.Schema
             CorrelationId = GuidUtils.NewCleanGuid;
             ErrorState = new ErrorState();
         }
+
         public string CorrelationId { get; set; }
         public ErrorState ErrorState { get; }
         public AggregateInfo Meta { get; set; }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using M5x.Kubernetes;
+﻿using M5x.Kubernetes;
 using M5x.Testing;
 using NATS.Client;
 using Xunit;

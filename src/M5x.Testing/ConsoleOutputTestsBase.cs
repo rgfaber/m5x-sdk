@@ -25,6 +25,8 @@ namespace M5x.Testing
             Console.SetOut(_originalOut);
         }
 
-        protected virtual void Cleanup() {}
+        protected virtual void Cleanup()
+        {
+        }
     }
 }

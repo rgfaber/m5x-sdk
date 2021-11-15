@@ -38,6 +38,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -53,6 +54,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -69,6 +71,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -86,6 +89,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -103,6 +107,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -119,6 +124,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -135,6 +141,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -153,6 +160,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -170,6 +178,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 
@@ -187,6 +196,7 @@ namespace M5x.DEC.TestKit.Unit.Contract
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
     }

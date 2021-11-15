@@ -7,7 +7,6 @@ using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 
-
 namespace M5x.DEC
 {
     [Obsolete("Please use AsyncActor instead")]
@@ -21,9 +20,9 @@ namespace M5x.DEC
     {
         private readonly IDECBus _bus;
 
-        private readonly IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> _handlers;
-
         private readonly IBroadcaster<TAggregateId> _caster;
+
+        private readonly IEnumerable<IEventHandler<TAggregateId, IEvent<TAggregateId>>> _handlers;
         protected readonly IEventStream<TAggregate, TAggregateId> Aggregates;
 
         protected Actor(
@@ -68,6 +67,4 @@ namespace M5x.DEC
     {
         TFeedback Handle(TCommand cmd);
     }
-    
-    
 }

@@ -17,9 +17,9 @@ namespace M5x.DEC.Infra.CouchDb
         where TStateModel : IStateEntity<TId>
         where TId : IIdentity
     {
+        private readonly int _backoff = 100;
         private readonly int _maxRetries = Polly.Config.MaxRetries;
         private readonly AsyncRetryPolicy _retryPolicy;
-        private readonly int _backoff = 100;
 
 
         protected RetryCouchStore(ICouchClient client, ILogger logger, AsyncRetryPolicy retryPolicy = null) : base(

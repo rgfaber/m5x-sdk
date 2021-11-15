@@ -10,7 +10,8 @@ namespace M5x.DEC.TestKit.Tests.SuT
             Payload = new MyPayload();
         }
 
-        private MyHope(string aggregateId, string correlationId, MyPayload payload) : base(aggregateId, correlationId, payload)
+        private MyHope(string aggregateId, string correlationId, MyPayload payload) : base(aggregateId, correlationId,
+            payload)
         {
         }
 

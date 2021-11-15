@@ -11,7 +11,7 @@ namespace M5x.DEC.Persistence
         Task HandleAsync(TFact fact);
     }
 
-    public interface IFactWriter<TAggregateId, TFact, TReadModel> 
+    public interface IFactWriter<TAggregateId, TFact, TReadModel>
         : IFactHandler<TAggregateId, TFact>
         where TReadModel : IReadEntity
         where TFact : IFact
@@ -22,7 +22,7 @@ namespace M5x.DEC.Persistence
     }
 
     public interface IEventWriter<TID, TEvent, TModel> : IEventHandler<TID, TEvent>
-        where TEvent : IEvent<TID> 
+        where TEvent : IEvent<TID>
         where TID : IIdentity
         where TModel : IReadEntity
     {
@@ -37,9 +37,4 @@ namespace M5x.DEC.Persistence
         where TID : IIdentity
     {
     }
-    
-    
-    
-    
-    
 }

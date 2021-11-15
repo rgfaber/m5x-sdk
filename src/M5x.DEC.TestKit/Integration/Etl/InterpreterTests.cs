@@ -15,13 +15,13 @@ namespace M5x.DEC.TestKit.Integration.Etl
     {
         protected object Input;
 
+        protected object Interpreter;
+
         protected object StartModel;
 
         protected InterpreterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
         {
         }
-
-        protected object Interpreter;
 
         [Fact]
         public Task Needs_Interpreter()
@@ -75,7 +75,5 @@ namespace M5x.DEC.TestKit.Integration.Etl
             Assert.NotNull(expected);
             return Task.CompletedTask;
         }
-
-
     }
 }

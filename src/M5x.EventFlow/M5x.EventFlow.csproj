@@ -12,9 +12,9 @@
 
 
     <ItemGroup>
-        <PackageReference Include="EventFlow" Version="0.83.4713"/>
+        <!--        <PackageReference Include="EventFlow" Version="0.83.4713"/>-->
         <PackageReference Include="EventFlow.DependencyInjection" Version="0.83.4713"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0"/>
     </ItemGroup>
 
 </Project>

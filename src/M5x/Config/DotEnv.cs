@@ -7,6 +7,11 @@ namespace M5x.Config
 {
     public static class DotEnv
     {
+        public static bool IsDevelopemnt =>
+            !string.IsNullOrEmpty(Get(EnVars.ASPNETCORE_ENVIRONMENT)) &&
+            Get("ASPNETCORE_ENVIRONMENT")
+                .Equals("Development");
+
         public static void FromEmbedded(Assembly assembly, string name = ".env")
         {
             var sIn = assembly.GetEmbeddedFile(name);
@@ -83,14 +88,8 @@ namespace M5x.Config
         {
             var s = Environment.GetEnvironmentVariable(name);
             if (string.IsNullOrWhiteSpace(s)) return s;
-            if (s.StartsWith('"'))
-            {
-                s = s.Split('"')[1];
-            }
-            if (s.StartsWith("'"))
-            {
-                s = s.Split('"')[1];
-            }
+            if (s.StartsWith('"')) s = s.Split('"')[1];
+            if (s.StartsWith("'")) s = s.Split('"')[1];
             return s;
         }
 
@@ -104,11 +103,5 @@ namespace M5x.Config
         {
             return Environment.ExpandEnvironmentVariables(variables);
         }
-        
-        
-        public static bool IsDevelopemnt =>
-            !string.IsNullOrEmpty(Get(EnVars.ASPNETCORE_ENVIRONMENT)) &&
-            Get("ASPNETCORE_ENVIRONMENT")
-                .Equals("Development");
     }
 }

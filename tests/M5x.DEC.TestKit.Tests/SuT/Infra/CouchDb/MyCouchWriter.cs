@@ -5,8 +5,10 @@ using Serilog;
 
 namespace M5x.DEC.TestKit.Tests.SuT.Infra.CouchDb
 {
-    
-    public interface IMyCouchWriter: IFactWriter<MyID, MyFact, MyReadModel> {}
+    public interface IMyCouchWriter : IFactWriter<MyID, MyFact, MyReadModel>
+    {
+    }
+
     public class MyCouchWriter : CouchWriter<MyID, MyFact, MyReadModel>, IMyCouchWriter
     {
         public MyCouchWriter(IMyCouchDb couchDb, ILogger logger) : base(couchDb, logger)

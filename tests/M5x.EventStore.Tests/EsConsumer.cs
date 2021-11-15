@@ -7,22 +7,20 @@ using EventStore.Client;
 using M5x.EventStore.Interfaces;
 using M5x.Testing;
 using Microsoft.Extensions.Hosting;
-using Serilog;
 using Xunit.Abstractions;
 
 namespace M5x.EventStore.Tests
 {
-    
     public class EsConsumer : BackgroundService
     {
         private readonly IEsPersistentSubscriptionsClient _client;
-        private readonly PersistentSubscriptionSettings _settings;
         private readonly ITestOutputHelper _output;
+        private readonly PersistentSubscriptionSettings _settings;
+        private readonly bool _autoAck = true;
+        private readonly int _bufferSize = 10;
+        private readonly UserCredentials? _credentials;
         private PersistentSubscription _subscription;
-        private UserCredentials? _credentials;
-        private int _bufferSize=10;
-        private bool _autoAck=true;
-        
+
         public EsConsumer(IEsPersistentSubscriptionsClient client,
             PersistentSubscriptionSettings settings, ITestOutputHelper output)
         {
@@ -31,13 +29,14 @@ namespace M5x.EventStore.Tests
             _output = output;
             _credentials = new UserCredentials(EventStoreConfig.UserName, EventStoreConfig.Password);
         }
-        
-        
+
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
             }
+
             return Task.CompletedTask;
         }
 
@@ -49,9 +48,9 @@ namespace M5x.EventStore.Tests
                 try
                 {
                     await _client
-                        .CreateAsync(TestConstants.Id, 
-                            TestConstants.GroupName, 
-                            _settings, 
+                        .CreateAsync(TestConstants.Id,
+                            TestConstants.GroupName,
+                            _settings,
                             _credentials, cancellationToken)
                         .ConfigureAwait(false);
                 }
@@ -59,15 +58,16 @@ namespace M5x.EventStore.Tests
                 {
                     _output.WriteLine($"{e.Message}");
                 }
+
                 _subscription = await _client.SubscribeAsync(
-                    TestConstants.Id,
-                    TestConstants.GroupName, 
-                    EventAppeared,
-                    SubscriptionDropped,
-                    _credentials,
-                    _bufferSize,
-                    _autoAck,
-                    cancellationToken )
+                        TestConstants.Id,
+                        TestConstants.GroupName,
+                        EventAppeared,
+                        SubscriptionDropped,
+                        _credentials,
+                        _bufferSize,
+                        _autoAck,
+                        cancellationToken)
                     .ConfigureAwait(false);
             }
             catch (Exception e)
@@ -77,17 +77,16 @@ namespace M5x.EventStore.Tests
             }
         }
 
-        private Task EventAppeared(PersistentSubscription subscription, ResolvedEvent resolvedEvent,  int? position, CancellationToken cancellationToken)
+        private Task EventAppeared(PersistentSubscription subscription, ResolvedEvent resolvedEvent, int? position,
+            CancellationToken cancellationToken)
         {
             if (resolvedEvent.Event.EventType == TestData.MyFactType)
-            {
                 _output?.WriteLine($"Event [{resolvedEvent.Event.EventType}] Appeared on \n" +
                                    $"\tSubscription: {subscription.SubscriptionId}" +
                                    $"\tGroup: {TestConstants.GroupName}\n" +
                                    $"\tName: {TestConstants.Id}\n" +
                                    $"\tPosition: {resolvedEvent.Event.Position}\n\n" +
                                    $"{Serialize(resolvedEvent)} \n");
-            }
             return Task.CompletedTask;
         }
 
@@ -96,7 +95,8 @@ namespace M5x.EventStore.Tests
             return base.StopAsync(cancellationToken);
         }
 
-        private void SubscriptionDropped(PersistentSubscription subscription, SubscriptionDroppedReason droppedReason, Exception? exception)
+        private void SubscriptionDropped(PersistentSubscription subscription, SubscriptionDroppedReason droppedReason,
+            Exception? exception)
         {
             _output?.WriteLine($"Subscription [{_subscription.SubscriptionId}] dropped. reason: {droppedReason}");
         }

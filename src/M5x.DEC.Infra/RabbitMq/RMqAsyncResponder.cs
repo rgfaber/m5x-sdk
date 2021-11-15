@@ -13,19 +13,19 @@ using Serilog;
 
 namespace M5x.DEC.Infra.RabbitMq
 {
-    public abstract class RMqAsyncResponder<TID, THope, TCmd, TFeedback> 
+    public abstract class RMqAsyncResponder<TID, THope, TCmd, TFeedback>
         : BackgroundService, IResponder<TID, THope, TCmd, TFeedback>
         where TID : IIdentity
         where TCmd : ICommand<TID>
         where THope : IHope
         where TFeedback : IFeedback
     {
-        private readonly IConnectionFactory _connFact;
         private readonly IAsyncActor<TID, TCmd, TFeedback> _actor;
+        private readonly IRabbitMqConnectionFactory _connectionFactory;
+        private readonly IConnectionFactory _connFact;
+        private readonly ILogger _logger;
         private IModel _channel;
         private IConnection _connection;
-        private readonly IRabbitMqConnectionFactory _connectionFactory;
-        private readonly ILogger _logger;
         private AsyncEventingBasicConsumer _hopeConsumer;
 
         protected RMqAsyncResponder(
@@ -57,7 +57,7 @@ namespace M5x.DEC.Infra.RabbitMq
             _channel.BasicQos(0, 1, false);
             _hopeConsumer = new AsyncEventingBasicConsumer(_channel);
             _channel.BasicConsume(Topic, false, _hopeConsumer);
-            _hopeConsumer.Received += HopeReceived ;
+            _hopeConsumer.Received += HopeReceived;
             return Task.CompletedTask;
         }
 
@@ -102,7 +102,6 @@ namespace M5x.DEC.Infra.RabbitMq
             _connection?.Dispose();
             base.Dispose();
         }
-        
 
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -110,6 +109,7 @@ namespace M5x.DEC.Infra.RabbitMq
             while (!stoppingToken.IsCancellationRequested)
             {
             }
+
             return Task.CompletedTask;
         }
     }

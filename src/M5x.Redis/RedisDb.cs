@@ -11,8 +11,8 @@ namespace M5x.Redis
         public string KeyNameSpace { get; }
         IDatabaseAsync DB { get; }
     }
-    
-    
+
+
     public interface IRedisDb : ISimpleRedisDb
     {
         IDatabase Database { get; }

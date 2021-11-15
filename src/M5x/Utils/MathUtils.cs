@@ -7,15 +7,15 @@ namespace M5x.Utils
     /// </summary>
     public static class MathUtils
     {
-        public static byte[] ToByteArray (this decimal src)
+        public static byte[] ToByteArray(this decimal src)
         {
             using var stream = new MemoryStream();
             using var writer = new BinaryWriter(stream);
             writer.Write(src);
             return stream.ToArray();
         }
-        
-        
+
+
         /// <summary>
         ///     Determines whether the specified STR text entry is numeric.
         /// </summary>

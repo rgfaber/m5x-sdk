@@ -39,9 +39,9 @@ namespace M5x.EventStore.Tests
             var _uuid = Uuid.FromGuid(Guid.NewGuid());
             var t = typeof(Tested).AssemblyQualifiedName;
             var d = Serialize(ev);
-            
+
             var m = Encoding.UTF8.GetBytes("{}");
-            
+
             var data = new EventData(_uuid, t, d, m);
             var res = await _clt.AppendToStreamAsync("TestStream",
                 StreamState.Any,

@@ -12,7 +12,7 @@ namespace M5x.DEC.TestKit.Integration.Client
         TSubscriber,
         TAggregateId,
         TEvent,
-        TFact> : EmitterTests<TConnection,TEmitter, TSubscriber, TAggregateId, TEvent, TFact>
+        TFact> : EmitterTests<TConnection, TEmitter, TSubscriber, TAggregateId, TEvent, TFact>
         where TEmitter : IFactEmitter<TAggregateId, TEvent, TFact>
         where TAggregateId : IIdentity
         where TFact : IFact

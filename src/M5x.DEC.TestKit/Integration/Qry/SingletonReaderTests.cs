@@ -31,6 +31,7 @@ namespace M5x.DEC.TestKit.Integration.Qry
                 Output.WriteLine(e.InnerAndOuter());
                 throw;
             }
+
             return Task.CompletedTask;
         }
 

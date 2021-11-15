@@ -47,7 +47,7 @@ namespace M5x.DEC.TestKit.Unit.Domain
 
         protected void Given(params Func<TAggregate, bool>[] preConditions)
         {
-            if (preConditions == null) 
+            if (preConditions == null)
                 Assert.True(true);
             var result = preConditions.Aggregate(true,
                 (current,
