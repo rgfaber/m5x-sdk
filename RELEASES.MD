@@ -2,6 +2,10 @@
 
 ## November 2021
 
+### v2.0.0
+- Port to .NET6
+
+
 ### v1.11.0
 - Dependency Updates 
 - Redis Tests

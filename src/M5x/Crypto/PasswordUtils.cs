@@ -72,10 +72,10 @@ namespace M5x.Crypto
             if (string.IsNullOrEmpty(encoded) && string.IsNullOrEmpty(plainText)) return true;
             if (encoded == null) return false;
             if (encoded.Length < 32) return false;
-            var md5 = encoded.Substring(encoded.Length - 32); // MD5 is 32 char length.
-            var saltHex = encoded.Substring(0, encoded.Length - md5.Length);
+            var md5 = encoded[^32..]; // MD5 is 32 char length.
+            var saltHex = encoded[..^md5.Length];
             var salt = HexUtils.GetStringFromHex(saltHex);
-            return encoded.Equals(saltHex + Md5.Encode(salt + plainText), StringComparison.InvariantCultureIgnoreCase);
+            return encoded.Equals(saltHex + (salt + plainText).MD5Encode(), StringComparison.InvariantCultureIgnoreCase);
         }
 
 

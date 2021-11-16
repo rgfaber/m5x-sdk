@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using FluentValidation;
 using FluentValidation.Results;
 using M5x.DEC;
@@ -34,10 +35,11 @@ namespace Robby.Game.Domain
             private void Validate(Initialize.Cmd command)
             {
                 command.Validate();
-                if (command == null) throw new ArgumentNullException("Command should not be nil", ex);
-                if (command.Payload == null) throw new Initialize.Excep("Order cannot be nil", ex);
-                if (command.Payload.FieldDimensions == null) throw new Initialize.Excep("FieldDimensions cannot be nil", ex);
-                if (string.IsNullOrEmpty(command.Payload.Name)) throw new Initialize.Excep("Name cannot be Empty", ex);
+                Guard.Against.Null(command, nameof(command));
+                Guard.Against.Null(command.Payload, nameof(command.Payload));
+                Guard.Against.Null(command.Payload.FieldDimensions, nameof(command.Payload.FieldDimensions));
+                Guard.Against.NullOrWhiteSpace(command.Payload.Name, nameof(command.Payload.Name));
+                
                 if ((Schema.Game.Flags) Model.Meta.Status != Schema.Game.Flags.Unknown)
                     return ExecutionResult.Failed();
                 
@@ -72,7 +74,7 @@ namespace Robby.Game.Domain
                 .AddTransient<IActor, Actor>();
         }
 
-        public interface IEmitter : IFactEmitter<Schema.Game.ID, Contract.Features.Initialize.Fact>
+        public interface IEmitter : IFactEmitter<Schema.Game.ID, Evt, Contract.Features.Initialize.Fact>
         {
         }
 

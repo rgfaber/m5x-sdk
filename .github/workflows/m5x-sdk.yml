@@ -13,12 +13,12 @@ jobs:
     environment: Production
     strategy:
       matrix: 
-        dotnet-version: ['5.0.x']
+        dotnet-version: ['6.0.x']
         
     steps:
        - uses: actions/checkout@v2
        - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-         uses: actions/setup-dotnet@v1.7.2
+         uses: actions/setup-dotnet@v1.8.2
          with:
            dotnet-version: ${{ matrix.dotnet-version }}
        - name: Make Scripts Executable

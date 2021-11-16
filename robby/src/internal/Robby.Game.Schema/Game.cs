@@ -8,7 +8,14 @@ namespace Robby.Game.Schema
     public interface IGame : IStateEntity<Game.ID>
     {
     }
-
+    public static class FlagExtensions
+    {
+        public static bool HasFlagFast(this Game.Flags value, Game.Flags flag)
+        {
+            return (value & flag) != 0;
+        }
+        
+    }
     [Serializable]
     [DbName(Attributes.DbName)]
     public record Game : IGame, IPayload
@@ -32,10 +39,6 @@ namespace Robby.Game.Schema
                     id = GuidUtils.LowerCaseGuid;
                 return NewComb(id);
             }
-
-
-
-
         }
 
         [Flags]
@@ -48,9 +51,6 @@ namespace Robby.Game.Schema
             DescriptionUpdated = 8,
             Started = 16,
         }
-
-        
-        
         public static class Attributes
         {
             public const string IDPrefix = "robbygame";
@@ -119,14 +119,5 @@ namespace Robby.Game.Schema
         {
             return new(idValue);
         }
-    }
-
-    public static class FlagExtensions
-    {
-        public static bool HasFlagFast(this Game.Flags value, Game.Flags flag)
-        {
-            return (value & flag) != 0;
-        }
-        
     }
 }

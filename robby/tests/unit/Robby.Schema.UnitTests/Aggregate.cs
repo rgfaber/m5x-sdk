@@ -8,7 +8,7 @@ namespace Robby.Schema.UnitTests
 {
     public static class Aggregate
     {
-        public class GameIdTests : IDTests<Schema.Game.ID>
+        public class GameIdTests : IDTests<Game.ID>
         {
             public GameIdTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
             {

@@ -8,7 +8,7 @@ namespace Robby.Game.Schema
     {
         public static void Validate(this FieldDimensions dimensions)
         {
-            var v = new FieldDimensions.Validator();
+            var v = FieldDimensions.Validator.New();
             var res = v.Validate(dimensions);
             if(res.IsValid) return;
             throw new ValidationException(string.Join('\n', res.Errors));
@@ -19,11 +19,16 @@ namespace Robby.Game.Schema
     {
         public class Validator : AbstractValidator<FieldDimensions>
         {
-            public Validator()
+            private Validator()
             {
                 RuleFor(fd => fd.X).GreaterThan(19);
                 RuleFor(fd => fd.Y).GreaterThan(19);
                 RuleFor(fd => fd.Z).GreaterThan(19);
+            }
+
+            public static Validator New()
+            {
+                return new Validator();
             }
         }
         

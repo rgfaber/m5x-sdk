@@ -9,7 +9,7 @@ namespace Robby.Schema.UnitTests
 {
     public class GameTests : IoCTestsBase
     {
-        private Game _game;
+        private Game.Schema.Game _game;
 
 
         public GameTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)

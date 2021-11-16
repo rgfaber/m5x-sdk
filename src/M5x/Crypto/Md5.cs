@@ -3,11 +3,11 @@ using System.Text;
 
 namespace M5x.Crypto
 {
-    public class Md5
+    public static class Md5
     {
-        public static string Encode(string str)
+        public static string MD5Encode(this string str)
         {
-            var x = new MD5CryptoServiceProvider();
+            var x = MD5.Create(); 
             var bs = Encoding.UTF8.GetBytes(str);
             bs = x.ComputeHash(bs);
 

@@ -31,7 +31,7 @@ namespace Robby.Game.Domain
             }
         }
 
-        public abstract record Cmd<TPayload> : Command<Root, Schema.Game.ID, IExecutionResult> 
+        public abstract record Cmd<TPayload> : Command<Schema.Game.ID> 
         where TPayload: IPayload
         {
             protected Cmd()

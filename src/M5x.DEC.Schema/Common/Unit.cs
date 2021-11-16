@@ -1,9 +1,17 @@
 using System.Text;
+using FluentValidation;
 
 namespace M5x.DEC.Schema.Common
 {
     public record Unit
     {
+
+        public class Validator : AbstractValidator<Unit>
+        {
+            
+        }
+
+
         public Unit()
         {
             BaseUnit = null;
