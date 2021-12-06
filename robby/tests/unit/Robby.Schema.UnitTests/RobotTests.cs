@@ -1,5 +1,6 @@
 using M5x.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Robby.Robot.Schema;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -7,7 +8,7 @@ namespace Robby.Schema.UnitTests
 {
     public class RobotTests : IoCTestsBase
     {
-        private Robot _robot;
+        private RobotModel _robot;
 
 
         public RobotTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
@@ -23,7 +24,7 @@ namespace Robby.Schema.UnitTests
 
         protected override async void Initialize()
         {
-            _robot = new Robot();
+            _robot = new RobotModel();
         }
 
         protected override void SetTestEnvironment()

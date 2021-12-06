@@ -39,7 +39,7 @@ namespace Robby.Game.Schema
 
         public static InitializationOrder New(string name, int x, int y, int z, int nbrOfRobots)
         {
-            return new(name, nbrOfRobots, new M5x.DEC.Schema.Common.Vector(x, y, z), Game.ID.New().Value);
+            return new(name, nbrOfRobots, new M5x.DEC.Schema.Common.Vector(x, y, z), GameModel.ID.New.Value);
         }
     }
 }

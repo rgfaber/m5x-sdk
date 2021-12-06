@@ -7,6 +7,8 @@ using M5x.DEC.Schema.Utils;
 using M5x.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Robby.Contract.Game.Features;
+using Robby.Game.Contract.Features;
+using Robby.Game.Schema;
 using Robby.Schema;
 using Xunit;
 using Xunit.Abstractions;
@@ -15,30 +17,14 @@ namespace Robby.Contract.UnitTests.Game.Features
 {
     public static class InitializeGame
     {
-        public class Tests : Aggregate.FeatureTests<Contract.Game.Features.Initialize.Fact,
-            Contract.Game.Features.Initialize.Hope, Contract.Game.Features.Initialize.Feedback>
+        public class Tests : Aggregate.FeatureTests<Robby.Game.Contract.Features.Initialize.Fact,
+            Robby.Game.Contract.Features.Initialize.Hope, Robby.Game.Contract.Features.Initialize.Fbk>
         {
             private InitializationOrder _order;
 
             public Tests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
             {
             }
-
-
-            protected override async void Initialize()
-            {
-                // base.Initialize();
-                _order = InitializationOrder.New("Test", 100, 100, 100, 50);
-            }
-
-            protected override void SetTestEnvironment()
-            {
-            }
-
-            protected override void InjectDependencies(IServiceCollection services)
-            {
-            }
-
 
             [Fact]
             public void Must_HaveOrder()
@@ -50,16 +36,14 @@ namespace Robby.Contract.UnitTests.Game.Features
             [Fact]
             public async Task Should_FactMustBeDeserialized()
             {
-                var gameId = Schema.Game.ID.New(Guid.NewGuid().ToString()).Value;
-                var fIn = Contract.Game.Features.Initialize.Fact.New(
-                    AggregateInfo.New(gameId, 
-                        -1, 
-                        (int)Schema.Game.Flags.Unknown), 
+                var gameId = GameModel.ID.New.Value;
+                var fIn = Robby.Game.Contract.Features.Initialize.Fact.New(
+                    AggregateInfo.New(gameId), 
                     GuidUtils.NewCleanGuid, 
                     _order);
                 var s = JsonSerializer.SerializeToUtf8Bytes(fIn);
                 var fOut = await JsonSerializer
-                    .DeserializeAsync<Contract.Game.Features.Initialize.Fact>(s.AsStream());
+                    .DeserializeAsync<Robby.Game.Contract.Features.Initialize.Fact>(s.AsStream());
                 Assert.Equal(fIn, fOut);
             }
 
@@ -73,10 +57,11 @@ namespace Robby.Contract.UnitTests.Game.Features
             }
 
 
-            protected override Contract.Game.Features.Initialize.Feedback CreateFeedback(Schema.Game.ID gameId,
+            protected override Robby.Game.Contract.Features.Initialize.Fbk CreateFeedback(
+                Robby.Game.Schema.GameModel.ID gameId,
                 string correlationId)
             {
-                return (Initialize.Feedback) Contract.Game.Features.Initialize.Feedback.Empty(correlationId);
+                return Initialize.Fbk.Empty(correlationId);
             }
 
             protected override Contract.Game.Features.Initialize.Fact CreateFact(Schema.Game.ID gameId, string correlationId)

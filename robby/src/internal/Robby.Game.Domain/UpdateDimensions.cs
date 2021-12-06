@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using M5x.DEC;
 using M5x.DEC.Events;
 using M5x.DEC.ExecutionResults;
+using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Common;
@@ -28,7 +29,7 @@ namespace Robby.Game.Domain
             public void Apply(UpdateDimensions.Evt evt)
             {
                 Model.Dimensions = evt.Payload;
-                Model.Status = (Schema.Game.Flags) evt.Meta.Status;
+                Model.Status = (Schema.GameModel.Flags) evt.Meta.Status;
                 Model.Meta = evt.Meta;
             }
 
@@ -38,11 +39,11 @@ namespace Robby.Game.Domain
                 {
                     if (command == null) throw new ArgumentNullException(nameof(command));
                     if (command.Payload == null) throw new UpdateDimensions.Excep($"Dimensions must not be nil in command {command.GetType()}");
-                    if (!Model.Status.HasFlag(Schema.Game.Flags.Initialized))
+                    if (!Model.Status.HasFlag(Schema.GameModel.Flags.Initialized))
                         throw new UpdatePopulation.Excep("Context is not initialized");
-                    if (Model.Status.HasFlag(Schema.Game.Flags.DimensionsUpdated))
+                    if (Model.Status.HasFlag(Schema.GameModel.Flags.DimensionsUpdated))
                         throw new UpdateDimensions.Excep("Simultation Dimensions are already set");
-                    var newStatus = Model.Status | Schema.Game.Flags.DimensionsUpdated;
+                    var newStatus = Model.Status | Schema.GameModel.Flags.DimensionsUpdated;
                     // TODO Factor this out
                     Model.Status = newStatus;
                     RaiseEvent(UpdateDimensions.Evt.New(command, newStatus));
@@ -66,50 +67,27 @@ namespace Robby.Game.Domain
         {
             return services
                 .AddDECBus()
-                .AddTransient<IGame, Schema.Game>()
+                .AddTransient<IGameModel, Schema.GameModel>()
                 .AddTransient<Aggregate.IRoot, Aggregate.Root>()
-                .AddTransient<IEventHandler<Schema.Game.ID, Domain.Initialize.Evt>,Initialize.Handler>()
                 .AddTransient<IActor, Actor>();
         }
 
         public interface IActor : IAsyncActor<
-            Aggregate.Root, 
-            Schema.Game.ID, 
+            Schema.GameModel.ID, 
             Cmd,
-            Contract.Features.UpdateDimensions.Hope,
-            Contract.Features.UpdateDimensions.Feedback>
+            Contract.Features.UpdateDimensions.Fbk>
         {
         }
 
 
-        internal class Actor : AsyncActor<
-            Aggregate.Root, 
-            Schema.Game.ID, Cmd,
-            Contract.Features.UpdateDimensions.Hope,
-            Contract.Features.UpdateDimensions.Feedback, 
-            Evt,
-            Contract.Features.UpdateDimensions.Fact>, IActor
+        internal class Actor : AsyncActor<Aggregate.Root, 
+            Schema.GameModel.ID, 
+            Cmd,
+            Contract.Features.UpdateDimensions.Fbk>, IActor
         {
-            public Actor(IGameStream gameStream,
-                IDECBus bus,
-                IEnumerable<IEventHandler<Schema.Game.ID, Evt>> handlers,
-                IEmitter emitter,
-                ILogger logger) : base(gameStream,
-                bus,
-                handlers,
-                emitter,
-                logger)
+            protected override async Task<Contract.Features.UpdateDimensions.Fbk> Act(Cmd cmd)
             {
-            }
-
-            protected override Cmd ToCommand(Contract.Features.UpdateDimensions.Hope hope)
-            {
-                return Cmd.New(Schema.Game.ID.With(hope.AggregateId), hope.CorrelationId, hope.Payload);
-            }
-
-            protected override async Task<Contract.Features.UpdateDimensions.Feedback> Act(Cmd cmd)
-            {
-                var rsp = Contract.Features.UpdateDimensions.Feedback.Empty(cmd.CorrelationId);
+                var rsp = Contract.Features.UpdateDimensions.Fbk.Empty(cmd.CorrelationId);
                 try
                 {
                     var root = await Aggregates.GetByIdAsync(cmd.AggregateId);
@@ -122,18 +100,25 @@ namespace Robby.Game.Domain
                 catch (Exception e)
                 {
                     rsp.ErrorState.Errors.Add(Constants.GameErrors.DomainError, e.AsApiError());
-                    Logger?.Error(e.InnerAndOuter());
                 }
                 return rsp;
             }
 
-            protected override Contract.Features.UpdateDimensions.Fact ToFact(Evt @event)
+
+            public Actor(IBroadcaster<GameModel.ID> caster,
+                IGameStream aggregates,
+                IDECBus bus,
+                IEnumerable<IEventHandler<GameModel.ID, IEvent<GameModel.ID>>> handlers) : base(caster,
+                aggregates,
+                bus,
+                handlers)
             {
-                return Contract.Features.UpdateDimensions.Fact.New(@event.Meta, @event.CorrelationId, @event.Payload);
             }
         }
 
-        public interface IEmitter : IFactEmitter<Schema.Game.ID, Contract.Features.UpdateDimensions.Fact>
+        public interface IEmitter : IFactEmitter<GameModel.ID, 
+            Evt, 
+            Contract.Features.UpdateDescription.Fact>
         {
         }
 
@@ -143,17 +128,17 @@ namespace Robby.Game.Domain
             {
             }
 
-            public Cmd(Schema.Game.ID aggregateId, string correlationId, Vector payload) : base(aggregateId, correlationId, payload)
+            public Cmd(Schema.GameModel.ID aggregateId, string correlationId, Vector payload) : base(aggregateId, correlationId, payload)
             {
             }
 
             public static Cmd New(Domain.Initialize.Evt @event)
             {
-                var gameId = Schema.Game.ID.With(@event.Meta.Id);
+                var gameId = Schema.GameModel.ID.With(@event.Meta.Id);
                 return new(gameId, @event.CorrelationId, @event.Payload.FieldDimensions);
             }
 
-            public static Cmd New(Schema.Game.ID id, string correlationId, Vector payload)
+            public static Cmd New(Schema.GameModel.ID id, string correlationId, Vector payload)
             {
                 return new Cmd(id, correlationId, payload);
             }
@@ -174,17 +159,16 @@ namespace Robby.Game.Domain
             {
             }
 
-            public static Evt New(Cmd command, Schema.Game.Flags newGameStatus)
+            public static Evt New(Cmd command, Schema.GameModel.Flags newGameStatus)
             {
                 return new(
                     AggregateInfo.New(command.AggregateId.Value,  -1, (int)newGameStatus), 
                     command.CorrelationId, 
                     command.Payload);
             }
-
-            public override IEvent<Schema.Game.ID> WithAggregate(AggregateInfo meta)
+            public override IEvent<GameModel.ID> WithAggregate(AggregateInfo meta, string correlationId)
             {
-                return new Evt(meta, Payload);
+                return new Evt(meta, correlationId, Payload);
             }
         }
 
@@ -205,28 +189,6 @@ namespace Robby.Game.Domain
 
             public Excep(string? message, Exception? innerException) : base(message, innerException)
             {
-            }
-        }
-
-        private static class Initialize
-        {
-            internal class Handler : IEventHandler<Schema.Game.ID, Domain.Initialize.Evt>
-            {
-                private readonly IActor _actor;
-
-                public Handler(IActor actor)
-                {
-                    _actor = actor;
-                }
-
-                public async Task HandleAsync(Domain.Initialize.Evt @event)
-                {
-                    var hope = Contract.Features.UpdateDimensions.Hope.New(@event.Meta.Id, @event.CorrelationId,
-                        @event.Payload.FieldDimensions);
-                    var feedback = await _actor.HandleAsync(hope);
-                    if (!feedback.IsSuccess)
-                        Log.Debug($"{GetType()} failed: {feedback}");
-                }
             }
         }
     }

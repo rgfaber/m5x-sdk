@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -17,6 +15,7 @@
     <ProjectReference Include="..\..\..\..\src\M5x.DEC.TestKit\M5x.DEC.TestKit.csproj" />
     <ProjectReference Include="..\..\..\..\src\M5x.Testing\M5x.Testing.csproj" />
     <ProjectReference Include="..\..\..\src\internal\Robby.Game.Schema\Robby.Game.Schema.csproj" />
+    <ProjectReference Include="..\..\..\src\internal\Robby.Robot.Schema\Robby.Robot.Schema.csproj" />
     <ProjectReference Include="..\..\..\src\internal\Robby.Schema\Robby.Schema.csproj" />
   </ItemGroup>
 

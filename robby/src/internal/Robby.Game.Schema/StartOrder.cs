@@ -1,6 +1,7 @@
 using System;
 using M5x.DEC.Schema;
 
+
 namespace Robby.Game.Schema
 {
     public record StartOrder: IPayload
@@ -28,11 +29,13 @@ namespace Robby.Game.Schema
 
         public StartOrder()
         {
+            GameId = GameModel.ID.New.Value;
         }
 
         public DateTime IssuedAt { get; set; }
         public string GameId { get; set; }
-        public Parameters Settings { get; set; } 
+        public Parameters Settings { get; set; }
+        public static StartOrder Empty => new StartOrder();
     }
 
 

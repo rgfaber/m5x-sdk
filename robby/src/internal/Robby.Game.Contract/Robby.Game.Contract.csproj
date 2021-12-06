@@ -1,8 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Robby.Game.Schema\Robby.Game.Schema.csproj" />

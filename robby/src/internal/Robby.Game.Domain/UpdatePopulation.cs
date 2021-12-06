@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using M5x.DEC;
 using M5x.DEC.Events;
 using M5x.DEC.ExecutionResults;
+using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
@@ -22,7 +23,7 @@ namespace Robby.Game.Domain
         {
             public void Apply(UpdatePopulation.Evt evt)
             {
-                Model.Status |= Schema.Game.Flags.PopulationUpdated;
+                Model.Status |= Schema.GameModel.Flags.PopulationUpdated;
                 Model.Population = evt.Payload;
             }
 
@@ -32,8 +33,8 @@ namespace Robby.Game.Domain
                 {
                     if (command == null) throw new ArgumentNullException(nameof(command));
                     if (command.Payload == null) throw new UpdatePopulation.Excep("Command Payload cannot be nil");
-                    if (!Model.Status.HasFlag(Schema.Game.Flags.Initialized)) throw new UpdatePopulation.Excep("Context is not initialized");
-                    var newStatus = Model.Status | Schema.Game.Flags.PopulationUpdated;
+                    if (!Model.Status.HasFlag(Schema.GameModel.Flags.Initialized)) throw new UpdatePopulation.Excep("Context is not initialized");
+                    var newStatus = Model.Status | Schema.GameModel.Flags.PopulationUpdated;
                     // TODO Factor this out
                     Model.Status = newStatus;
                     RaiseEvent(UpdatePopulation.Evt.New(command, newStatus));
@@ -53,75 +54,32 @@ namespace Robby.Game.Domain
         {
             return services
                 .AddDECBus()
-                .AddTransient<IGame, Schema.Game>()
+                .AddTransient<IGameModel, Schema.GameModel>()
                 .AddTransient<Aggregate.IRoot, Aggregate.Root>()
-                .AddTransient<IEventHandler<Schema.Game.ID, Domain.Initialize.Evt>, Initialize.Handler>()
                 .AddTransient<IActor, Actor>();
         }
 
 
-        private static class Initialize
-        {
-            internal class Handler : IEventHandler<Schema.Game.ID, Domain.Initialize.Evt>
-            {
-                private readonly IActor _actor;
-
-                public Handler(IActor actor)
-                {
-                    _actor = actor;
-                }
-
-                public async Task HandleAsync(Domain.Initialize.Evt @event)
-                {
-                    var hope = Contract.Features.UpdatePopulation.Hope.New(@event.Meta.Id, @event.CorrelationId,
-                        @event.Payload.NumberOfRobots);
-                    var feedback = await _actor.HandleAsync(hope);
-                    if (!feedback.IsSuccess) 
-                        Log.Debug($"{GetType()} failed: {feedback}");
-                }
-            }
-        }
-
 
         public interface IActor : IAsyncActor<
-            Aggregate.Root, 
-            Schema.Game.ID,
+            Schema.GameModel.ID,
             Cmd,
-            Contract.Features.UpdatePopulation.Hope,
-            Contract.Features.UpdatePopulation.Feedback>
+            Contract.Features.UpdatePopulation.Fbk>
         {
         }
 
         internal class Actor : AsyncActor<
             Aggregate.Root,
-            Schema.Game.ID,
+            Schema.GameModel.ID,
             Cmd,
-            Contract.Features.UpdatePopulation.Hope,
-            Contract.Features.UpdatePopulation.Feedback,
-            Evt,
-            Contract.Features.UpdatePopulation.Fact>, IActor
+            Contract.Features.UpdatePopulation.Fbk>, IActor
         {
-            public Actor(IGameStream aggregates,
-                IDECBus subscriber,
-                IEnumerable<IEventHandler<Schema.Game.ID, Evt>> handlers,
-                IEmitter emitter,
-                ILogger logger) : base(aggregates,
-                subscriber,
-                handlers,
-                emitter,
-                logger)
-            {
-            }
 
-            protected override Cmd ToCommand(Contract.Features.UpdatePopulation.Hope hope)
-            {
-                return Cmd.New(Schema.Game.ID.With(hope.AggregateId), hope.CorrelationId, hope.Payload);
-            }
 
-            protected override async Task<Contract.Features.UpdatePopulation.Feedback> Act(Cmd cmd)
+            protected override async Task<Contract.Features.UpdatePopulation.Fbk> Act(Cmd cmd)
             {
                 var feedback =
-                    Contract.Features.UpdatePopulation.Feedback.Empty(cmd.CorrelationId);
+                    Contract.Features.UpdatePopulation.Fbk.Empty(cmd.CorrelationId);
                 try
                 {
                     var root = await Aggregates.GetByIdAsync(cmd.AggregateId);
@@ -136,20 +94,27 @@ namespace Robby.Game.Domain
                 catch (Exception e)
                 {
                     feedback.ErrorState.Errors.Add(Constants.GameErrors.DomainError, e.AsApiError());
-                    Logger?.Error(e.InnerAndOuter());
                 }
                 return feedback;
             }
 
-            protected override Contract.Features.UpdatePopulation.Fact ToFact(Evt @event)
+
+            public Actor(IBroadcaster<GameModel.ID> caster,
+                IGameStream aggregates,
+                IDECBus bus,
+                IEnumerable<IEventHandler<GameModel.ID, IEvent<GameModel.ID>>> handlers) : base(caster,
+                aggregates,
+                bus,
+                handlers)
             {
-                return Contract.Features.UpdatePopulation.Fact.New(@event.Meta, @event.CorrelationId,
-                    @event.Payload);
             }
         }
 
 
-        public interface IEmitter : IFactEmitter<Schema.Game.ID, Contract.Features.UpdatePopulation.Fact>
+        public interface IEmitter : IFactEmitter<
+            Schema.GameModel.ID, 
+            Domain.UpdatePopulation.Evt,
+            Contract.Features.UpdatePopulation.Fact>
         {
         }
 
@@ -180,19 +145,19 @@ namespace Robby.Game.Domain
             {
             }
 
-            public Cmd(Schema.Game.ID aggregateId, string correlationId, Population payload) : base(aggregateId, correlationId, payload)
+            public Cmd(Schema.GameModel.ID aggregateId, string correlationId, Population payload) : base(aggregateId, correlationId, payload)
             {
             }
 
             public static Cmd New(Domain.Initialize.Evt @event)
             {
-                var gameId = Schema.Game.ID.With(@event.Meta.Id);
+                var gameId = Schema.GameModel.ID.With(@event.Meta.Id);
                 return new Cmd(gameId, 
                     @event.CorrelationId, 
                     Population.New(@event.Payload.NumberOfRobots, @event.Payload.FieldDimensions));
             }
 
-            public static Cmd New(Schema.Game.ID id, string correlationId, Population payload)
+            public static Cmd New(Schema.GameModel.ID id, string correlationId, Population payload)
             {
                 return new Cmd(id, correlationId, payload);
             }
@@ -212,16 +177,17 @@ namespace Robby.Game.Domain
             {
             }
 
-            public static Evt New(Cmd command, Schema.Game.Flags newStatus)
+            public static Evt New(Cmd command, Schema.GameModel.Flags newStatus)
             {
-                return new(AggregateInfo.New(command.AggregateId.Value, -1, (int)newStatus),
+                return new Evt(
+                    AggregateInfo.New(command.AggregateId.Value, -1, (int)newStatus),
                     command.CorrelationId,
                     command.Payload);
             }
 
-            public override IEvent<Schema.Game.ID> WithAggregate(AggregateInfo meta)
+            public override IEvent<GameModel.ID> WithAggregate(AggregateInfo meta, string correlationId)
             {
-                return new Evt(meta, Payload);
+                return new Evt(meta, correlationId, Payload);
             }
         }
     }

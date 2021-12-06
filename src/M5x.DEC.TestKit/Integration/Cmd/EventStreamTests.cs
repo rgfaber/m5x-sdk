@@ -11,7 +11,7 @@ namespace M5x.DEC.TestKit.Integration.Cmd
     public abstract class
         EventStreamTests<TAggregate, TAggregateId, TEventStream, TActor> : EventingTests<TAggregate, TAggregateId>
         where TAggregateId : IIdentity
-        where TAggregate : IAggregate<TAggregateId>
+        where TAggregate : IEventSourcingAggregate<TAggregateId>
         where TEventStream : IAsyncEventStream<TAggregate, TAggregateId>
         where TActor : IAsyncActor
     {

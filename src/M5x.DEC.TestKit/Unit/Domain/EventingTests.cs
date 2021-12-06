@@ -14,10 +14,10 @@ namespace M5x.DEC.TestKit.Unit.Domain
 {
     public abstract class EventingTests<TAggregate, TAggregateId>
         : IoCTestsBase
-        where TAggregate : IAggregate<TAggregateId>
+        where TAggregate : IEventSourcingAggregate<TAggregateId>
         where TAggregateId : IIdentity
     {
-        protected IAggregate<TAggregateId> Aggregate;
+        protected TAggregate Aggregate;
 
         protected IDECBus Bus;
 

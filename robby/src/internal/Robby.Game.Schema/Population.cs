@@ -6,23 +6,23 @@ namespace Robby.Game.Schema
 {
     public record Population: IPayload
     {
-        public Population(IEnumerable<Robot> robots)
+        public Population(IEnumerable<Competitor> competitors)
         {
-            Robots = robots;
+            Competitors = competitors;
         }
 
         public Population()
         {
         }
 
-        public IEnumerable<Robot> Robots { get; set; }
+        public IEnumerable<Competitor> Competitors { get; set; }
 
         public static Population New(int count, M5x.DEC.Schema.Common.Vector maxDimensions)
         {
-            var lst = new List<Robot>();
+            var lst = new List<Competitor>();
             while (lst.Count < count)
             {
-                var robot = Robot.New(maxDimensions);
+                var robot = Competitor.New( maxDimensions);
                 
                 if (lst.All(x => x.Description.Name != robot.Description.Name))
                     lst.Add(robot);

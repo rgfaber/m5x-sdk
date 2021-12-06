@@ -15,7 +15,7 @@ namespace M5x.DEC.Persistence
     }
 
     public interface IAsyncEventStream<TAggregate, TAggregateId> : IAsyncEventStream
-        where TAggregate : IAggregate<TAggregateId>
+        where TAggregate : IEventSourcingAggregate<TAggregateId>
         where TAggregateId : IIdentity
     {
         Task<TAggregate> GetByIdAsync(TAggregateId id);
@@ -26,7 +26,7 @@ namespace M5x.DEC.Persistence
 
 
     public abstract class AsyncEventStream<TAggregate, TAggregateId> : IAsyncEventStream<TAggregate, TAggregateId>
-        where TAggregate : AggregateRoot<TAggregateId>, IAggregate<TAggregateId>
+        where TAggregate : IEventSourcingAggregate<TAggregateId>
         where TAggregateId : IIdentity
     {
         private readonly IDECBus bus;
@@ -116,11 +116,12 @@ namespace M5x.DEC.Persistence
                 var ci = typeof(TAggregate)
                     .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
                         null,
-                        new Type[0],
-                        new ParameterModifier[0]);
-                var res = ci.Invoke(new object[0]);
+                        new [] {typeof(TAggregateId)} ,
+                        Array.Empty<ParameterModifier>());
+                Guard.Against.Null(ci, nameof(ci));
+                var res = ci.Invoke(new object[] {id});
                 var result = (TAggregate)res;
-                result.Id = id;
+//                result.Id = id;
                 return result;
             }
             catch (Exception e)

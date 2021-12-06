@@ -191,7 +191,7 @@ namespace M5x.Crypto
             var randomBytes = new byte[4];
 
             // Generate 4 random bytes.
-            var rng = new RNGCryptoServiceProvider();
+            var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomBytes);
 
             // Convert 4 bytes into a 32-bit integer value.

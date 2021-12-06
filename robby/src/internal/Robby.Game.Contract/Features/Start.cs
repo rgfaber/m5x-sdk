@@ -42,24 +42,21 @@ namespace Robby.Game.Contract.Features
             }
         }
 
-        public record Feedback : Feedback<StartOrder>
+        public record Fbk : Feedback<StartOrder>
         {
-            public Feedback()
+            public Fbk()
             {
             }
 
-            public Feedback(AggregateInfo meta, string correlationId, StartOrder payload) 
+            public Fbk(AggregateInfo meta, string correlationId, StartOrder payload) 
                 : base(meta, correlationId, payload)
             {
             }
 
-            private Feedback(string correlationId) : base(correlationId)
-            {
-            }
 
-            public static Feedback Empty(string correlationId)
+            public static Fbk Empty(string correlationId)
             {
-                return new Feedback(correlationId);
+                return new Fbk(AggregateInfo.Empty, correlationId, StartOrder.Empty);
             }
         }
         

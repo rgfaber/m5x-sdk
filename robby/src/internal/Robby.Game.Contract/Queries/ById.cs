@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using M5x.DEC.Schema;
+using Robby.Game.Schema;
 
 namespace Robby.Game.Contract.Queries
 {
@@ -18,24 +19,23 @@ namespace Robby.Game.Contract.Queries
             }
         }
 
-        public record Rsp : Response<IEnumerable<Schema.Game>>
+        public record Rsp : MultiResponse<Schema.GameModel>
         {
+            public Rsp(string correlationId, IEnumerable<GameModel> payload) : base(correlationId, payload)
+            {
+            }
+
             public Rsp()
             {
-                Data = new List<Schema.Game>();
             }
 
-            private Rsp(string correlationId) : base(correlationId)
+            public Rsp(IEnumerable<GameModel> payload) : base(payload)
             {
             }
 
-            public Rsp(string correlationId, IEnumerable<Schema.Game> data) : base(correlationId, data)
+            public static Rsp New(Qry qry, IEnumerable<GameModel> payload)
             {
-            }
-
-            public static Rsp New(Qry qry)
-            {
-                return new(qry.CorrelationId);
+                return new(qry.CorrelationId, payload);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using M5x.DEC.Events;
+﻿using System.Collections.Generic;
+using M5x.DEC.Events;
 using M5x.DEC.Schema;
 
 namespace M5x.DEC.Persistence
@@ -16,14 +17,10 @@ namespace M5x.DEC.Persistence
         where TAggregateId : IIdentity
     {
         long Version { get; }
-
         void ApplyEvent(IEvent<TAggregateId> @event, long version);
-
-//        void ApplyEvent<TPayload>(IEvent<TAggregateId, TPayload> @event, long version) where TPayload : IPayload;
-
-
         void ClearUncommittedEvents();
+        void Load(IEnumerable<IEvent<TAggregateId>> aggregateEvents);
+        IEnumerable<IEvent<TAggregateId>> GetUncommittedEvents();
 
-//        IEnumerable<IAggregateEvent<TAggregateId>> Load();
     }
 }

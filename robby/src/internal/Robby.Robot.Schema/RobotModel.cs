@@ -4,9 +4,9 @@ using System.Runtime.Serialization;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Common;
 
-namespace Robby.Game.Schema
+namespace Robby.Robot.Schema
 {
-    public record Robot : IStateEntity<Aggregate.RobotId>, IPayload
+    public record RobotModel : IStateEntity<RobotModel.RobotId>, IPayload
     {
         private static readonly string[] _names =
         {
@@ -38,11 +38,11 @@ namespace Robby.Game.Schema
         
         
         
-        public Robot()
+        public RobotModel()
         {
         }
 
-        public Robot(string id,
+        public RobotModel(string id,
             string prev,
             Description description,
             Vector position,
@@ -69,18 +69,18 @@ namespace Robby.Game.Schema
         public Flags Status { get; set; }
         public RobotKind Kind { get; set; }
 
-        public static Robot New(M5x.DEC.Schema.Common.Vector maxDimensions)
+        public static RobotModel New(Vector maxDimensions)
         {
             var rndName = new Random().Next(_names.Length - 1);
             var rndAdjective = new Random().Next(_adjectives.Length - 1);
             var id = $"{_adjectives[rndAdjective]} {_names[rndName]}";
-            return new Robot
+            return new RobotModel
             {
                 Id = id,
                 Description = new Description(id, ""),
                 Health = new Health(new Random().Next(5)),
                 Kind = (RobotKind) new Random().Next(1, 3),
-                Position = new M5x.DEC.Schema.Common.Vector
+                Position = new Vector
                 {
                     X = new Random().Next(1, maxDimensions.X),
                     Y = new Random().Next(1, maxDimensions.Y),
@@ -91,11 +91,23 @@ namespace Robby.Game.Schema
         }
 
         public AggregateInfo Meta { get; set; }
+        
+        
+        [IDPrefix(Constants.RobotAttributes.IDPrefix)]
+        public record RobotId : Identity<RobotId>
+        {
+            public RobotId(string value) : base(value)
+            {
+            }
+            
+            public RobotId() : base(New.Value) {}
+        }
+
     }
 
     public static class FlagsExtensions
     {
-        public static bool HasFlagFast(this Robot.Flags value, Robot.Flags flag)
+        public static bool HasFlagFast(this RobotModel.Flags value, RobotModel.Flags flag)
         {
             return (value & flag) != 0;
         }

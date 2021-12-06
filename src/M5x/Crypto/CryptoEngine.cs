@@ -16,12 +16,12 @@ namespace M5x.Crypto
         /// </summary>
         /// <param name="ablock">The ablock.</param>
         /// <returns></returns>
-        public static string Encrypt(string ablock)
+        public static string DESEncrypt(string ablock)
         {
             if (string.IsNullOrEmpty(ablock))
                 return ablock;
 
-            var des = new DESCryptoServiceProvider();
+            var des = DES.Create();
             var ms = new MemoryStream();
             var bin = Encoding.UTF8.GetBytes(ablock);
 
@@ -43,7 +43,7 @@ namespace M5x.Crypto
             {
                 if (string.IsNullOrEmpty(ablock))
                     return ablock;
-                var des = new DESCryptoServiceProvider();
+                var des = DES.Create();
                 var ms = new MemoryStream();
                 var bin = Convert.FromBase64String(ablock);
 

@@ -1,17 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\M5x.DEC.Infra\M5x.DEC.Infra.csproj" />
-    <ProjectReference Include="..\..\clients\Robby.Client.Infra\Robby.Client.Infra.csproj" />
-    <ProjectReference Include="..\..\internal\Robby.Domain\Robby.Domain.csproj" />
+    <ProjectReference Include="..\..\internal\Robby.Game.Domain\Robby.Game.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-  </ItemGroup>
 
 </Project>

@@ -1,20 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using FluentValidation;
-using FluentValidation.Results;
 using M5x.DEC;
 using M5x.DEC.Events;
 using M5x.DEC.ExecutionResults;
+using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Robby.Game.Schema;
-using Serilog;
 
 namespace Robby.Game.Domain
 {
@@ -26,7 +24,7 @@ namespace Robby.Game.Domain
         {
             public void Apply(Initialize.Evt evt)
             {
-                Model.Status = (Schema.Game.Flags) evt.Meta.Status;
+                Model.Status = (Schema.GameModel.Flags) evt.Meta.Status;
                 Model.Meta = evt.Meta;
                 Model.Id = evt.Meta.Id;
                 Model.Description.Name = evt.Payload.Name;
@@ -39,11 +37,7 @@ namespace Robby.Game.Domain
                 Guard.Against.Null(command.Payload, nameof(command.Payload));
                 Guard.Against.Null(command.Payload.FieldDimensions, nameof(command.Payload.FieldDimensions));
                 Guard.Against.NullOrWhiteSpace(command.Payload.Name, nameof(command.Payload.Name));
-                
-                if ((Schema.Game.Flags) Model.Meta.Status != Schema.Game.Flags.Unknown)
-                    return ExecutionResult.Failed();
-                
-                return ex;
+                Guard.Against.AlreadyInitialized(Model);
             }
 
             public IExecutionResult Execute(Initialize.Cmd command)
@@ -51,7 +45,7 @@ namespace Robby.Game.Domain
                 try
                 {
                     Validate(command);
-                    RaiseEvents(cmd);
+                    RaiseEvents(command);
                     return ExecutionResult.Success();
                 }
                 catch (Exception e)
@@ -59,22 +53,32 @@ namespace Robby.Game.Domain
                     return ExecutionResult.Failed(e.InnerAndOuter());
                 }
             }
+
+            private void RaiseEvents(Initialize.Cmd cmd)
+            {
+            }
         }
     }
 
     public static class Initialize
     {
-        
+
+        public static void AlreadyInitialized(this IGuardClause guardClause, Schema.GameModel model)
+        {
+            if (model.Status != Schema.GameModel.Flags.Unknown)
+                throw new Initialize.Excep($"Game [{model.Id}] is already initialized.");
+        }
+
         public static IServiceCollection AddInitializeActor(this IServiceCollection services)
         {
             return services
                 .AddDECBus()
-                .AddTransient<IGame, Schema.Game>()
+                .AddTransient<IGameModel, Schema.GameModel>()
                 .AddTransient<Aggregate.IRoot, Aggregate.Root>()
                 .AddTransient<IActor, Actor>();
         }
 
-        public interface IEmitter : IFactEmitter<Schema.Game.ID, Evt, Contract.Features.Initialize.Fact>
+        public interface IEmitter : IFactEmitter<Schema.GameModel.ID, Evt, Contract.Features.Initialize.Fact>
         {
         }
 
@@ -122,11 +126,11 @@ namespace Robby.Game.Domain
             {
             }
 
-            private Cmd(Schema.Game.ID aggregateId, string correlationId, InitializationOrder payload) : base(aggregateId, correlationId, payload)
+            private Cmd(Schema.GameModel.ID aggregateId, string correlationId, InitializationOrder payload) : base(aggregateId, correlationId, payload)
             {
             }
 
-            public static Cmd New(Schema.Game.ID gameId, string correlationId, InitializationOrder order)
+            public static Cmd New(Schema.GameModel.ID gameId, string correlationId, InitializationOrder order)
             {
                 return new(gameId, correlationId, order);
             }
@@ -134,29 +138,16 @@ namespace Robby.Game.Domain
 
         public record Evt : Aggregate.Evt<InitializationOrder>
         {
-            
             public Evt() {}
-
             private Evt(AggregateInfo meta, InitializationOrder payload) : base(meta, payload)
             {
             }
-
-            public static Evt New(Cmd command, Schema.Game.Flags newGameStatus)
-            {
-                return new(AggregateInfo.New(
-                    command.AggregateId.Value,
-                    -1,
-                    (int)newGameStatus), command.CorrelationId, command.Payload);
-            }
-
-
             private Evt(AggregateInfo meta, string correlationId, InitializationOrder payload) : base(meta, correlationId, payload)
             {
             }
-
-            public override IEvent<Schema.Game.ID> WithAggregate(AggregateInfo meta)
+            public override IEvent<GameModel.ID> WithAggregate(AggregateInfo meta, string correlationId)
             {
-                return new Evt(meta, Payload);
+                return new Evt(meta, correlationId, Payload);
             }
         }
 
@@ -165,37 +156,23 @@ namespace Robby.Game.Domain
             public const string ActorError = "Robby.InitializeContext.ActorError";
         }
 
-        public interface IActor : IAsyncActor<Aggregate.Root, Schema.Game.ID, Cmd,
-            Contract.Features.Initialize.Hope,
-            Contract.Features.Initialize.Feedback>
+        public interface IActor : IAsyncActor<Schema.GameModel.ID, 
+            Cmd,
+            Contract.Features.Initialize.Fbk>
         {
         }
 
-        internal class Actor : AsyncActor<Aggregate.Root, Schema.Game.ID, Cmd,
-            Contract.Features.Initialize.Hope,
-            Contract.Features.Initialize.Feedback, 
-            Evt, Contract.Features.Initialize.Fact>, IActor
+        internal class Actor : AsyncActor<
+            Aggregate.Root,
+            GameModel.ID, 
+            Cmd,
+            Contract.Features.Initialize.Fbk>, IActor
         {
-            public Actor(IGameStream aggregates,
-                IDECBus subscriber,
-                IEnumerable<IEventHandler<Schema.Game.ID, Evt>> handlers,
-                IEmitter emitter,
-                ILogger logger) : base(aggregates,
-                subscriber,
-                handlers,
-                emitter,
-                logger)
-            {
-            }
 
-            protected override Cmd ToCommand(Contract.Features.Initialize.Hope hope)
-            {
-                return Cmd.New(Schema.Game.ID.With(hope.AggregateId), hope.CorrelationId, hope.Payload);
-            }
 
-            protected override async Task<Contract.Features.Initialize.Feedback> Act(Cmd cmd)
+            protected override async Task<Contract.Features.Initialize.Fbk> Act(Cmd cmd)
             {
-                var res = Contract.Features.Initialize.Feedback.Empty(cmd.CorrelationId);
+                var res = Contract.Features.Initialize.Fbk.Empty(cmd.CorrelationId);
                 try
                 {
                     var root = await Aggregates.GetByIdAsync(cmd.AggregateId);
@@ -210,14 +187,13 @@ namespace Robby.Game.Domain
                 catch (Exception e)
                 {
                     res.ErrorState.Errors.Add(Errors.ActorError, e.AsApiError());
-                    Logger.Error(e.InnerAndOuter());
                 }
                 return res;
             }
+           
 
-            protected override Contract.Features.Initialize.Fact ToFact(Evt @event)
+            public Actor(IBroadcaster<GameModel.ID> caster, IAsyncEventStream<Aggregate.Root, GameModel.ID> aggregates, IDECBus bus, IEnumerable<IEventHandler<GameModel.ID, IEvent<GameModel.ID>>> handlers) : base(caster, aggregates, bus, handlers)
             {
-                return Contract.Features.Initialize.Fact.New(@event.Meta, @event.CorrelationId, @event.Payload);
             }
         }
     }

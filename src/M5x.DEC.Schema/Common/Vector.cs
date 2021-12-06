@@ -1,3 +1,5 @@
+using System;
+
 namespace M5x.DEC.Schema.Common
 {
     public record Vector : IPayload
@@ -20,6 +22,19 @@ namespace M5x.DEC.Schema.Common
         public override string ToString()
         {
             return $"Postion: ({X},{Y},{Z})";
+        }
+
+        public static Vector New(int x, int y, int z)
+        {
+            return new Vector(x, y, z);
+        }
+
+        public static Vector Random(int x, int y, int z)
+        {
+            return New(
+                new Random().Next(0, x), 
+                new Random().Next(0, y), 
+                new Random().Next(0, z));
         }
     }
 }

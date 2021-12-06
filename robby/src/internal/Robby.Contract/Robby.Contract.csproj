@@ -1,17 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
     <AssemblyOriginatorKeyFile>../../../m5x.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\M5x.DEC\M5x.DEC.csproj" />
     <ProjectReference Include="..\Robby.Schema\Robby.Schema.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Game" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

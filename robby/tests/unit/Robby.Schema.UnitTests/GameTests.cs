@@ -2,6 +2,7 @@ using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
 using M5x.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Robby.Game.Schema;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,7 +10,7 @@ namespace Robby.Schema.UnitTests
 {
     public class GameTests : IoCTestsBase
     {
-        private Game.Schema.Game _game;
+        private Game.Schema.GameModel _gameModel;
 
 
         public GameTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
@@ -19,32 +20,32 @@ namespace Robby.Schema.UnitTests
         [Fact]
         public void Should_RoboSimMustContainRobots()
         {
-            Assert.NotNull(_game.Population);
+            Assert.NotNull(_gameModel.Population);
         }
 
 
         [Fact]
         public void Should_RoboSimMustHaveATableName()
         {
-            var name = _game.TableName();
+            var name = _gameModel.TableName();
             Assert.False(string.IsNullOrEmpty(name));
         }
 
         [Fact]
         public void Should_RoboSimMustHaveDetails()
         {
-            Assert.NotNull(_game.Description);
+            Assert.NotNull(_gameModel.Description);
         }
 
         [Fact]
         public void Should_MustBeAbleToCreateNewRoboSim()
         {
-            Assert.NotNull(_game);
+            Assert.NotNull(_gameModel);
         }
 
         protected override async void Initialize()
         {
-            _game = Game.New(Identity<Game.ID>.New.Value);
+            _gameModel = GameModel.New(Identity<GameModel.ID>.New.Value);
         }
 
         protected override void SetTestEnvironment()

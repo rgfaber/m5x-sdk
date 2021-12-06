@@ -5,12 +5,12 @@ using M5x.DEC.Schema.Utils;
 
 namespace Robby.Game.Schema
 {
-    public interface IGame : IStateEntity<Game.ID>
+    public interface IGameModel : IStateEntity<GameModel.ID>
     {
     }
     public static class FlagExtensions
     {
-        public static bool HasFlagFast(this Game.Flags value, Game.Flags flag)
+        public static bool HasFlagFast(this GameModel.Flags value, GameModel.Flags flag)
         {
             return (value & flag) != 0;
         }
@@ -18,7 +18,7 @@ namespace Robby.Game.Schema
     }
     [Serializable]
     [DbName(Attributes.DbName)]
-    public record Game : IGame, IPayload
+    public record GameModel : IGameModel, IPayload
     {
         
         
@@ -29,16 +29,10 @@ namespace Robby.Game.Schema
             {
             }
 
-            public ID() : base(Identity<ID>.New.Value)
+            public ID() : base(New.Value)
             {
             }
-
-            public static ID New(string id=null)
-            {
-                if(string.IsNullOrWhiteSpace(id)) 
-                    id = GuidUtils.LowerCaseGuid;
-                return NewComb(id);
-            }
+            
         }
 
         [Flags]
@@ -58,9 +52,9 @@ namespace Robby.Game.Schema
         }
 
        
-        public Game() {}
+        public GameModel() {}
 
-        public Game(Population population, Description description, Flags flags, string id,
+        public GameModel(Population population, Description description, Flags flags, string id,
             string prev, string aggregateId, Vector dimensions)
         {
             Population = population;
@@ -72,7 +66,7 @@ namespace Robby.Game.Schema
             Meta = AggregateInfo.New(aggregateId,-1,(int)Flags.Unknown);
         }
 
-        private Game(string aggregateId)
+        private GameModel(string aggregateId)
         {
             Population = new Population();
             Description = new Description("New Simulation", "");
@@ -83,7 +77,7 @@ namespace Robby.Game.Schema
             Meta = AggregateInfo.New(aggregateId,-1,(int)Flags.Unknown);
         }
 
-        public Game(ID gameID, Population population, Description description,
+        public GameModel(ID gameID, Population population, Description description,
             Flags flags, string id, string prev, AggregateInfo meta, Vector dimensions)
         {
             Population = population;
@@ -95,7 +89,7 @@ namespace Robby.Game.Schema
             Dimensions = dimensions;
         }
 
-        public Game(Population population, Description description, Flags flags, string id,
+        public GameModel(Population population, Description description, Flags flags, string id,
             string prev, AggregateInfo meta, Vector dimensions)
         {
             Population = population;
@@ -115,7 +109,7 @@ namespace Robby.Game.Schema
         public string Prev { get; set; }
         public AggregateInfo Meta { get; set; }
         public StartOrder StartOrder { get; set; }
-        public static Game New(string idValue, InitializationOrder initializationOrder = null)
+        public static GameModel New(string idValue, InitializationOrder initializationOrder = null)
         {
             return new(idValue);
         }

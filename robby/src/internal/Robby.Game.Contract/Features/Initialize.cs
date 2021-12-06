@@ -44,23 +44,20 @@ namespace Robby.Game.Contract.Features
             }
         }
 
-        public record Feedback : Feedback<Dummy>
+        public record Fbk : Feedback
         {
-            public Feedback()
+            public Fbk()
             {
             }
 
-            public Feedback(AggregateInfo meta, string correlationId, Dummy payload) : base(meta, correlationId, payload)
+
+            private Fbk(AggregateInfo meta, string correlationId) : base(meta, correlationId)
             {
             }
 
-            public Feedback(string correlationId) : base(correlationId)
+            public static Fbk Empty(string correlationId)
             {
-            }
-
-            public static Feedback Empty(string correlationId)
-            {
-                return new(correlationId);
+                return new(AggregateInfo.Empty, correlationId);
             }
         }
     }

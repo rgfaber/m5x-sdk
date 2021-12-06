@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using M5x.DEC;
 using M5x.DEC.Events;
 using M5x.DEC.ExecutionResults;
+using M5x.DEC.Persistence;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 using M5x.DEC.Schema.Extensions;
@@ -26,17 +27,17 @@ namespace Robby.Game.Domain
                 if (command == null) throw new ArgumentNullException(nameof(command));
                 if (command.Payload == null) throw new Start.Excep("Payload Cannot be nil");
                 
-                if (!Model.Status.HasFlag(Schema.Game.Flags.DimensionsUpdated) ||
-                    !Model.Status.HasFlag(Schema.Game.Flags.PopulationUpdated)) 
+                if (!Model.Status.HasFlag(Schema.GameModel.Flags.DimensionsUpdated) ||
+                    !Model.Status.HasFlag(Schema.GameModel.Flags.PopulationUpdated)) 
                     return ExecutionResult.Failed();
-                var newStatus = Model.Status | Schema.Game.Flags.Started;
+                var newStatus = Model.Status | Schema.GameModel.Flags.Started;
                 RaiseEvent(Start.Evt.New(command, newStatus));
                 return ExecutionResult.Success();
             }
 
             public void Apply(Start.Evt evt)
             {
-                Model.Status = (Schema.Game.Flags) evt.Meta.Status;
+                Model.Status = (Schema.GameModel.Flags) evt.Meta.Status;
                 Model.Meta = evt.Meta;
                 Model.StartOrder = evt.Payload;
             }
@@ -53,12 +54,14 @@ namespace Robby.Game.Domain
         {
             return services?
                 .AddDECBus()
-                .AddTransient<IGame, Schema.Game>()
+                .AddTransient<IGameModel, Schema.GameModel>()
                 .AddTransient<Aggregate.IRoot, Aggregate.Root>()
                 .AddTransient<IActor, Actor>();
         }
 
-        public interface IEmitter : IFactEmitter<Schema.Game.ID, Contract.Features.Start.Fact>
+        public interface IEmitter : IFactEmitter<Schema.GameModel.ID,
+            Domain.Initialize.Evt,
+            Contract.Features.Start.Fact>
         {}
 
         public record Cmd : Aggregate.Cmd<StartOrder>
@@ -67,12 +70,12 @@ namespace Robby.Game.Domain
             {
             }
 
-            public Cmd(Schema.Game.ID aggregateId, string correlationId, StartOrder payload) 
+            public Cmd(Schema.GameModel.ID aggregateId, string correlationId, StartOrder payload) 
                 : base(aggregateId, correlationId, payload)
             {
             }
 
-            public static Cmd New(Schema.Game.ID id, string correlationId, StartOrder payload)
+            public static Cmd New(Schema.GameModel.ID id, string correlationId, StartOrder payload)
             {
                 return new(id, correlationId, payload);
             }
@@ -81,7 +84,7 @@ namespace Robby.Game.Domain
         public record Evt : Aggregate.Evt<StartOrder>
         {
             public Evt() {}
-            public static Evt New(Cmd command, Schema.Game.Flags newStatus)
+            public static Evt New(Cmd command, Schema.GameModel.Flags newStatus)
             {
                 return new Evt(AggregateInfo.New(
                         command.AggregateId.Value,
@@ -95,7 +98,11 @@ namespace Robby.Game.Domain
             {
             }
 
-            public Evt(AggregateInfo meta, string correlationId, StartOrder payload) : base(meta, correlationId, payload)
+            private Evt(AggregateInfo meta,
+                string correlationId,
+                StartOrder payload) : base(meta,
+                correlationId,
+                payload)
             {
             }
 
@@ -103,41 +110,27 @@ namespace Robby.Game.Domain
             {
             }
 
-            public override IEvent<Schema.Game.ID> WithAggregate(AggregateInfo meta)
+            public override IEvent<GameModel.ID> WithAggregate(AggregateInfo meta, string correlationId)
             {
-                return new Evt(meta, Payload);
+                return new Evt(meta, correlationId, Payload);
             }
         }
-        public interface IActor : IAsyncActor<Aggregate.Root, Schema.Game.ID, Cmd, Contract.Features.Start.Hope,
-            Contract.Features.Start.Feedback>
+        public interface IActor : IAsyncActor<
+            Schema.GameModel.ID, 
+            Cmd,
+            Contract.Features.Start.Fbk>
         { }
         
         
-        internal class Actor : AsyncActor<Aggregate.Root, Schema.Game.ID, Cmd,
-                Contract.Features.Start.Hope,
-                Contract.Features.Start.Feedback, 
-                Evt, Contract.Features.Start.Fact>, IActor
+        internal class Actor : AsyncActor<
+            Game.Domain.Aggregate.Root, 
+            Schema.GameModel.ID, 
+            Cmd, Contract.Features.Start.Fbk>, IActor
         {
-            public Actor(IGameStream aggregates,
-                IDECBus subscriber,
-                IEnumerable<IEventHandler<Schema.Game.ID, Evt>> handlers,
-                IEmitter emitter,
-                ILogger logger) : base(aggregates,
-                subscriber,
-                handlers,
-                emitter,
-                logger)
-            {
-            }
 
-            protected override Cmd ToCommand(Contract.Features.Start.Hope hope)
+            protected override async Task<Contract.Features.Start.Fbk> Act(Cmd cmd)
             {
-                return Cmd.New(Schema.Game.ID.With(hope.AggregateId), hope.CorrelationId, hope.Payload);
-            }
-
-            protected override async Task<Contract.Features.Start.Feedback> Act(Cmd cmd)
-            {
-                var rsp = Contract.Features.Start.Feedback.Empty(cmd.CorrelationId);
+                var rsp = Contract.Features.Start.Fbk.Empty(cmd.CorrelationId);
                 try
                 {
                     var root = await Aggregates.GetByIdAsync(cmd.AggregateId);
@@ -150,7 +143,6 @@ namespace Robby.Game.Domain
                 catch (Exception e)
                 {
                     rsp.ErrorState.Errors.Add(Errors.ActorError, e.AsApiError() );
-                    Logger?.Error(e.InnerAndOuter());
                 }
                 return rsp;
             }
@@ -160,9 +152,15 @@ namespace Robby.Game.Domain
                 public const string ActorError = "StartSimulation.ActorError";
             }
 
-            protected override Contract.Features.Start.Fact ToFact(Evt @event)
+
+            public Actor(IBroadcaster<GameModel.ID> caster,
+                IGameStream aggregates,
+                IDECBus bus,
+                IEnumerable<IEventHandler<GameModel.ID, IEvent<GameModel.ID>>> handlers) : base(caster,
+                aggregates,
+                bus,
+                handlers)
             {
-                return Contract.Features.Start.Fact.New(@event.Meta, @event.CorrelationId, @event.Payload);
             }
         }
 

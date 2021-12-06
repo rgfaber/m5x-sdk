@@ -7,6 +7,7 @@
 
 This is an opinionated library of various tools and classes that we have been carrying around from project to project
 since 2001; updating as we move along.
+[Releases](RELEASES.MD)
 
 ### Motivation
 
@@ -24,10 +25,6 @@ Redis**, **NATS** and **RabbitMQ**.
 
 ## RoadMap
 
-### NET 6.0
-
-- Support for .NET 6 is expected by v2.0, as of 22.01
-
 ### EventFlow
 
 The current DEC.* implementation has many similarities with the
@@ -37,7 +34,9 @@ it into the current programming model. The M5x.CEQS.* namespace is a first attem
 ### MediatR
 
 The current DEC.* implementation uses its own *IDECBus* to implement the "mediator" pattern. We investigate te impact of
-using [MediatR](https://github.com/jbogard/MediatR) instead. 
+using [MediatR](https://github.com/jbogard/MediatR) instead.
+
+
 
 
 

@@ -1,4 +1,4 @@
-namespace Robby.Game.Schema
+namespace Robby.Robot.Schema
 {
     public record Health
     {
