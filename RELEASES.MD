@@ -1,7 +1,7 @@
 # Releases
 
 ## December 2021
-
+- v2.0.2 | Dependency updates (Grpc, Mailkit, NEST, MSwag)
 - v2.0.1 | Dependency Updates  
 
 ## November 2021
