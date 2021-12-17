@@ -7,68 +7,67 @@ using M5x.Testing;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace M5x.DEC.TestKit.Integration.Qry
+namespace M5x.DEC.TestKit.Integration.Qry;
+
+public abstract class ReaderTests<TReader, TQuery, TReadModel> : IoCTestsBase
+    where TReader : IModelReader
+    where TQuery : IQuery
+    where TReadModel : IPayload
 {
-    public abstract class ReaderTests<TReader, TQuery, TReadModel> : IoCTestsBase
-        where TReader : IModelReader
-        where TQuery : IQuery
-        where TReadModel : IPayload
+    protected IQuery Query;
+    protected TReader Reader;
+
+    protected ReaderTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
     {
-        protected IQuery Query;
-        protected TReader Reader;
+    }
 
-        protected ReaderTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
+
+    [Fact]
+    public Task Must_QueryMustBeOfTypeTQuery()
+    {
+        try
         {
+            Assert.IsAssignableFrom<TQuery>(Query);
+        }
+        catch (Exception e)
+        {
+            Output.WriteLine(e.InnerAndOuter());
+            throw;
         }
 
+        return Task.CompletedTask;
+    }
 
-        [Fact]
-        public Task Must_QueryMustBeOfTypeTQuery()
+
+    [Fact]
+    public Task Needs_Reader()
+    {
+        try
         {
-            try
-            {
-                Assert.IsAssignableFrom<TQuery>(Query);
-            }
-            catch (Exception e)
-            {
-                Output.WriteLine(e.InnerAndOuter());
-                throw;
-            }
-
-            return Task.CompletedTask;
+            Assert.NotNull(Reader);
+        }
+        catch (Exception e)
+        {
+            Output.WriteLine(e.InnerAndOuter());
+            throw;
         }
 
+        return Task.CompletedTask;
+    }
 
-        [Fact]
-        public Task Needs_Reader()
+    [Fact]
+    public Task Needs_Query()
+    {
+        try
         {
-            try
-            {
-                Assert.NotNull(Reader);
-            }
-            catch (Exception e)
-            {
-                Output.WriteLine(e.InnerAndOuter());
-                throw;
-            }
-
-            return Task.CompletedTask;
+            Assert.NotNull(Query);
+        }
+        catch (Exception e)
+        {
+            Output.WriteLine(e.InnerAndOuter());
+            throw;
         }
 
-        [Fact]
-        public Task Needs_Query()
-        {
-            try
-            {
-                Assert.NotNull(Query);
-            }
-            catch (Exception e)
-            {
-                Output.WriteLine(e.InnerAndOuter());
-                throw;
-            }
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

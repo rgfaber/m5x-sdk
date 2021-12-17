@@ -19,14 +19,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace M5x.Consul.Interfaces
-{
-    public interface IDistributedLock
-    {
-        bool IsHeld { get; }
+namespace M5x.Consul.Interfaces;
 
-        Task<CancellationToken> Acquire(CancellationToken ct = default);
-        Task Destroy(CancellationToken ct = default);
-        Task Release(CancellationToken ct = default);
-    }
+public interface IDistributedLock
+{
+    bool IsHeld { get; }
+
+    Task<CancellationToken> Acquire(CancellationToken ct = default);
+    Task Destroy(CancellationToken ct = default);
+    Task Release(CancellationToken ct = default);
 }

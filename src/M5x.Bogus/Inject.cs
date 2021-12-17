@@ -1,6 +1,5 @@
-﻿namespace M5x.Bogus
+﻿namespace M5x.Bogus;
+
+public static class Inject
 {
-    public static class Inject
-    {
-    }
 }

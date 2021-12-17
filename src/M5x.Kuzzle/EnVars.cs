@@ -1,7 +1,6 @@
-namespace M5x.Kuzzle
+namespace M5x.Kuzzle;
+
+public static class EnVars
 {
-    public static class EnVars
-    {
-        public const string KUZZLE_URL = "KUZZLE_URL";
-    }
+    public const string KUZZLE_URL = "KUZZLE_URL";
 }

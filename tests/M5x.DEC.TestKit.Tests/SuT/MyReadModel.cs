@@ -1,37 +1,36 @@
 using M5x.DEC.Schema;
 
-namespace M5x.DEC.TestKit.Tests.SuT
+namespace M5x.DEC.TestKit.Tests.SuT;
+
+[DbName(MyConfig.MyDb)]
+public record MyReadModel : IStateEntity<MyID, MyStatus>
 {
-    [DbName(MyConfig.MyDb)]
-    public record MyReadModel : IStateEntity<MyID, MyStatus>
+    public MyReadModel()
     {
-        public MyReadModel()
-        {
-        }
+    }
 
-        private MyReadModel(string id)
-        {
-            Id = id;
-        }
+    private MyReadModel(string id)
+    {
+        Id = id;
+    }
 
-        private MyReadModel(string id, string prev)
-        {
-            Id = id;
-            Prev = prev;
-        }
+    private MyReadModel(string id, string prev)
+    {
+        Id = id;
+        Prev = prev;
+    }
 
-        public MyPayload Content { get; set; }
+    public MyPayload Content { get; set; }
 
-        public string Id { get; set; }
-        public string Prev { get; set; }
-        public AggregateInfo Meta { get; set; }
+    public string Id { get; set; }
+    public string Prev { get; set; }
+    public AggregateInfo Meta { get; set; }
 
-        public MyStatus Status { get; set; }
+    public MyStatus Status { get; set; }
 
 
-        public static MyReadModel New(string id, string prev)
-        {
-            return new MyReadModel(id, prev);
-        }
+    public static MyReadModel New(string id, string prev)
+    {
+        return new MyReadModel(id, prev);
     }
 }

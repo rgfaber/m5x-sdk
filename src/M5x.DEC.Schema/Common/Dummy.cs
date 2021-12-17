@@ -1,7 +1,6 @@
-namespace M5x.DEC.Schema.Common
+namespace M5x.DEC.Schema.Common;
+
+public record Dummy : IPayload
 {
-    public record Dummy : IPayload
-    {
-        public static Dummy Empty = new();
-    }
+    public static Dummy Empty = new();
 }

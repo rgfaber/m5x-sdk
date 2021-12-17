@@ -1,17 +1,16 @@
-﻿namespace M5x.DEC.Persistence.EventStore
+﻿namespace M5x.DEC.Persistence.EventStore;
+
+public class AppendResult
 {
-    public class AppendResult
+    private AppendResult(long nextExpectedVersion)
     {
-        private AppendResult(long nextExpectedVersion)
-        {
-            NextExpectedVersion = nextExpectedVersion;
-        }
+        NextExpectedVersion = nextExpectedVersion;
+    }
 
-        public long NextExpectedVersion { get; }
+    public long NextExpectedVersion { get; }
 
-        public static AppendResult New(long nextExpectedVersion)
-        {
-            return new AppendResult(nextExpectedVersion);
-        }
+    public static AppendResult New(long nextExpectedVersion)
+    {
+        return new AppendResult(nextExpectedVersion);
     }
 }

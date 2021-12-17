@@ -1,6 +1,5 @@
-﻿namespace M5x.Polly
+﻿namespace M5x.Polly;
+
+public static class Inject
 {
-    public static class Inject
-    {
-    }
 }

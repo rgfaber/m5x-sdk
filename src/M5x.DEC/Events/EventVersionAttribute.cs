@@ -1,19 +1,18 @@
 ﻿using System;
 using M5x.DEC.Schema.VersionedTypes;
 
-namespace M5x.DEC.Events
+namespace M5x.DEC.Events;
+
+[AttributeUsage(
+    AttributeTargets.Class,
+    AllowMultiple = true
+)]
+public class EventVersionAttribute : VersionedTypeAttribute
 {
-    [AttributeUsage(
-        AttributeTargets.Class,
-        AllowMultiple = true
-    )]
-    public class EventVersionAttribute : VersionedTypeAttribute
+    public EventVersionAttribute(
+        string name,
+        int version)
+        : base(name, version)
     {
-        public EventVersionAttribute(
-            string name,
-            int version)
-            : base(name, version)
-        {
-        }
     }
 }

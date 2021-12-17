@@ -1,29 +1,28 @@
-namespace M5x.Couch
+namespace M5x.Couch;
+
+/// <summary>
+///     Conflict reconcilliation strategies supported by Divan
+/// </summary>
+public enum ReconcileStrategy
 {
     /// <summary>
-    ///     Conflict reconcilliation strategies supported by Divan
+    ///     If a conflict occurs, the exception is propagated to the application
     /// </summary>
-    public enum ReconcileStrategy
-    {
-        /// <summary>
-        ///     If a conflict occurs, the exception is propagated to the application
-        /// </summary>
-        None,
+    None,
 
-        /// <summary>
-        ///     The document will retain additional state information to identify which fields
-        ///     have been modified since the last save, and use that to merge with the database
-        ///     copy. The merge will be performed automatically, by reflecting over all public
-        ///     and non-public fields and properties of the document.
-        /// </summary>
-        AutoMergeFields,
+    /// <summary>
+    ///     The document will retain additional state information to identify which fields
+    ///     have been modified since the last save, and use that to merge with the database
+    ///     copy. The merge will be performed automatically, by reflecting over all public
+    ///     and non-public fields and properties of the document.
+    /// </summary>
+    AutoMergeFields,
 
-        /// <summary>
-        ///     The document will retain additional state information to identify which fields
-        ///     have been modified since the last save, and use that to merge with the database
-        ///     copy. The merge will be delegated to the document instance, by invoking the
-        ///     Reconcile() method with the database document.
-        /// </summary>
-        ManualMergeFields
-    }
+    /// <summary>
+    ///     The document will retain additional state information to identify which fields
+    ///     have been modified since the last save, and use that to merge with the database
+    ///     copy. The merge will be delegated to the document instance, by invoking the
+    ///     Reconcile() method with the database document.
+    /// </summary>
+    ManualMergeFields
 }

@@ -21,50 +21,48 @@ using System.Threading.Tasks;
 using M5x.Consul.Client;
 using M5x.Consul.Interfaces;
 
-namespace M5x.Consul.Coordinate
+namespace M5x.Consul.Coordinate;
+// May want to rework this as Dictionary<string,List<CoordinateEntry>>
+
+public class Coordinate : ICoordinateEndpoint
 {
-    // May want to rework this as Dictionary<string,List<CoordinateEntry>>
+    private readonly ConsulClient.ConsulClient _client;
 
-    public class Coordinate : ICoordinateEndpoint
+    internal Coordinate(ConsulClient.ConsulClient c)
     {
-        private readonly ConsulClient.ConsulClient _client;
+        _client = c;
+    }
 
-        internal Coordinate(ConsulClient.ConsulClient c)
-        {
-            _client = c;
-        }
+    /// <summary>
+    ///     Datacenters is used to return the coordinates of all the servers in the WAN pool.
+    /// </summary>
+    /// <returns>
+    ///     A query result containing a map of datacenters, each with a list of coordinates of all the servers in the WAN
+    ///     pool
+    /// </returns>
+    public Task<QueryResult<CoordinateDatacenterMap[]>> Datacenters(
+        CancellationToken ct = default)
+    {
+        return _client.Get<CoordinateDatacenterMap[]>("/v1/coordinate/datacenters").Execute(ct);
+    }
 
-        /// <summary>
-        ///     Datacenters is used to return the coordinates of all the servers in the WAN pool.
-        /// </summary>
-        /// <returns>
-        ///     A query result containing a map of datacenters, each with a list of coordinates of all the servers in the WAN
-        ///     pool
-        /// </returns>
-        public Task<QueryResult<CoordinateDatacenterMap[]>> Datacenters(
-            CancellationToken ct = default)
-        {
-            return _client.Get<CoordinateDatacenterMap[]>("/v1/coordinate/datacenters").Execute(ct);
-        }
+    /// <summary>
+    ///     Nodes is used to return the coordinates of all the nodes in the LAN pool.
+    /// </summary>
+    /// <returns>A query result containing coordinates of all the nodes in the LAN pool</returns>
+    public Task<QueryResult<CoordinateEntry[]>> Nodes(CancellationToken ct = default)
+    {
+        return Nodes(QueryOptions.Default, ct);
+    }
 
-        /// <summary>
-        ///     Nodes is used to return the coordinates of all the nodes in the LAN pool.
-        /// </summary>
-        /// <returns>A query result containing coordinates of all the nodes in the LAN pool</returns>
-        public Task<QueryResult<CoordinateEntry[]>> Nodes(CancellationToken ct = default)
-        {
-            return Nodes(QueryOptions.Default, ct);
-        }
-
-        /// <summary>
-        ///     Nodes is used to return the coordinates of all the nodes in the LAN pool.
-        /// </summary>
-        /// <param name="q">Customized query options</param>
-        /// <returns>A query result containing coordinates of all the nodes in the LAN pool</returns>
-        public Task<QueryResult<CoordinateEntry[]>> Nodes(QueryOptions q,
-            CancellationToken ct = default)
-        {
-            return _client.Get<CoordinateEntry[]>("/v1/coordinate/nodes", q).Execute(ct);
-        }
+    /// <summary>
+    ///     Nodes is used to return the coordinates of all the nodes in the LAN pool.
+    /// </summary>
+    /// <param name="q">Customized query options</param>
+    /// <returns>A query result containing coordinates of all the nodes in the LAN pool</returns>
+    public Task<QueryResult<CoordinateEntry[]>> Nodes(QueryOptions q,
+        CancellationToken ct = default)
+    {
+        return _client.Get<CoordinateEntry[]>("/v1/coordinate/nodes", q).Execute(ct);
     }
 }

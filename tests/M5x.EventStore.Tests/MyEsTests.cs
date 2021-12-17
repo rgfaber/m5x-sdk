@@ -1,6 +1,5 @@
-namespace M5x.EventStore.Tests
+namespace M5x.EventStore.Tests;
+
+public static class MyEsTests
 {
-    public static class MyEsTests
-    {
-    }
 }

@@ -1,11 +1,10 @@
-﻿namespace M5x.DEC.Sagas
-{
-    public interface ISaga
-    {
-    }
+﻿namespace M5x.DEC.Sagas;
 
-    public interface ISaga<TSagaId> : ISaga
-        where TSagaId : ISagaId
-    {
-    }
+public interface ISaga
+{
+}
+
+public interface ISaga<TSagaId> : ISaga
+    where TSagaId : ISagaId
+{
 }

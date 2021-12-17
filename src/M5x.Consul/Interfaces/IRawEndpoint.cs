@@ -20,14 +20,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using M5x.Consul.Client;
 
-namespace M5x.Consul.Interfaces
-{
-    public interface IRawEndpoint
-    {
-        Task<QueryResult<dynamic>> Query(string endpoint, QueryOptions q,
-            CancellationToken ct = default);
+namespace M5x.Consul.Interfaces;
 
-        Task<WriteResult<dynamic>> Write(string endpoint, object obj, WriteOptions q,
-            CancellationToken ct = default);
-    }
+public interface IRawEndpoint
+{
+    Task<QueryResult<dynamic>> Query(string endpoint, QueryOptions q,
+        CancellationToken ct = default);
+
+    Task<WriteResult<dynamic>> Write(string endpoint, object obj, WriteOptions q,
+        CancellationToken ct = default);
 }

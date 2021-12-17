@@ -1,6 +1,5 @@
-﻿namespace M5x.Neo4j
+﻿namespace M5x.Neo4j;
+
+public class Class1
 {
-    public class Class1
-    {
-    }
 }

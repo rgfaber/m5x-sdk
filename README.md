@@ -3,6 +3,10 @@
 
 # M5x SDK
 
+## Important Notice
+Though .NET has served us well for many years, we have decided to gradually de-invest in the technology and embrace the BEAM ecosystem instead.
+This means that we will only perform dependency updates to the SDK in the future. 
+
 ## Introduction
 
 This is an opinionated library of various tools and classes that we have been carrying around from project to project
@@ -20,7 +24,8 @@ since 2001; updating as we move along.
 
 The M5x.DEC.* namespace contains an SDK that helps with the creation of systems that are based on
 **D**omain Driven Design - **E**vent Sourcing and **C**ommand Query Responsibility Segregation using Clean Architecture
-with the Event/Command Handler ("mediator") pattern. There is built in support for **EventStoreDB**, **CouchDB**, **Redis**, **NATS** and **RabbitMQ**.
+with the Event/Command Handler ("mediator") pattern. There is built in support for **EventStoreDB**, **CouchDB**, **
+Redis**, **NATS** and **RabbitMQ**.
 
 ## RoadMap
 

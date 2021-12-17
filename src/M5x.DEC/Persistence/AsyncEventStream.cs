@@ -8,126 +8,124 @@ using M5x.DEC.Persistence.EventStore;
 using M5x.DEC.PubSub;
 using M5x.DEC.Schema;
 
-namespace M5x.DEC.Persistence
+namespace M5x.DEC.Persistence;
+
+public interface IAsyncEventStream
 {
-    public interface IAsyncEventStream
+}
+
+public interface IAsyncEventStream<TAggregate, TAggregateId> : IAsyncEventStream
+    where TAggregate : IEventSourcingAggregate<TAggregateId>
+    where TAggregateId : IIdentity
+{
+    Task<TAggregate> GetByIdAsync(TAggregateId id);
+    Task SaveAsync(TAggregate aggregate);
+    Task<IEnumerable<StoreEvent<TAggregateId>>> LoadAsync(TAggregateId id);
+    IAsyncEnumerable<StoreEvent<TAggregateId>> LoadAllAsync(CancellationToken cancellationToken = default);
+}
+
+public abstract class AsyncEventStream<TAggregate, TAggregateId> : IAsyncEventStream<TAggregate, TAggregateId>
+    where TAggregate : IEventSourcingAggregate<TAggregateId>
+    where TAggregateId : IIdentity
+{
+    private readonly IDECBus bus;
+    private readonly IEventStore eventStore;
+
+    public AsyncEventStream(IEventStore eventStore, IDECBus bus)
     {
+        this.eventStore = eventStore;
+        this.bus = bus;
     }
 
-    public interface IAsyncEventStream<TAggregate, TAggregateId> : IAsyncEventStream
-        where TAggregate : IEventSourcingAggregate<TAggregateId>
-        where TAggregateId : IIdentity
+
+    public async Task<TAggregate> GetByIdAsync(TAggregateId id)
     {
-        Task<TAggregate> GetByIdAsync(TAggregateId id);
-        Task SaveAsync(TAggregate aggregate);
-        Task<IEnumerable<StoreEvent<TAggregateId>>> LoadAsync(TAggregateId id);
-        IAsyncEnumerable<StoreEvent<TAggregateId>> LoadAllAsync(CancellationToken cancellationToken = default);
+        try
+        {
+            var aggregate = CreateEmptyAggregate(id);
+            IEventSourcingAggregate<TAggregateId> aggregatePersistence = aggregate;
+            var lst = await eventStore.ReadEventsAsync(id);
+            if (lst == null) return aggregate;
+            foreach (var @event in lst)
+                aggregatePersistence.ApplyEvent(@event.Event, @event.EventNumber);
+            return aggregate;
+        }
+        catch (EventStoreCommunicationException ex)
+        {
+            throw new RepositoryException("Unable to access persistence layer", ex);
+        }
     }
 
 
-    public abstract class AsyncEventStream<TAggregate, TAggregateId> : IAsyncEventStream<TAggregate, TAggregateId>
-        where TAggregate : IEventSourcingAggregate<TAggregateId>
-        where TAggregateId : IIdentity
+    public async Task<IEnumerable<StoreEvent<TAggregateId>>> LoadAsync(TAggregateId id)
     {
-        private readonly IDECBus bus;
-        private readonly IEventStore eventStore;
-
-        public AsyncEventStream(IEventStore eventStore, IDECBus bus)
+        try
         {
-            this.eventStore = eventStore;
-            this.bus = bus;
+            return await eventStore.ReadEventsAsync(id);
         }
-
-
-        public async Task<TAggregate> GetByIdAsync(TAggregateId id)
+        // catch (EventStoreAggregateNotFoundException)
+        // {
+        //     return null;
+        // }
+        catch (EventStoreCommunicationException ex)
         {
-            try
-            {
-                var aggregate = CreateEmptyAggregate(id);
-                IEventSourcingAggregate<TAggregateId> aggregatePersistence = aggregate;
-                var lst = await eventStore.ReadEventsAsync(id);
-                if (lst == null) return aggregate;
-                foreach (var @event in lst)
-                    aggregatePersistence.ApplyEvent(@event.Event, @event.EventNumber);
-                return aggregate;
-            }
-            catch (EventStoreCommunicationException ex)
-            {
-                throw new RepositoryException("Unable to access persistence layer", ex);
-            }
+            throw new RepositoryException("Unable to access persistence layer", ex);
         }
+    }
 
-
-        public async Task<IEnumerable<StoreEvent<TAggregateId>>> LoadAsync(TAggregateId id)
+    public IAsyncEnumerable<StoreEvent<TAggregateId>> LoadAllAsync(CancellationToken cancellationToken = default)
+    {
+        try
         {
-            try
-            {
-                return await eventStore.ReadEventsAsync(id);
-            }
-            // catch (EventStoreAggregateNotFoundException)
-            // {
-            //     return null;
-            // }
-            catch (EventStoreCommunicationException ex)
-            {
-                throw new RepositoryException("Unable to access persistence layer", ex);
-            }
+            return eventStore.ReadAllEventsAsync<TAggregateId>(cancellationToken);
         }
-
-        public IAsyncEnumerable<StoreEvent<TAggregateId>> LoadAllAsync(CancellationToken cancellationToken = default)
+        catch (EventStoreCommunicationException ex)
         {
-            try
-            {
-                return eventStore.ReadAllEventsAsync<TAggregateId>(cancellationToken);
-            }
-            catch (EventStoreCommunicationException ex)
-            {
-                throw new RepositoryException("Unable to access persistence layer", ex);
-            }
+            throw new RepositoryException("Unable to access persistence layer", ex);
         }
+    }
 
 
-        public async Task SaveAsync(TAggregate aggregate)
+    public async Task SaveAsync(TAggregate aggregate)
+    {
+        try
         {
-            try
+            IEventSourcingAggregate<TAggregateId> aggregatePersistence = aggregate;
+            var uncomEvts = aggregatePersistence.GetUncommittedEvents();
+            foreach (var @event in uncomEvts)
             {
-                IEventSourcingAggregate<TAggregateId> aggregatePersistence = aggregate;
-                var uncomEvts = aggregatePersistence.GetUncommittedEvents();
-                foreach (var @event in uncomEvts)
-                {
-                    await eventStore.AppendEventAsync(@event).ConfigureAwait(false);
-                    await bus.PublishAsync((dynamic)@event);
-                }
+                await eventStore.AppendEventAsync(@event).ConfigureAwait(false);
+                await bus.PublishAsync((dynamic)@event);
+            }
 
-                aggregatePersistence.ClearUncommittedEvents();
-            }
-            catch (EventStoreCommunicationException ex)
-            {
-                throw new RepositoryException("Unable to access persistence layer", ex);
-            }
+            aggregatePersistence.ClearUncommittedEvents();
         }
-
-        private TAggregate CreateEmptyAggregate(TAggregateId id)
+        catch (EventStoreCommunicationException ex)
         {
-            Guard.Against.Null(id, nameof(id));
-            Guard.Against.NullOrWhiteSpace(id.Value, nameof(id.Value));
-            try
-            {
-                var ci = typeof(TAggregate)
-                    .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
-                        null,
-                        new [] {typeof(TAggregateId)} ,
-                        Array.Empty<ParameterModifier>());
-                Guard.Against.Null(ci, nameof(ci));
-                var res = ci.Invoke(new object[] {id});
-                var result = (TAggregate)res;
+            throw new RepositoryException("Unable to access persistence layer", ex);
+        }
+    }
+
+    private TAggregate CreateEmptyAggregate(TAggregateId id)
+    {
+        Guard.Against.Null(id, nameof(id));
+        Guard.Against.NullOrWhiteSpace(id.Value, nameof(id.Value));
+        try
+        {
+            var ci = typeof(TAggregate)
+                .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
+                    null,
+                    new[] { typeof(TAggregateId) },
+                    Array.Empty<ParameterModifier>());
+            Guard.Against.Null(ci, nameof(ci));
+            var res = ci.Invoke(new object[] { id });
+            var result = (TAggregate)res;
 //                result.Id = id;
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw new RepositoryException("Failed at Creating an Empty Aggregate!", e);
-            }
+            return result;
+        }
+        catch (Exception e)
+        {
+            throw new RepositoryException("Failed at Creating an Empty Aggregate!", e);
         }
     }
 }

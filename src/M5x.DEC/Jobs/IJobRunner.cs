@@ -1,6 +1,5 @@
-namespace M5x.DEC.Jobs
+namespace M5x.DEC.Jobs;
+
+public interface IJobRunner
 {
-    public interface IJobRunner
-    {
-    }
 }

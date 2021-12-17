@@ -1,12 +1,11 @@
 using M5x.DEC.Schema;
 
-namespace M5x.DEC.Snapshot
+namespace M5x.DEC.Snapshot;
+
+public record SnapshotId : Identity<SnapshotId>, ISnapshotId
 {
-    public record SnapshotId : Identity<SnapshotId>, ISnapshotId
+    public SnapshotId(string value)
+        : base(value)
     {
-        public SnapshotId(string value)
-            : base(value)
-        {
-        }
     }
 }

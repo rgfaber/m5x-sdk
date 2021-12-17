@@ -1,32 +1,31 @@
 using M5x.Couch.Interfaces;
 
-namespace M5x.Couch
+namespace M5x.Couch;
+
+public abstract class CouchViewDefinitionBase : ICouchViewDefinitionBase
 {
-    public abstract class CouchViewDefinitionBase : ICouchViewDefinitionBase
+    protected CouchViewDefinitionBase(string name, CouchDesignDocument doc)
     {
-        protected CouchViewDefinitionBase(string name, CouchDesignDocument doc)
-        {
-            Doc = doc;
-            Name = name;
-        }
+        Doc = doc;
+        Name = name;
+    }
 
-        public CouchDesignDocument Doc { get; set; }
-        public string Name { get; set; }
+    public CouchDesignDocument Doc { get; set; }
+    public string Name { get; set; }
 
-        public ICouchDatabase Db()
-        {
-            return Doc.Owner;
-        }
+    public ICouchDatabase Db()
+    {
+        return Doc.Owner;
+    }
 
-        public ICouchRequest Request()
-        {
-            return Db().Request(Path());
-        }
+    public ICouchRequest Request()
+    {
+        return Db().Request(Path());
+    }
 
-        public virtual string Path()
-        {
-            if (Doc.Id == "_design/") return Name;
-            return Doc.Id + "/_view/" + Name;
-        }
+    public virtual string Path()
+    {
+        if (Doc.Id == "_design/") return Name;
+        return Doc.Id + "/_view/" + Name;
     }
 }

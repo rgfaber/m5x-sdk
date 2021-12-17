@@ -1,79 +1,77 @@
 using System;
 
-namespace M5x.DEC.Schema
+namespace M5x.DEC.Schema;
+
+public interface IStateEntity<TId> : IReadEntity
+    where TId : IIdentity
 {
-    public interface IStateEntity<TId> : IReadEntity
-        where TId : IIdentity
+    AggregateInfo Meta { get; set; }
+}
+
+public interface IStateEntity<TId, TStatus> : IStateEntity<TId>
+    where TId : IIdentity
+    where TStatus : Enum
+{
+    TStatus Status { get; set; }
+}
+
+public abstract record StateEntity<TID, TStatus> : StateEntity<TID>, IStateEntity<TID, TStatus>
+    where TID : IIdentity where TStatus : Enum
+{
+    private TStatus _status;
+
+    protected StateEntity(TStatus status)
     {
-        AggregateInfo Meta { get; set; }
+        Status = status;
     }
 
-    public interface IStateEntity<TId, TStatus> : IStateEntity<TId>
-        where TId : IIdentity
-        where TStatus : Enum
+    protected StateEntity(string id, string prev, AggregateInfo meta, TStatus status) : base(id, prev, meta)
     {
-        TStatus Status { get; set; }
+        Status = status;
     }
 
-    public abstract record StateEntity<TID, TStatus> : StateEntity<TID>, IStateEntity<TID, TStatus>
-        where TID : IIdentity where TStatus : Enum
+    protected StateEntity()
     {
-        private TStatus _status;
+        Status = default;
+    }
 
-        protected StateEntity(TStatus status)
+    public TStatus Status
+    {
+        get => _status;
+        set
         {
-            Status = status;
+            _status = value;
+            Meta.Status = Convert.ToInt32(_status);
         }
+    }
+}
 
-        protected StateEntity(string id, string prev, AggregateInfo meta, TStatus status) : base(id, prev, meta)
-        {
-            Status = status;
-        }
+public abstract record StateEntity<TID> : IStateEntity<TID> where TID : IIdentity
+{
+    private string _id;
 
-        protected StateEntity()
-        {
-            Status = default;
-        }
+    protected StateEntity()
+    {
+        Meta = AggregateInfo.Empty;
+    }
 
-        public TStatus Status
+    protected StateEntity(string id, string prev, AggregateInfo meta)
+    {
+        Id = id;
+        Prev = prev;
+        Meta = meta;
+    }
+
+    public string Id
+    {
+        get => _id;
+        set
         {
-            get => _status;
-            set
-            {
-                _status = value;
-                Meta.Status = Convert.ToInt32(_status);
-            }
+            _id = value;
+            Meta.Id = _id;
         }
     }
 
-
-    public abstract record StateEntity<TID> : IStateEntity<TID> where TID : IIdentity
-    {
-        private string _id;
-
-        protected StateEntity()
-        {
-            Meta = AggregateInfo.Empty;
-        }
-
-        protected StateEntity(string id, string prev, AggregateInfo meta)
-        {
-            Id = id;
-            Prev = prev;
-            Meta = meta;
-        }
-
-        public string Id
-        {
-            get => _id;
-            set
-            {
-                _id = value;
-                Meta.Id = _id;
-            }
-        }
-
-        public string Prev { get; set; }
-        public AggregateInfo Meta { get; set; }
-    }
+    public string Prev { get; set; }
+    public AggregateInfo Meta { get; set; }
 }

@@ -1,6 +1,5 @@
-﻿namespace M5x.DGraph.Tests
+﻿namespace M5x.DGraph.Tests;
+
+public class Class1
 {
-    public class Class1
-    {
-    }
 }

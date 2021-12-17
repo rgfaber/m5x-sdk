@@ -1,113 +1,112 @@
 ﻿using System;
 
-namespace M5x.Chassis.Mh
+namespace M5x.Chassis.Mh;
+
+/// <summary>
+///     Provides support for timing values
+///     <see href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/TimeUnit.html" />
+/// </summary>
+public enum TimeUnit
 {
-    /// <summary>
-    ///     Provides support for timing values
-    ///     <see href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/TimeUnit.html" />
-    /// </summary>
-    public enum TimeUnit
+    Ticks = 0,
+    Nanoseconds = 1,
+    Microseconds = 2,
+    Milliseconds = 3,
+    Seconds = 4,
+    Minutes = 5,
+    Hours = 6,
+    Days = 7
+}
+
+/// <summary>
+///     Provides enum methods for timing values
+/// </summary>
+public static class TimeUnitExtensions
+{
+    private static readonly long[][] ConversionMatrix = BuildConversionMatrix();
+
+    private static long[][] BuildConversionMatrix()
     {
-        Ticks = 0,
-        Nanoseconds = 1,
-        Microseconds = 2,
-        Milliseconds = 3,
-        Seconds = 4,
-        Minutes = 5,
-        Hours = 6,
-        Days = 7
+        var unitsCount = Enum.GetValues(typeof(TimeUnit)).Length;
+        var timingFactors = new[]
+        {
+            100L, // Ticks to nanos
+            1000L, // Nanos to micros
+            1000L, // Micros to millis
+            1000L, // Millis to seconds
+            60L, // Seconds to minutes
+            60L, // Minutes to hours
+            24L // Hours to days
+        };
+
+        // matrix[i, j] holds the timing factor we need to divide by to get from i to j;
+        // we'll only populate the part of the matrix where j < i since the other half uses the same factors
+        var matrix = new long[unitsCount][];
+        for (var source = 0; source < unitsCount; source++)
+        {
+            matrix[source] = new long[source];
+            var cumulativeFactor = 1L;
+            for (var target = source - 1; target >= 0; target--)
+            {
+                cumulativeFactor *= timingFactors[target];
+                matrix[source][target] = cumulativeFactor;
+            }
+        }
+
+        return matrix;
     }
 
-    /// <summary>
-    ///     Provides enum methods for timing values
-    /// </summary>
-    public static class TimeUnitExtensions
+    public static long Convert(this TimeUnit source, long duration, TimeUnit target)
     {
-        private static readonly long[][] ConversionMatrix = BuildConversionMatrix();
+        if (source == target) return duration;
 
-        private static long[][] BuildConversionMatrix()
-        {
-            var unitsCount = Enum.GetValues(typeof(TimeUnit)).Length;
-            var timingFactors = new[]
-            {
-                100L, // Ticks to nanos
-                1000L, // Nanos to micros
-                1000L, // Micros to millis
-                1000L, // Millis to seconds
-                60L, // Seconds to minutes
-                60L, // Minutes to hours
-                24L // Hours to days
-            };
+        var sourceIndex = (int)source;
+        var targetIndex = (int)target;
 
-            // matrix[i, j] holds the timing factor we need to divide by to get from i to j;
-            // we'll only populate the part of the matrix where j < i since the other half uses the same factors
-            var matrix = new long[unitsCount][];
-            for (var source = 0; source < unitsCount; source++)
-            {
-                matrix[source] = new long[source];
-                var cumulativeFactor = 1L;
-                for (var target = source - 1; target >= 0; target--)
-                {
-                    cumulativeFactor *= timingFactors[target];
-                    matrix[source][target] = cumulativeFactor;
-                }
-            }
+        var result = sourceIndex > targetIndex
+            ? duration * ConversionMatrix[sourceIndex][targetIndex]
+            : duration / ConversionMatrix[targetIndex][sourceIndex];
 
-            return matrix;
-        }
+        return result;
+    }
 
-        public static long Convert(this TimeUnit source, long duration, TimeUnit target)
-        {
-            if (source == target) return duration;
+    public static long ToTicks(this TimeUnit source, long interval)
+    {
+        return Convert(source, interval, TimeUnit.Ticks);
+    }
 
-            var sourceIndex = (int)source;
-            var targetIndex = (int)target;
+    public static long ToNanos(this TimeUnit source, long interval)
+    {
+        return Convert(source, interval, TimeUnit.Nanoseconds);
+    }
 
-            var result = sourceIndex > targetIndex
-                ? duration * ConversionMatrix[sourceIndex][targetIndex]
-                : duration / ConversionMatrix[targetIndex][sourceIndex];
+    public static long ToMicros(this TimeUnit source, long interval)
+    {
+        return Convert(source, interval, TimeUnit.Microseconds);
+    }
 
-            return result;
-        }
+    public static long ToMillis(this TimeUnit source, long interval)
+    {
+        return Convert(source, interval, TimeUnit.Milliseconds);
+    }
 
-        public static long ToTicks(this TimeUnit source, long interval)
-        {
-            return Convert(source, interval, TimeUnit.Ticks);
-        }
+    public static long ToSeconds(this TimeUnit source, long interval)
+    {
+        return Convert(source, interval, TimeUnit.Seconds);
+    }
 
-        public static long ToNanos(this TimeUnit source, long interval)
-        {
-            return Convert(source, interval, TimeUnit.Nanoseconds);
-        }
+    public static long ToMinutes(this TimeUnit source, long interval)
+    {
+        return Convert(source, interval, TimeUnit.Minutes);
+    }
 
-        public static long ToMicros(this TimeUnit source, long interval)
-        {
-            return Convert(source, interval, TimeUnit.Microseconds);
-        }
+    public static long ToHours(this TimeUnit source, long interval)
+    {
+        return Convert(source, interval, TimeUnit.Hours);
+    }
 
-        public static long ToMillis(this TimeUnit source, long interval)
-        {
-            return Convert(source, interval, TimeUnit.Milliseconds);
-        }
-
-        public static long ToSeconds(this TimeUnit source, long interval)
-        {
-            return Convert(source, interval, TimeUnit.Seconds);
-        }
-
-        public static long ToMinutes(this TimeUnit source, long interval)
-        {
-            return Convert(source, interval, TimeUnit.Minutes);
-        }
-
-        public static long ToHours(this TimeUnit source, long interval)
-        {
-            return Convert(source, interval, TimeUnit.Hours);
-        }
-
-        public static long ToDays(this TimeUnit source, long interval)
-        {
-            return Convert(source, interval, TimeUnit.Days);
-        }
+    public static long ToDays(this TimeUnit source, long interval)
+    {
+        return Convert(source, interval, TimeUnit.Days);
     }
 }

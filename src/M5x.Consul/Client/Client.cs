@@ -107,8 +107,8 @@ namespace M5x.Consul.Client
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode && (
-                response.StatusCode != HttpStatusCode.NotFound && typeof(TOut) != typeof(TxnResponse) ||
-                response.StatusCode != HttpStatusCode.Conflict && typeof(TOut) == typeof(TxnResponse)))
+                    response.StatusCode != HttpStatusCode.NotFound && typeof(TOut) != typeof(TxnResponse) ||
+                    response.StatusCode != HttpStatusCode.Conflict && typeof(TOut) == typeof(TxnResponse)))
             {
                 if (ResponseStream == null)
                     throw new ConsulRequestException($"Unexpected response, status code {response.StatusCode}",

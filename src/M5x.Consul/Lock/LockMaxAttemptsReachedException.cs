@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace M5x.Consul.Lock
+namespace M5x.Consul.Lock;
+
+public class LockMaxAttemptsReachedException : Exception
 {
-    public class LockMaxAttemptsReachedException : Exception
+    public LockMaxAttemptsReachedException()
     {
-        public LockMaxAttemptsReachedException()
-        {
-        }
+    }
 
-        public LockMaxAttemptsReachedException(string message) : base(message)
-        {
-        }
+    public LockMaxAttemptsReachedException(string message) : base(message)
+    {
+    }
 
-        public LockMaxAttemptsReachedException(string message, Exception inner) : base(message, inner)
-        {
-        }
+    public LockMaxAttemptsReachedException(string message, Exception inner) : base(message, inner)
+    {
     }
 }

@@ -1,6 +1,5 @@
-﻿namespace M5x.Couch
+﻿namespace M5x.Couch;
+
+public static class Inject
 {
-    public static class Inject
-    {
-    }
 }

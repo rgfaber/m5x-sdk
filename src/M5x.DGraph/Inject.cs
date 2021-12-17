@@ -4,21 +4,20 @@ using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace M5x.DGraph
+namespace M5x.DGraph;
+
+public static class Inject
 {
-    public static class Inject
+    public static IServiceCollection AddDGraph(this IServiceCollection services)
     {
-        public static IServiceCollection AddDGraph(this IServiceCollection services)
-        {
-            return services?
-                .AddTransient<IDgraphClient, DgraphClient>(x =>
-                    new DgraphClient(GrpcChannel.ForAddress(
-                        new Uri(DGraphConfig.DGraphChannel),
-                        new GrpcChannelOptions
-                        {
-                            Credentials = ChannelCredentials.Insecure
-                        })))
-                .AddTransient<IGraphClient, GraphClient>();
-        }
+        return services?
+            .AddTransient<IDgraphClient, DgraphClient>(x =>
+                new DgraphClient(GrpcChannel.ForAddress(
+                    new Uri(DGraphConfig.DGraphChannel),
+                    new GrpcChannelOptions
+                    {
+                        Credentials = ChannelCredentials.Insecure
+                    })))
+            .AddTransient<IGraphClient, GraphClient>();
     }
 }

@@ -1,15 +1,14 @@
 using System;
 
-namespace M5x.EventStore
-{
-    [AttributeUsage(AttributeTargets.Class)]
-    public class StreamNameAttribute : Attribute
-    {
-        public StreamNameAttribute(string streamName)
-        {
-            StreamName = streamName;
-        }
+namespace M5x.EventStore;
 
-        public string StreamName { get; }
+[AttributeUsage(AttributeTargets.Class)]
+public class StreamNameAttribute : Attribute
+{
+    public StreamNameAttribute(string streamName)
+    {
+        StreamName = streamName;
     }
+
+    public string StreamName { get; }
 }

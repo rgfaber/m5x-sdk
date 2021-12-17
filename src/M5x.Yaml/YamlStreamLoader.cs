@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using YamlDotNet.RepresentationModel;
 
-namespace M5x.Yaml
+namespace M5x.Yaml;
+
+public class YamlStreamLoader
 {
-    public class YamlStreamLoader
-    {
-        private const string Document = @"---
+    private const string Document = @"---
             receipt:    Oz-Ware Purchase Invoice
             date:        2007-08-06
             customer:
@@ -40,33 +40,32 @@ namespace M5x.Yaml
                 man behind the curtain.
 ...";
 
-        // [Sample(
-        //     DisplayName = "Loading a YAML Stream",
-        //     Description = "Explains how to load YAML using the representation model."
-        // )]
-        public void Main()
-        {
-            // Setup the input
-            var input = new StringReader(Document);
+    // [Sample(
+    //     DisplayName = "Loading a YAML Stream",
+    //     Description = "Explains how to load YAML using the representation model."
+    // )]
+    public void Main()
+    {
+        // Setup the input
+        var input = new StringReader(Document);
 
-            // Load the stream
-            var yaml = new YamlStream();
-            yaml.Load(input);
+        // Load the stream
+        var yaml = new YamlStream();
+        yaml.Load(input);
 
-            // Examine the stream
-            var mapping =
-                (YamlMappingNode)yaml.Documents[0].RootNode;
+        // Examine the stream
+        var mapping =
+            (YamlMappingNode)yaml.Documents[0].RootNode;
 
-            foreach (var entry in mapping.Children) Console.WriteLine(((YamlScalarNode)entry.Key).Value);
+        foreach (var entry in mapping.Children) Console.WriteLine(((YamlScalarNode)entry.Key).Value);
 
-            // List all the items
-            var items = (YamlSequenceNode)mapping.Children[new YamlScalarNode("items")];
-            foreach (YamlMappingNode item in items)
-                Console.WriteLine(
-                    "{0}\t{1}",
-                    item.Children[new YamlScalarNode("part_no")],
-                    item.Children[new YamlScalarNode("descrip")]
-                );
-        }
+        // List all the items
+        var items = (YamlSequenceNode)mapping.Children[new YamlScalarNode("items")];
+        foreach (YamlMappingNode item in items)
+            Console.WriteLine(
+                "{0}\t{1}",
+                item.Children[new YamlScalarNode("part_no")],
+                item.Children[new YamlScalarNode("descrip")]
+            );
     }
 }

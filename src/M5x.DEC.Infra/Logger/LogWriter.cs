@@ -4,30 +4,28 @@ using M5x.DEC.Events;
 using M5x.DEC.Schema;
 using Serilog;
 
-namespace M5x.DEC.Infra.Logger
+namespace M5x.DEC.Infra.Logger;
+
+public interface ILogWriter<TAggregateId, TEvent> : IEventHandler<TAggregateId, TEvent>
+    where TAggregateId : IIdentity
+    where TEvent : IEvent<TAggregateId>
 {
-    public interface ILogWriter<TAggregateId, TEvent> : IEventHandler<TAggregateId, TEvent>
-        where TAggregateId : IIdentity
-        where TEvent : IEvent<TAggregateId>
+}
+
+public abstract class LogWriter<TAggregateId, TEvent> : ILogWriter<TAggregateId, TEvent>
+    where TEvent : IEvent<TAggregateId>
+    where TAggregateId : IIdentity
+{
+    protected LogWriter(ILogger logger)
     {
+        Logger = logger;
     }
 
+    protected ILogger Logger { get; }
 
-    public abstract class LogWriter<TAggregateId, TEvent> : ILogWriter<TAggregateId, TEvent>
-        where TEvent : IEvent<TAggregateId>
-        where TAggregateId : IIdentity
+    public Task HandleAsync(TEvent @event)
     {
-        protected LogWriter(ILogger logger)
-        {
-            Logger = logger;
-        }
-
-        protected ILogger Logger { get; }
-
-        public Task HandleAsync(TEvent @event)
-        {
-            Logger.Information(JsonSerializer.Serialize(@event));
-            return Task.CompletedTask;
-        }
+        Logger.Information(JsonSerializer.Serialize(@event));
+        return Task.CompletedTask;
     }
 }

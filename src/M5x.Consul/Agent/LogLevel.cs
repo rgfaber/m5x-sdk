@@ -1,11 +1,10 @@
-﻿namespace M5x.Consul.Agent
+﻿namespace M5x.Consul.Agent;
+
+public enum LogLevel
 {
-    public enum LogLevel
-    {
-        Info,
-        Trace,
-        Debug,
-        Warn,
-        Err
-    }
+    Info,
+    Trace,
+    Debug,
+    Warn,
+    Err
 }

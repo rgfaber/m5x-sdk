@@ -2,100 +2,99 @@
 using System.Collections.Generic;
 using M5x.Chassis.Mh.Core;
 
-namespace M5x.Chassis.Mh.Support
+namespace M5x.Chassis.Mh.Support;
+
+/// <summary>
+///     Provides an immutable dictionary
+/// </summary>
+internal class ReadOnlyDictionary<T, TK> : IDictionary<T, TK> where TK : ICopyable<TK>
 {
-    /// <summary>
-    ///     Provides an immutable dictionary
-    /// </summary>
-    internal class ReadOnlyDictionary<T, TK> : IDictionary<T, TK> where TK : ICopyable<TK>
+    private readonly IDictionary<T, TK> _inner;
+
+    public ReadOnlyDictionary(ICollection<KeyValuePair<T, TK>> inner)
     {
-        private readonly IDictionary<T, TK> _inner;
+        _inner = new Dictionary<T, TK>(inner.Count);
+        foreach (var entry in inner) _inner.Add(entry.Key, entry.Value.Copy);
+    }
 
-        public ReadOnlyDictionary(ICollection<KeyValuePair<T, TK>> inner)
-        {
-            _inner = new Dictionary<T, TK>(inner.Count);
-            foreach (var entry in inner) _inner.Add(entry.Key, entry.Value.Copy);
-        }
+    public IEnumerator<KeyValuePair<T, TK>> GetEnumerator()
+    {
+        return _inner.GetEnumerator();
+    }
 
-        public IEnumerator<KeyValuePair<T, TK>> GetEnumerator()
-        {
-            return _inner.GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    public void Add(KeyValuePair<T, TK> item)
+    {
+        /* read-only */
+    }
 
-        public void Add(KeyValuePair<T, TK> item)
+    public void Clear()
+    {
+        /* read-only */
+    }
+
+    public bool Contains(KeyValuePair<T, TK> item)
+    {
+        return _inner.Contains(item);
+    }
+
+    public void CopyTo(KeyValuePair<T, TK>[] array, int arrayIndex)
+    {
+        CopyInner().CopyTo(array, arrayIndex);
+    }
+
+    public bool Remove(KeyValuePair<T, TK> item)
+    {
+        return false; /* read-only */
+    }
+
+    public int Count => _inner.Count;
+
+    public bool IsReadOnly => true;
+
+    public bool ContainsKey(T key)
+    {
+        return _inner.ContainsKey(key);
+    }
+
+    public void Add(T key, TK value)
+    {
+        /* read-only */
+    }
+
+    public bool Remove(T key)
+    {
+        return false; /* read-only */
+    }
+
+    public bool TryGetValue(T key, out TK value)
+    {
+        var result = _inner.TryGetValue(key, out value);
+        value = value.Copy;
+        return result;
+    }
+
+    public TK this[T key]
+    {
+        get => _inner[key].Copy;
+        set
         {
             /* read-only */
         }
+    }
 
-        public void Clear()
-        {
-            /* read-only */
-        }
+    public ICollection<T> Keys => CopyInner().Keys;
 
-        public bool Contains(KeyValuePair<T, TK> item)
-        {
-            return _inner.Contains(item);
-        }
+    public ICollection<TK> Values => CopyInner().Values;
 
-        public void CopyTo(KeyValuePair<T, TK>[] array, int arrayIndex)
-        {
-            CopyInner().CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(KeyValuePair<T, TK> item)
-        {
-            return false; /* read-only */
-        }
-
-        public int Count => _inner.Count;
-
-        public bool IsReadOnly => true;
-
-        public bool ContainsKey(T key)
-        {
-            return _inner.ContainsKey(key);
-        }
-
-        public void Add(T key, TK value)
-        {
-            /* read-only */
-        }
-
-        public bool Remove(T key)
-        {
-            return false; /* read-only */
-        }
-
-        public bool TryGetValue(T key, out TK value)
-        {
-            var result = _inner.TryGetValue(key, out value);
-            value = value.Copy;
-            return result;
-        }
-
-        public TK this[T key]
-        {
-            get => _inner[key].Copy;
-            set
-            {
-                /* read-only */
-            }
-        }
-
-        public ICollection<T> Keys => CopyInner().Keys;
-
-        public ICollection<TK> Values => CopyInner().Values;
-
-        private IDictionary<T, TK> CopyInner()
-        {
-            IDictionary<T, TK> copy = new Dictionary<T, TK>(_inner.Count);
-            foreach (var entry in _inner) copy.Add(entry.Key, entry.Value.Copy);
-            return copy;
-        }
+    private IDictionary<T, TK> CopyInner()
+    {
+        IDictionary<T, TK> copy = new Dictionary<T, TK>(_inner.Count);
+        foreach (var entry in _inner) copy.Add(entry.Key, entry.Value.Copy);
+        return copy;
     }
 }

@@ -13,51 +13,50 @@ using RabbitMQ.Client;
 using Serilog;
 using Xunit.Abstractions;
 
-namespace M5x.DEC.TestKit.Tests
+namespace M5x.DEC.TestKit.Tests;
+
+public class MyEmitterTests : EmitterTests<
+    IConnectionFactory,
+    IMyEventEmitter,
+    MySubscriber,
+    MyID,
+    MyEvent,
+    MyFact>
 {
-    public class MyEmitterTests : EmitterTests<
-        IConnectionFactory,
-        IMyEventEmitter,
-        MySubscriber,
-        MyID,
-        MyEvent,
-        MyFact>
+    public MyEmitterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
     {
-        public MyEmitterTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
-        {
-        }
+    }
 
-        protected override void Initialize()
-        {
-            Connection = Container.GetRequiredService<IConnectionFactory>();
-            Bus = Container.GetRequiredService<IDECBus>();
-            Emitter = Container.GetRequiredService<IMyEventEmitter>();
-            Logger = Container.GetRequiredService<ILogger>();
-            var meta = MyBogus.Schema.Meta.Generate();
-            var payload = MyBogus.Schema.Payload;
-            var cmd = MyCommand.New(meta, TestConstants.CORRELATION_ID, payload);
-            TestEvents.OutEvent = MyEvent.New(cmd);
-            FactHandler = Container.GetRequiredService<IFactHandler<MyID, MyFact>>();
-            Executor = Container.GetRequiredService<IHostExecutor>();
-            Subscriber = Container.GetHostedService<MySubscriber>();
-            TestFacts.OutFact = MyFact.New(meta, TestConstants.CORRELATION_ID, payload);
-        }
+    protected override void Initialize()
+    {
+        Connection = Container.GetRequiredService<IConnectionFactory>();
+        Bus = Container.GetRequiredService<IDECBus>();
+        Emitter = Container.GetRequiredService<IMyEventEmitter>();
+        Logger = Container.GetRequiredService<ILogger>();
+        var meta = MyBogus.Schema.Meta.Generate();
+        var payload = MyBogus.Schema.Payload;
+        var cmd = MyCommand.New(meta, TestConstants.CORRELATION_ID, payload);
+        TestEvents.OutEvent = MyEvent.New(cmd);
+        FactHandler = Container.GetRequiredService<IFactHandler<MyID, MyFact>>();
+        Executor = Container.GetRequiredService<IHostExecutor>();
+        Subscriber = Container.GetHostedService<MySubscriber>();
+        TestFacts.OutFact = MyFact.New(meta, TestConstants.CORRELATION_ID, payload);
+    }
 
-        protected override void SetTestEnvironment()
-        {
-            DotEnv.FromEmbedded();
-        }
+    protected override void SetTestEnvironment()
+    {
+        DotEnv.FromEmbedded();
+    }
 
-        protected override void InjectDependencies(IServiceCollection services)
-        {
-            services
-                .AddHostExecutor()
-                .AddTransient<IFactHandler<MyID, MyFact>, TheFactHandler>()
-                .AddConsoleLogger()
-                .AddDECBus()
-                .AddSingletonRMq()
-                .AddMyEventEmitter()
-                .AddMySubscriber();
-        }
+    protected override void InjectDependencies(IServiceCollection services)
+    {
+        services
+            .AddHostExecutor()
+            .AddTransient<IFactHandler<MyID, MyFact>, TheFactHandler>()
+            .AddConsoleLogger()
+            .AddDECBus()
+            .AddSingletonRMq()
+            .AddMyEventEmitter()
+            .AddMySubscriber();
     }
 }

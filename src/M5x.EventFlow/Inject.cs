@@ -4,15 +4,14 @@ using EventFlow.DependencyInjection.Extensions;
 using M5x.Serilog;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace M5x.EventFlow
+namespace M5x.EventFlow;
+
+public static class Inject
 {
-    public static class Inject
+    public static IServiceCollection AddCEQS(this IServiceCollection services, Action<IEventFlowOptions> options)
     {
-        public static IServiceCollection AddCEQS(this IServiceCollection services, Action<IEventFlowOptions> options)
-        {
-            return services
-                .AddConsoleLogger()
-                .AddEventFlow(options);
-        }
+        return services
+            .AddConsoleLogger()
+            .AddEventFlow(options);
     }
 }

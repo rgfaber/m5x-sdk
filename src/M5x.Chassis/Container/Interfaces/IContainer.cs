@@ -1,6 +1,5 @@
-﻿namespace M5x.Chassis.Container.Interfaces
+﻿namespace M5x.Chassis.Container.Interfaces;
+
+public interface IContainer : IDependencyResolver, IDependencyRegistrar
 {
-    public interface IContainer : IDependencyResolver, IDependencyRegistrar
-    {
-    }
 }

@@ -1,6 +1,5 @@
-namespace M5x.Stan
+namespace M5x.Stan;
+
+public static class StanConfig
 {
-    public static class StanConfig
-    {
-    }
 }

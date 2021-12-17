@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace M5x.Git
+namespace M5x.Git;
+
+public static class Inject
 {
-    public static class Inject
+    public static IServiceCollection AddGitRepo(this IServiceCollection services)
     {
-        public static IServiceCollection AddGitRepo(this IServiceCollection services)
-        {
-            return services?
-                .AddSingleton<IGitRepoBuilder, GitRepoBuilder>();
-        }
+        return services?
+            .AddSingleton<IGitRepoBuilder, GitRepoBuilder>();
     }
 }

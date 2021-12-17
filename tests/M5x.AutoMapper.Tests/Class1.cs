@@ -1,6 +1,5 @@
-﻿namespace M5x.AutoMapper.Tests
+﻿namespace M5x.AutoMapper.Tests;
+
+public class Class1
 {
-    public class Class1
-    {
-    }
 }

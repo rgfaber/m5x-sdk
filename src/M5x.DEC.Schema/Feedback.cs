@@ -2,64 +2,62 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using M5x.DEC.Schema.Utils;
 
-namespace M5x.DEC.Schema
+namespace M5x.DEC.Schema;
+
+public interface IFeedback : IExecutionResult
 {
-    public interface IFeedback : IExecutionResult
+    [Required(AllowEmptyStrings = false)] string CorrelationId { get; set; }
+    [Required] ErrorState ErrorState { get; }
+    [Required] AggregateInfo Meta { get; }
+}
+
+public interface IFeedback<TPayload> : IFeedback
+    where TPayload : IPayload
+{
+    TPayload Payload { get; set; }
+}
+
+public abstract record Feedback : IFeedback
+{
+    protected Feedback(AggregateInfo meta, string correlationId)
     {
-        [Required(AllowEmptyStrings = false)] string CorrelationId { get; set; }
-        [Required] ErrorState ErrorState { get; }
-        [Required] AggregateInfo Meta { get; }
+        CorrelationId = correlationId;
+        Meta = meta;
+        ErrorState = new ErrorState();
     }
 
-    public interface IFeedback<TPayload> : IFeedback
-        where TPayload : IPayload
+    protected Feedback()
     {
-        TPayload Payload { get; set; }
+        Meta = AggregateInfo.Empty;
+        CorrelationId = GuidUtils.NewCleanGuid;
+        ErrorState = new ErrorState();
     }
 
-    public abstract record Feedback : IFeedback
+    public string CorrelationId { get; set; }
+    public ErrorState ErrorState { get; }
+    public AggregateInfo Meta { get; set; }
+    public bool IsSuccess => ErrorState.IsSuccessful;
+}
+
+public abstract record Feedback<TPayload> : Feedback, IFeedback<TPayload> where TPayload : IPayload
+{
+    protected Feedback()
     {
-        protected Feedback(AggregateInfo meta, string correlationId)
-        {
-            CorrelationId = correlationId;
-            Meta = meta;
-            ErrorState = new ErrorState();
-        }
-
-        protected Feedback()
-        {
-            Meta = AggregateInfo.Empty;
-            CorrelationId = GuidUtils.NewCleanGuid;
-            ErrorState = new ErrorState();
-        }
-
-        public string CorrelationId { get; set; }
-        public ErrorState ErrorState { get; }
-        public AggregateInfo Meta { get; set; }
-        public bool IsSuccess => ErrorState.IsSuccessful;
+        Meta = AggregateInfo.Empty;
+        CorrelationId = GuidUtils.NewCleanGuid;
     }
 
-
-    public abstract record Feedback<TPayload> : Feedback, IFeedback<TPayload> where TPayload : IPayload
+    protected Feedback(AggregateInfo meta, string correlationId, TPayload payload)
     {
-        protected Feedback()
-        {
-            Meta = AggregateInfo.Empty;
-            CorrelationId = GuidUtils.NewCleanGuid;
-        }
+        Meta = meta;
+        CorrelationId = correlationId;
+        Payload = payload;
+    }
 
-        protected Feedback(AggregateInfo meta, string correlationId, TPayload payload)
-        {
-            Meta = meta;
-            CorrelationId = correlationId;
-            Payload = payload;
-        }
+    public TPayload Payload { get; set; }
 
-        public TPayload Payload { get; set; }
-
-        public override string ToString()
-        {
-            return $"Feedback: {JsonSerializer.Serialize(this)}";
-        }
+    public override string ToString()
+    {
+        return $"Feedback: {JsonSerializer.Serialize(this)}";
     }
 }

@@ -1,12 +1,11 @@
 ﻿using M5x.DEC.Commands;
 
-namespace M5x.DEC.Extensions
+namespace M5x.DEC.Extensions;
+
+public static class SourceIdExtensions
 {
-    public static class SourceIdExtensions
+    public static bool IsNone(this ISourceID sourceId)
     {
-        public static bool IsNone(this ISourceID sourceId)
-        {
-            return string.IsNullOrEmpty(sourceId?.Value);
-        }
+        return string.IsNullOrEmpty(sourceId?.Value);
     }
 }

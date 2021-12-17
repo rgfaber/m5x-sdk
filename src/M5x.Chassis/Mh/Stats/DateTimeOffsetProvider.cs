@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace M5x.Chassis.Mh.Stats
+namespace M5x.Chassis.Mh.Stats;
+
+internal class DateTimeOffsetProvider : IDateTimeOffsetProvider
 {
-    internal class DateTimeOffsetProvider : IDateTimeOffsetProvider
-    {
-        public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
-    }
+    public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
 }

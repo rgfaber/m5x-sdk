@@ -1,6 +1,5 @@
-﻿namespace M5x.SignalR
+﻿namespace M5x.SignalR;
+
+public class Class1
 {
-    public class Class1
-    {
-    }
 }

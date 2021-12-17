@@ -2,17 +2,16 @@ using System;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace M5x.Swagger
+namespace M5x.Swagger;
+
+public class NamespaceSchemaFilter : ISchemaFilter
 {
-    public class NamespaceSchemaFilter : ISchemaFilter
+    public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
-        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
-        {
-            if (schema is null) throw new ArgumentNullException(nameof(schema));
+        if (schema is null) throw new ArgumentNullException(nameof(schema));
 
-            if (context is null) throw new ArgumentNullException(nameof(context));
+        if (context is null) throw new ArgumentNullException(nameof(context));
 
-            schema.Title = context.Type.Name; // To replace the full name with namespace with the class name only
-        }
+        schema.Title = context.Type.Name; // To replace the full name with namespace with the class name only
     }
 }

@@ -1,7 +1,6 @@
-namespace M5x.Sso
+namespace M5x.Sso;
+
+public static class EnVars
 {
-    public static class EnVars
-    {
-        public const string SSO_URL = "SSO_URL";
-    }
+    public const string SSO_URL = "SSO_URL";
 }

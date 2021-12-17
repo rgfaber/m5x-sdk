@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace M5x.DEC
+namespace M5x.DEC;
+
+public interface ICommander<TCmd, TRsp>
 {
-    public interface ICommander<TCmd, TRsp>
-    {
-        Task<TRsp> CommandAsync(TCmd cmd);
-    }
+    Task<TRsp> CommandAsync(TCmd cmd);
 }

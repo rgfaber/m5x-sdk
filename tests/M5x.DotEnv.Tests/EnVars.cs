@@ -1,8 +1,7 @@
-namespace M5x.DotEnv.Tests
+namespace M5x.DotEnv.Tests;
+
+public static class EnVars
 {
-    public static class EnVars
-    {
-        public const string NAME = "NAME";
-        public const string ADDRESS = "ADDRESS";
-    }
+    public const string NAME = "NAME";
+    public const string ADDRESS = "ADDRESS";
 }

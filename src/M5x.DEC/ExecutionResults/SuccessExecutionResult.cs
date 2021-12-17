@@ -1,10 +1,9 @@
-﻿namespace M5x.DEC.ExecutionResults
+﻿namespace M5x.DEC.ExecutionResults;
+
+public record SuccessExecutionResult : ExecutionResult
 {
-    public record SuccessExecutionResult : ExecutionResult
+    public override string ToString()
     {
-        public override string ToString()
-        {
-            return "Successful execution";
-        }
+        return "Successful execution";
     }
 }

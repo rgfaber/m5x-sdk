@@ -1,6 +1,5 @@
-namespace M5x.DEC.Schema
+namespace M5x.DEC.Schema;
+
+public interface IPayload
 {
-    public interface IPayload
-    {
-    }
 }

@@ -19,11 +19,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace M5x.Consul.Interfaces
+namespace M5x.Consul.Interfaces;
+
+public interface IStatusEndpoint
 {
-    public interface IStatusEndpoint
-    {
-        Task<string> Leader(CancellationToken ct = default);
-        Task<string[]> Peers(CancellationToken ct = default);
-    }
+    Task<string> Leader(CancellationToken ct = default);
+    Task<string[]> Peers(CancellationToken ct = default);
 }

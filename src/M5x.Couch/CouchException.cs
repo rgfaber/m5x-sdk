@@ -6,68 +6,67 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace M5x.Couch
+namespace M5x.Couch;
+
+/// <summary>
+///     All Exceptions thrown inside Divan uses this class, MOST of these wrap a WebException
+///     and we extract the HttpStatusCode to make it easily accessible.
+/// </summary>
+[Serializable]
+public class CouchException : Exception
 {
-    /// <summary>
-    ///     All Exceptions thrown inside Divan uses this class, MOST of these wrap a WebException
-    ///     and we extract the HttpStatusCode to make it easily accessible.
-    /// </summary>
-    [Serializable]
-    public class CouchException : Exception
+    public HttpStatusCode StatusCode;
+
+    public CouchException()
     {
-        public HttpStatusCode StatusCode;
+    }
 
-        public CouchException()
-        {
-        }
+    public CouchException(string message)
+        : base(message)
+    {
+    }
 
-        public CouchException(string message)
-            : base(message)
-        {
-        }
+    public CouchException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 
-        public CouchException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    protected CouchException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 
-        protected CouchException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    public static Exception Create(string message)
+    {
+        return new CouchException(message);
+    }
 
-        public static Exception Create(string message)
+    public static Exception Create(string message, WebException e)
+    {
+        var msg = string.Format(CultureInfo.InvariantCulture, message + ": {0}", e.Message);
+        if (e.Response != null)
         {
-            return new CouchException(message);
-        }
-
-        public static Exception Create(string message, WebException e)
-        {
-            var msg = string.Format(CultureInfo.InvariantCulture, message + ": {0}", e.Message);
-            if (e.Response != null)
+            var webResponse = (HttpWebResponse)e.Response;
+            // Pick out status code
+            var code = webResponse.StatusCode;
+            using (var stream = new JsonTextReader(new StreamReader(webResponse.GetResponseStream())))
             {
-                var webResponse = (HttpWebResponse)e.Response;
-                // Pick out status code
-                var code = webResponse.StatusCode;
-                using (var stream = new JsonTextReader(new StreamReader(webResponse.GetResponseStream())))
+                // if we don't get a valid {error:, reason:}, don't worry about it
+                try
                 {
-                    // if we don't get a valid {error:, reason:}, don't worry about it
-                    try
-                    {
-                        var error = JToken.ReadFrom(stream);
-                        msg += string.Format(CultureInfo.InvariantCulture, " error: {0}, reason: {1}",
-                            error.Value<string>("error"), error.Value<string>("reason"));
-                    }
-                    catch
-                    {
-                    }
-
-                    // Create any specific exceptions we care to use
-                    if (code == HttpStatusCode.Conflict) return new CouchConflictException(msg, e);
-                    if (code == HttpStatusCode.NotFound) return new CouchNotFoundException(msg, e);
+                    var error = JToken.ReadFrom(stream);
+                    msg += string.Format(CultureInfo.InvariantCulture, " error: {0}, reason: {1}",
+                        error.Value<string>("error"), error.Value<string>("reason"));
                 }
-            }
+                catch
+                {
+                }
 
-            // Fall back on generic CouchException
-            return new CouchException(msg, e);
+                // Create any specific exceptions we care to use
+                if (code == HttpStatusCode.Conflict) return new CouchConflictException(msg, e);
+                if (code == HttpStatusCode.NotFound) return new CouchNotFoundException(msg, e);
+            }
         }
+
+        // Fall back on generic CouchException
+        return new CouchException(msg, e);
     }
 }

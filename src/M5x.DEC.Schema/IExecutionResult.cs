@@ -1,7 +1,6 @@
-﻿namespace M5x.DEC.Schema
+﻿namespace M5x.DEC.Schema;
+
+public interface IExecutionResult
 {
-    public interface IExecutionResult
-    {
-        bool IsSuccess { get; }
-    }
+    bool IsSuccess { get; }
 }

@@ -21,17 +21,16 @@ using System.Threading.Tasks;
 using M5x.Consul.Client;
 using M5x.Consul.Event;
 
-namespace M5x.Consul.Interfaces
-{
-    public interface IEventEndpoint
-    {
-        Task<WriteResult<string>> Fire(UserEvent ue, CancellationToken ct = default);
-        Task<WriteResult<string>> Fire(UserEvent ue, WriteOptions q, CancellationToken ct = default);
-        ulong IdToIndex(string uuid);
-        Task<QueryResult<UserEvent[]>> List(CancellationToken ct = default);
-        Task<QueryResult<UserEvent[]>> List(string name, CancellationToken ct = default);
+namespace M5x.Consul.Interfaces;
 
-        Task<QueryResult<UserEvent[]>> List(string name, QueryOptions q,
-            CancellationToken ct = default);
-    }
+public interface IEventEndpoint
+{
+    Task<WriteResult<string>> Fire(UserEvent ue, CancellationToken ct = default);
+    Task<WriteResult<string>> Fire(UserEvent ue, WriteOptions q, CancellationToken ct = default);
+    ulong IdToIndex(string uuid);
+    Task<QueryResult<UserEvent[]>> List(CancellationToken ct = default);
+    Task<QueryResult<UserEvent[]>> List(string name, CancellationToken ct = default);
+
+    Task<QueryResult<UserEvent[]>> List(string name, QueryOptions q,
+        CancellationToken ct = default);
 }

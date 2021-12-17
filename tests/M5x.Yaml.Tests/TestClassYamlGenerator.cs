@@ -1,24 +1,22 @@
-namespace M5x.Yaml.Tests
+namespace M5x.Yaml.Tests;
+
+public class TestClassYamlGenerator : ITestClassGenerator
 {
-    public class TestClassYamlGenerator : ITestClassGenerator
+    private readonly IYamlSerializer _serializer;
+
+    public TestClassYamlGenerator(IYamlSerializer serializer)
     {
-        private readonly IYamlSerializer _serializer;
-
-        public TestClassYamlGenerator(IYamlSerializer serializer)
-        {
-            _serializer = serializer;
-        }
-
-        public string Generate(TestClass test)
-        {
-            var res = _serializer.Serialize(test);
-            return res;
-        }
+        _serializer = serializer;
     }
 
-
-    public interface ITestClassGenerator
+    public string Generate(TestClass test)
     {
-        string Generate(TestClass test);
+        var res = _serializer.Serialize(test);
+        return res;
     }
+}
+
+public interface ITestClassGenerator
+{
+    string Generate(TestClass test);
 }

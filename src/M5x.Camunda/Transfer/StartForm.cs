@@ -1,7 +1,6 @@
-﻿namespace M5x.Camunda.Transfer
+﻿namespace M5x.Camunda.Transfer;
+
+internal class StartForm
 {
-    internal class StartForm
-    {
-        public string Key { get; set; }
-    }
+    public string Key { get; set; }
 }

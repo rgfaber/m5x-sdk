@@ -1,6 +1,5 @@
-﻿namespace M5x.NBomber
+﻿namespace M5x.NBomber;
+
+public static class Inject
 {
-    public static class Inject
-    {
-    }
 }

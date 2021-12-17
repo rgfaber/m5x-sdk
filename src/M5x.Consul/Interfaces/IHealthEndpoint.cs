@@ -21,34 +21,33 @@ using System.Threading.Tasks;
 using M5x.Consul.Client;
 using M5x.Consul.Health;
 
-namespace M5x.Consul.Interfaces
+namespace M5x.Consul.Interfaces;
+
+public interface IHealthEndpoint
 {
-    public interface IHealthEndpoint
-    {
-        Task<QueryResult<HealthCheck[]>> Checks(string service, CancellationToken ct = default);
+    Task<QueryResult<HealthCheck[]>> Checks(string service, CancellationToken ct = default);
 
-        Task<QueryResult<HealthCheck[]>> Checks(string service, QueryOptions q,
-            CancellationToken ct = default);
+    Task<QueryResult<HealthCheck[]>> Checks(string service, QueryOptions q,
+        CancellationToken ct = default);
 
-        Task<QueryResult<HealthCheck[]>> Node(string node, CancellationToken ct = default);
+    Task<QueryResult<HealthCheck[]>> Node(string node, CancellationToken ct = default);
 
-        Task<QueryResult<HealthCheck[]>> Node(string node, QueryOptions q,
-            CancellationToken ct = default);
+    Task<QueryResult<HealthCheck[]>> Node(string node, QueryOptions q,
+        CancellationToken ct = default);
 
-        Task<QueryResult<ServiceEntry[]>> Service(string service, CancellationToken ct = default);
+    Task<QueryResult<ServiceEntry[]>> Service(string service, CancellationToken ct = default);
 
-        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag,
-            CancellationToken ct = default);
+    Task<QueryResult<ServiceEntry[]>> Service(string service, string tag,
+        CancellationToken ct = default);
 
-        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly,
-            CancellationToken ct = default);
+    Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly,
+        CancellationToken ct = default);
 
-        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q,
-            CancellationToken ct = default);
+    Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q,
+        CancellationToken ct = default);
 
-        Task<QueryResult<HealthCheck[]>> State(HealthStatus status, CancellationToken ct = default);
+    Task<QueryResult<HealthCheck[]>> State(HealthStatus status, CancellationToken ct = default);
 
-        Task<QueryResult<HealthCheck[]>> State(HealthStatus status, QueryOptions q,
-            CancellationToken ct = default);
-    }
+    Task<QueryResult<HealthCheck[]>> State(HealthStatus status, QueryOptions q,
+        CancellationToken ct = default);
 }

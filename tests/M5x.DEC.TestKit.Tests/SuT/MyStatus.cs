@@ -1,12 +1,11 @@
 using System;
 
-namespace M5x.DEC.TestKit.Tests.SuT
+namespace M5x.DEC.TestKit.Tests.SuT;
+
+[Flags]
+public enum MyStatus
 {
-    [Flags]
-    public enum MyStatus
-    {
-        Unknown = 0,
-        Pending = 1,
-        Initialized = 2
-    }
+    Unknown = 0,
+    Pending = 1,
+    Initialized = 2
 }

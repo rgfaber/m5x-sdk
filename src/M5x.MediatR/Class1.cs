@@ -1,6 +1,5 @@
-﻿namespace M5x.MediatR
+﻿namespace M5x.MediatR;
+
+public class Class1
 {
-    public class Class1
-    {
-    }
 }

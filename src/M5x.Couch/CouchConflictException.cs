@@ -1,14 +1,13 @@
 using System;
 
-namespace M5x.Couch
+namespace M5x.Couch;
+
+/// <summary>
+///     Represents a CouchDB HTTP 409 conflict.
+/// </summary>
+public class CouchConflictException : Exception
 {
-    /// <summary>
-    ///     Represents a CouchDB HTTP 409 conflict.
-    /// </summary>
-    public class CouchConflictException : Exception
+    public CouchConflictException(string msg, Exception e) : base(msg, e)
     {
-        public CouchConflictException(string msg, Exception e) : base(msg, e)
-        {
-        }
     }
 }

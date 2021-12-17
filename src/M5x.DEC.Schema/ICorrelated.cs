@@ -1,7 +1,6 @@
-namespace M5x.DEC.Schema
+namespace M5x.DEC.Schema;
+
+public interface ICorrelated
 {
-    public interface ICorrelated
-    {
-        string CorrelationId { get; set; }
-    }
+    string CorrelationId { get; set; }
 }

@@ -1,11 +1,10 @@
 using M5x.DEC.Schema;
 
-namespace M5x.DEC.Events
+namespace M5x.DEC.Events;
+
+public interface IEventUpcaster<TAggregate, TIdentity>
+    where TAggregate : IAggregateRoot<TIdentity>
+    where TIdentity : IIdentity
 {
-    public interface IEventUpcaster<TAggregate, TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-    {
-        IAggregateEvent<TAggregate, TIdentity> Upcast(IAggregateEvent<TAggregate, TIdentity> aggregateEvent);
-    }
+    IAggregateEvent<TAggregate, TIdentity> Upcast(IAggregateEvent<TAggregate, TIdentity> aggregateEvent);
 }

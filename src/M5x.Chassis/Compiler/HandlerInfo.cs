@@ -5,31 +5,30 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace M5x.Chassis.Compiler
+namespace M5x.Chassis.Compiler;
+
+/// <summary>
+///     Struct HandlerInfo
+/// </summary>
+public struct HandlerInfo
 {
     /// <summary>
-    ///     Struct HandlerInfo
+    ///     The code
     /// </summary>
-    public struct HandlerInfo
-    {
-        /// <summary>
-        ///     The code
-        /// </summary>
-        public string Code;
+    public string Code;
 
-        /// <summary>
-        ///     The namespace
-        /// </summary>
-        public string Namespace;
+    /// <summary>
+    ///     The namespace
+    /// </summary>
+    public string Namespace;
 
-        /// <summary>
-        ///     The entry point
-        /// </summary>
-        public string EntryPoint;
+    /// <summary>
+    ///     The entry point
+    /// </summary>
+    public string EntryPoint;
 
-        /// <summary>
-        ///     The function
-        /// </summary>
-        public string Function;
-    }
+    /// <summary>
+    ///     The function
+    /// </summary>
+    public string Function;
 }

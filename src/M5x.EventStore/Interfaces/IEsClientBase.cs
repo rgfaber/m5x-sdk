@@ -1,9 +1,8 @@
 using System;
 
-namespace M5x.EventStore.Interfaces
+namespace M5x.EventStore.Interfaces;
+
+public interface IEsClientBase : IDisposable, IAsyncDisposable
 {
-    public interface IEsClientBase : IDisposable, IAsyncDisposable
-    {
-        string ConnectionName { get; }
-    }
+    string ConnectionName { get; }
 }

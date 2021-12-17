@@ -1,9 +1,8 @@
 ﻿using M5x.Consul.KV;
 
-namespace M5x.Consul.Transaction
+namespace M5x.Consul.Transaction;
+
+internal class TxnOp
 {
-    internal class TxnOp
-    {
-        public KVTxnOp Kv { get; set; }
-    }
+    public KVTxnOp Kv { get; set; }
 }

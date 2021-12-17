@@ -1,21 +1,19 @@
-namespace M5x.DEC.Schema
+namespace M5x.DEC.Schema;
+
+public abstract record Query : IQuery
 {
-    public abstract record Query : IQuery
+    protected Query()
     {
-        protected Query()
-        {
-        }
-
-        protected Query(string correlationId)
-        {
-        }
-
-        public string CorrelationId { get; set; }
     }
 
-
-    public interface IQuery
+    protected Query(string correlationId)
     {
-        public string CorrelationId { get; set; }
     }
+
+    public string CorrelationId { get; set; }
+}
+
+public interface IQuery
+{
+    public string CorrelationId { get; set; }
 }

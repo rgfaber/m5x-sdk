@@ -1,8 +1,7 @@
-﻿namespace M5x.DEC.Schema
+﻿namespace M5x.DEC.Schema;
+
+public interface IReadEntity : IBoundedContext, IPayload
 {
-    public interface IReadEntity : IBoundedContext, IPayload
-    {
-        string Id { get; set; }
-        string Prev { get; set; }
-    }
+    string Id { get; set; }
+    string Prev { get; set; }
 }

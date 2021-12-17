@@ -1,6 +1,5 @@
-﻿namespace M5x.TermUi
+﻿namespace M5x.TermUi;
+
+public static class Inject
 {
-    public static class Inject
-    {
-    }
 }

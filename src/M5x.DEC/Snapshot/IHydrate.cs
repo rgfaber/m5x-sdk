@@ -1,8 +1,7 @@
-namespace M5x.DEC.Snapshot
+namespace M5x.DEC.Snapshot;
+
+public interface IHydrate<in TAggregateSnapshot>
+    where TAggregateSnapshot : IAggregateSnapshot
 {
-    public interface IHydrate<in TAggregateSnapshot>
-        where TAggregateSnapshot : IAggregateSnapshot
-    {
-        void Hydrate(TAggregateSnapshot aggregateSnapshot);
-    }
+    void Hydrate(TAggregateSnapshot aggregateSnapshot);
 }

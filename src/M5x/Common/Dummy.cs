@@ -1,6 +1,5 @@
-﻿namespace M5x.Common
+﻿namespace M5x.Common;
+
+public class Dummy
 {
-    public class Dummy
-    {
-    }
 }

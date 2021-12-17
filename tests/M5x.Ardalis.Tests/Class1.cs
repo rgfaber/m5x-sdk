@@ -1,6 +1,5 @@
-﻿namespace M5x.Ardalis.Tests
+﻿namespace M5x.Ardalis.Tests;
+
+public class Class1
 {
-    public class Class1
-    {
-    }
 }

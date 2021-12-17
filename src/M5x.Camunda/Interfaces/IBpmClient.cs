@@ -18,28 +18,27 @@ using Camunda.Api.Client.User;
 using Camunda.Api.Client.UserTask;
 using Camunda.Api.Client.VariableInstance;
 
-namespace M5x.Camunda.Interfaces
+namespace M5x.Camunda.Interfaces;
+
+public interface IBpmClient
 {
-    public interface IBpmClient
-    {
-        CaseDefinitionService CaseDefinitions { get; }
-        CaseExecutionService CaseExecutions { get; }
-        DecisionDefinitionService DecisionDefinitions { get; }
-        DeploymentService Deployments { get; }
-        ExecutionService Executions { get; }
-        ExternalTaskService ExternalTasks { get; }
-        GroupService Group { get; }
-        HistoryService History { get; }
-        IncidentService Incidents { get; }
-        JobDefinitionService JobDefinitions { get; }
-        JobService Jobs { get; }
-        MessageService Messages { get; }
-        ProcessDefinitionService ProcessDefinitions { get; }
-        ProcessInstanceService ProcessInstances { get; }
-        SignalService Signals { get; }
-        TenantService Tenants { get; }
-        UserService Users { get; }
-        UserTaskService UserTasks { get; }
-        VariableInstanceService VariableInstances { get; }
-    }
+    CaseDefinitionService CaseDefinitions { get; }
+    CaseExecutionService CaseExecutions { get; }
+    DecisionDefinitionService DecisionDefinitions { get; }
+    DeploymentService Deployments { get; }
+    ExecutionService Executions { get; }
+    ExternalTaskService ExternalTasks { get; }
+    GroupService Group { get; }
+    HistoryService History { get; }
+    IncidentService Incidents { get; }
+    JobDefinitionService JobDefinitions { get; }
+    JobService Jobs { get; }
+    MessageService Messages { get; }
+    ProcessDefinitionService ProcessDefinitions { get; }
+    ProcessInstanceService ProcessInstances { get; }
+    SignalService Signals { get; }
+    TenantService Tenants { get; }
+    UserService Users { get; }
+    UserTaskService UserTasks { get; }
+    VariableInstanceService VariableInstances { get; }
 }

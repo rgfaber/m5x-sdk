@@ -5,21 +5,20 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace M5x.DEC.Schema.Geo
+namespace M5x.DEC.Schema.Geo;
+
+/// <summary>
+///     Enum DistanceType
+/// </summary>
+public enum DistanceType
 {
     /// <summary>
-    ///     Enum DistanceType
+    ///     The miles
     /// </summary>
-    public enum DistanceType
-    {
-        /// <summary>
-        ///     The miles
-        /// </summary>
-        Miles = 0,
+    Miles = 0,
 
-        /// <summary>
-        ///     The kilometers
-        /// </summary>
-        Kilometers = 1
-    }
+    /// <summary>
+    ///     The kilometers
+    /// </summary>
+    Kilometers = 1
 }

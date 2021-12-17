@@ -10,78 +10,77 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace M5x.EventStore.Tests
+namespace M5x.EventStore.Tests;
+
+public class Tested
 {
-    public class Tested
+    public bool IsTested { get; set; }
+    public string Name { get; set; }
+}
+
+public class EsClientTests : IoCTestsBase
+{
+    private IEsClient _clt;
+
+
+    public EsClientTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
     {
-        public bool IsTested { get; set; }
-        public string Name { get; set; }
     }
 
-    public class EsClientTests : IoCTestsBase
+
+    [Fact]
+    public async Task Should_AppendToStream()
     {
-        private IEsClient _clt;
-
-
-        public EsClientTests(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
+        var ev = new Tested
         {
-        }
+            IsTested = false,
+            Name = "Raf"
+        };
+        var _uuid = Uuid.FromGuid(Guid.NewGuid());
+        var t = typeof(Tested).AssemblyQualifiedName;
+        var d = Serialize(ev);
+
+        var m = Encoding.UTF8.GetBytes("{}");
+
+        var data = new EventData(_uuid, t, d, m);
+        var res = await _clt.AppendToStreamAsync("TestStream",
+            StreamState.Any,
+            new[] { data });
+        ;
+        Assert.NotNull(res);
+    }
+
+    [Fact]
+    public void Try_EncodingGetBytes()
+    {
+        var d = Encoding.UTF8.GetBytes("{}");
+        Assert.NotEmpty(d);
+    }
 
 
-        [Fact]
-        public async Task Should_AppendToStream()
-        {
-            var ev = new Tested
-            {
-                IsTested = false,
-                Name = "Raf"
-            };
-            var _uuid = Uuid.FromGuid(Guid.NewGuid());
-            var t = typeof(Tested).AssemblyQualifiedName;
-            var d = Serialize(ev);
+    private byte[] Serialize(Tested @event)
+    {
+        return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event));
+    }
 
-            var m = Encoding.UTF8.GetBytes("{}");
+    protected override void Initialize()
+    {
+        _clt = Container.GetService<IEsClient>();
+    }
 
-            var data = new EventData(_uuid, t, d, m);
-            var res = await _clt.AppendToStreamAsync("TestStream",
-                StreamState.Any,
-                new[] { data });
-            ;
-            Assert.NotNull(res);
-        }
+    [Fact]
+    public void Needs_Client()
+    {
+        Assert.NotNull(_clt);
+    }
 
-        [Fact]
-        public void Try_EncodingGetBytes()
-        {
-            var d = Encoding.UTF8.GetBytes("{}");
-            Assert.NotEmpty(d);
-        }
+    protected override void SetTestEnvironment()
+    {
+        DotEnv.FromEmbedded();
+    }
 
-
-        private byte[] Serialize(Tested @event)
-        {
-            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event));
-        }
-
-        protected override void Initialize()
-        {
-            _clt = Container.GetService<IEsClient>();
-        }
-
-        [Fact]
-        public void Needs_Client()
-        {
-            Assert.NotNull(_clt);
-        }
-
-        protected override void SetTestEnvironment()
-        {
-            DotEnv.FromEmbedded();
-        }
-
-        protected override void InjectDependencies(IServiceCollection services)
-        {
-            services.AddDECEsClients();
-        }
+    protected override void InjectDependencies(IServiceCollection services)
+    {
+        services.AddDECEsClients();
     }
 }

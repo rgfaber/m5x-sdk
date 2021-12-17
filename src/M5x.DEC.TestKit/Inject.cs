@@ -1,6 +1,5 @@
-namespace M5x.DEC.TestKit
+namespace M5x.DEC.TestKit;
+
+public static class Inject
 {
-    public static class Inject
-    {
-    }
 }

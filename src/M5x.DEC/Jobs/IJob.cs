@@ -1,8 +1,7 @@
 using M5x.DEC.Schema;
 
-namespace M5x.DEC.Jobs
+namespace M5x.DEC.Jobs;
+
+public interface IJob : IVersionedType
 {
-    public interface IJob : IVersionedType
-    {
-    }
 }

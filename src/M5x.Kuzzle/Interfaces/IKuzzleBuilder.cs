@@ -1,9 +1,8 @@
 using KuzzleSdk;
 
-namespace M5x.Kuzzle.Interfaces
+namespace M5x.Kuzzle.Interfaces;
+
+public interface IKuzzleBuilder
 {
-    public interface IKuzzleBuilder
-    {
-        IKuzzleApi BuildApi(string url = null);
-    }
+    IKuzzleApi BuildApi(string url = null);
 }

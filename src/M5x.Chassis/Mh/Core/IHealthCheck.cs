@@ -1,8 +1,7 @@
-﻿namespace M5x.Chassis.Mh.Core
+﻿namespace M5x.Chassis.Mh.Core;
+
+public interface IHealthCheck
 {
-    public interface IHealthCheck
-    {
-        string Name { get; }
-        IMetric Execute();
-    }
+    string Name { get; }
+    IMetric Execute();
 }

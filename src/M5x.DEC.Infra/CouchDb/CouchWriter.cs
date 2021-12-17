@@ -4,41 +4,40 @@ using M5x.DEC.Persistence;
 using M5x.DEC.Schema;
 using Serilog;
 
-namespace M5x.DEC.Infra.CouchDb
+namespace M5x.DEC.Infra.CouchDb;
+
+public abstract class CouchWriter<TAggregateId, TFact, TReadModel> :
+    IFactWriter<TAggregateId, TFact, TReadModel>
+    where TAggregateId : IIdentity
+    where TFact : IFact
+    where TReadModel : IReadEntity
 {
-    public abstract class CouchWriter<TAggregateId, TFact, TReadModel> :
-        IFactWriter<TAggregateId, TFact, TReadModel>
-        where TAggregateId : IIdentity
-        where TFact : IFact
-        where TReadModel : IReadEntity
+    protected readonly ILogger Logger;
+
+    protected CouchWriter(ICouchStore<TReadModel> couchDb, ILogger logger)
     {
-        protected readonly ILogger Logger;
+        CouchDb = couchDb;
+        Logger = logger;
+    }
 
-        protected CouchWriter(ICouchStore<TReadModel> couchDb, ILogger logger)
+    protected ICouchStore<TReadModel> CouchDb { get; set; }
+
+    public async Task HandleAsync(TFact fact)
+    {
+        try
         {
-            CouchDb = couchDb;
-            Logger = logger;
+            await UpdateAsync(fact);
         }
-
-        protected ICouchStore<TReadModel> CouchDb { get; set; }
-
-        public async Task HandleAsync(TFact fact)
+        catch (Exception e)
         {
-            try
-            {
-                await UpdateAsync(fact);
-            }
-            catch (Exception e)
-            {
-                Logger?.Fatal(e.Message);
-            }
+            Logger?.Fatal(e.Message);
         }
+    }
 
-        public abstract Task<TReadModel> UpdateAsync(TFact fact);
+    public abstract Task<TReadModel> UpdateAsync(TFact fact);
 
-        public async Task<TReadModel> DeleteAsync(string id)
-        {
-            return await CouchDb.DeleteAsync(id).ConfigureAwait(false);
-        }
+    public async Task<TReadModel> DeleteAsync(string id)
+    {
+        return await CouchDb.DeleteAsync(id).ConfigureAwait(false);
     }
 }

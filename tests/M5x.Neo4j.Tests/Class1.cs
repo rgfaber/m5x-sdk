@@ -1,6 +1,5 @@
-﻿namespace M5x.Neo4j.Tests
+﻿namespace M5x.Neo4j.Tests;
+
+public class Class1
 {
-    public class Class1
-    {
-    }
 }

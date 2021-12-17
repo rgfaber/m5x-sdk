@@ -9,21 +9,20 @@
 using M5x.Chassis.Service.Container;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace M5x.Chassis.Service.Metrics
+namespace M5x.Chassis.Service.Metrics;
+
+/// <summary>
+///     Class Add.
+/// </summary>
+public static partial class Add
 {
     /// <summary>
-    ///     Class Add.
+    ///     Adds the hq.
     /// </summary>
-    public static partial class Add
+    /// <param name="services">The services.</param>
+    public static IServiceCollection AddMh(this IServiceCollection services)
     {
-        /// <summary>
-        ///     Adds the hq.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        public static IServiceCollection AddMh(this IServiceCollection services)
-        {
-            RegisterMetricsAndHealthChecks(services.AddContainer());
-            return services;
-        }
+        RegisterMetricsAndHealthChecks(services.AddContainer());
+        return services;
     }
 }

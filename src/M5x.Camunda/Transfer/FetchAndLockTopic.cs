@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace M5x.Camunda.Transfer
+namespace M5x.Camunda.Transfer;
+
+public class FetchAndLockTopic
 {
-    public class FetchAndLockTopic
-    {
-        public string TopicName { get; set; }
-        public long LockDuration { get; set; }
-        public IEnumerable<string> Variables { get; set; }
-    }
+    public string TopicName { get; set; }
+    public long LockDuration { get; set; }
+    public IEnumerable<string> Variables { get; set; }
 }

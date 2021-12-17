@@ -1,18 +1,17 @@
 ﻿using System;
 
-namespace M5x.DEC.Sagas
+namespace M5x.DEC.Sagas;
+
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public class SagaNameAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public class SagaNameAttribute : Attribute
+    public SagaNameAttribute(string name)
     {
-        public SagaNameAttribute(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentNullException(nameof(name));
 
-            Name = name;
-        }
-
-        public string Name { get; }
+        Name = name;
     }
+
+    public string Name { get; }
 }

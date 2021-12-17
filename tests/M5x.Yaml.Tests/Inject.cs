@@ -1,14 +1,13 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace M5x.Yaml.Tests
+namespace M5x.Yaml.Tests;
+
+public static class Inject
 {
-    public static class Inject
+    public static IServiceCollection AddTestClassGenerator(this IServiceCollection services)
     {
-        public static IServiceCollection AddTestClassGenerator(this IServiceCollection services)
-        {
-            return services?
-                .AddYaml()
-                .AddSingleton<ITestClassGenerator, TestClassYamlGenerator>();
-        }
+        return services?
+            .AddYaml()
+            .AddSingleton<ITestClassGenerator, TestClassYamlGenerator>();
     }
 }

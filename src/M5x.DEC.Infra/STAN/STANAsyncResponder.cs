@@ -11,126 +11,125 @@ using Microsoft.Extensions.Hosting;
 using NATS.Client;
 using Serilog;
 
-namespace M5x.DEC.Infra.STAN
+namespace M5x.DEC.Infra.STAN;
+
+public abstract class STANAsyncResponder<TID, THope, TCmd, TFeedback>
+    : BackgroundService, IResponder<TID, THope, TCmd, TFeedback>
+    where TID : IIdentity
+    where THope : IHope
+    where TCmd : ICommand<TID>
+    where TFeedback : IFeedback
 {
-    public abstract class STANAsyncResponder<TID, THope, TCmd, TFeedback>
-        : BackgroundService, IResponder<TID, THope, TCmd, TFeedback>
-        where TID : IIdentity
-        where THope : IHope
-        where TCmd : ICommand<TID>
-        where TFeedback : IFeedback
+    private readonly IAsyncActor<TID, TCmd, TFeedback> _actor;
+    private readonly IDECBus _bus;
+    private readonly IEncodedConnection _conn;
+    private readonly ILogger _logger;
+    private readonly IMapper _mapper;
+    private string _logMessage;
+    private IAsyncSubscription _subscription;
+
+
+    protected STANAsyncResponder(IEncodedConnection conn,
+        IAsyncActor<TID, TCmd, TFeedback> actor,
+        ILogger logger)
     {
-        private readonly IAsyncActor<TID, TCmd, TFeedback> _actor;
-        private readonly IDECBus _bus;
-        private readonly IEncodedConnection _conn;
-        private readonly ILogger _logger;
-        private readonly IMapper _mapper;
-        private string _logMessage;
-        private IAsyncSubscription _subscription;
-
-
-        protected STANAsyncResponder(IEncodedConnection conn,
-            IAsyncActor<TID, TCmd, TFeedback> actor,
-            ILogger logger)
-        {
-            _conn = conn;
+        _conn = conn;
 //            _bus = bus;
-            _actor = actor;
-            _logger = logger;
-            _conn.OnSerialize = o =>
-            {
-                var res = JsonSerializer.SerializeToUtf8Bytes((TFeedback)o);
-                return res;
-            };
-            _conn.OnDeserialize = data =>
-            {
-                try
-                {
-                    return JsonSerializer.DeserializeAsync<THope>(data.AsStream()).Result;
-                }
-                catch (Exception e)
-                {
-                    _logger?.Error(e.InnerAndOuter());
-                    throw;
-                }
-            };
-        }
-
-        public string Topic => GetTopic();
-
-        public override Task StartAsync(CancellationToken cancellationToken)
+        _actor = actor;
+        _logger = logger;
+        _conn.OnSerialize = o =>
+        {
+            var res = JsonSerializer.SerializeToUtf8Bytes((TFeedback)o);
+            return res;
+        };
+        _conn.OnDeserialize = data =>
         {
             try
             {
-                WaitForConnection();
-                _logMessage = $"[{Topic}]-RSP on [{JsonSerializer.Serialize(_conn.DiscoveredServers)}]";
-                _logger?.Debug(_logMessage);
-                _logMessage = "";
-                _subscription = _conn.SubscribeAsync(Topic, async (sender, args) =>
-                {
-                    if (args.ReceivedObject is not THope hope) return;
-                    _logger?.Debug($"[{Topic}]-HOPE {hope.AggregateId}");
-                    var cmd = ToCommand(hope);
-                    var fbk = await _actor.HandleAsync(cmd);
-                    _conn.Publish(args.Message.Reply, fbk);
-                    _conn.Flush();
-                    _logger?.Debug($"[{Topic}]-FEEDBACK {fbk.ErrorState.IsSuccessful} ");
-                });
+                return JsonSerializer.DeserializeAsync<THope>(data.AsStream()).Result;
             }
             catch (Exception e)
             {
-                _logMessage = $"[{Topic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}";
-                _logger.Fatal(_logMessage);
-                _subscription.DrainAsync();
+                _logger?.Error(e.InnerAndOuter());
+                throw;
             }
+        };
+    }
 
-            return Task.CompletedTask;
-        }
+    public string Topic => GetTopic();
 
-
-        public override async Task StopAsync(CancellationToken cancellationToken)
+    public override Task StartAsync(CancellationToken cancellationToken)
+    {
+        try
         {
-            await StopRespondingAsync(cancellationToken);
-        }
-
-
-        private string GetTopic()
-        {
-            var attrs = (TopicAttribute[])typeof(THope).GetCustomAttributes(typeof(TopicAttribute), true);
-            return attrs.Length > 0 ? attrs[0].Id : throw new Exception($"No Topic Defined on {typeof(THope)}!");
-        }
-
-
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-            }
-
-            return Task.CompletedTask;
-        }
-
-
-        protected abstract TCmd ToCommand(THope hope);
-
-        private async Task StopRespondingAsync(CancellationToken cancellationToken)
-        {
-            if (_conn.State != ConnState.CONNECTED) return;
-            _logMessage = $"[CONN]-DRN [{_conn.ConnectedUrl}]";
+            WaitForConnection();
+            _logMessage = $"[{Topic}]-RSP on [{JsonSerializer.Serialize(_conn.DiscoveredServers)}]";
             _logger?.Debug(_logMessage);
-            await _conn.DrainAsync().ConfigureAwait(false);
-            _logMessage = $"[CONN]-CLS [{_conn.ConnectedUrl}]";
-            _logger?.Debug(_logMessage);
-            _conn.Close();
-        }
-
-        private void WaitForConnection()
-        {
-            Task.Run(() =>
+            _logMessage = "";
+            _subscription = _conn.SubscribeAsync(Topic, async (sender, args) =>
             {
-                while (_conn.State != ConnState.CONNECTED)
-                    _logger.Information($"Waiting for Connection. State: {_conn.State}");
+                if (args.ReceivedObject is not THope hope) return;
+                _logger?.Debug($"[{Topic}]-HOPE {hope.AggregateId}");
+                var cmd = ToCommand(hope);
+                var fbk = await _actor.HandleAsync(cmd);
+                _conn.Publish(args.Message.Reply, fbk);
+                _conn.Flush();
+                _logger?.Debug($"[{Topic}]-FEEDBACK {fbk.ErrorState.IsSuccessful} ");
             });
         }
+        catch (Exception e)
+        {
+            _logMessage = $"[{Topic}]-ERR {JsonSerializer.Serialize(e.AsApiError())}";
+            _logger.Fatal(_logMessage);
+            _subscription.DrainAsync();
+        }
+
+        return Task.CompletedTask;
+    }
+
+
+    public override async Task StopAsync(CancellationToken cancellationToken)
+    {
+        await StopRespondingAsync(cancellationToken);
+    }
+
+
+    private string GetTopic()
+    {
+        var attrs = (TopicAttribute[])typeof(THope).GetCustomAttributes(typeof(TopicAttribute), true);
+        return attrs.Length > 0 ? attrs[0].Id : throw new Exception($"No Topic Defined on {typeof(THope)}!");
+    }
+
+
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
+        {
+        }
+
+        return Task.CompletedTask;
+    }
+
+
+    protected abstract TCmd ToCommand(THope hope);
+
+    private async Task StopRespondingAsync(CancellationToken cancellationToken)
+    {
+        if (_conn.State != ConnState.CONNECTED) return;
+        _logMessage = $"[CONN]-DRN [{_conn.ConnectedUrl}]";
+        _logger?.Debug(_logMessage);
+        await _conn.DrainAsync().ConfigureAwait(false);
+        _logMessage = $"[CONN]-CLS [{_conn.ConnectedUrl}]";
+        _logger?.Debug(_logMessage);
+        _conn.Close();
+    }
+
+    private void WaitForConnection()
+    {
+        Task.Run(() =>
+        {
+            while (_conn.State != ConnState.CONNECTED)
+                _logger.Information($"Waiting for Connection. State: {_conn.State}");
+        });
     }
 }

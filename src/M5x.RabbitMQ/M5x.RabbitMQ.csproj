@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="RabbitMQ.Client.Core.DependencyInjection" Version="5.0.0" />
+        <PackageReference Include="RabbitMQ.Client.Core.DependencyInjection" Version="5.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\M5x\M5x.csproj" />
+        <ProjectReference Include="..\M5x\M5x.csproj"/>
     </ItemGroup>
 
 </Project>

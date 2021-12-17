@@ -4,26 +4,25 @@ using MyNatsClient;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace M5x.Nats.Tests
+namespace M5x.Nats.Tests;
+
+public abstract class NatsTestsBase : IoCTestsBase
 {
-    public abstract class NatsTestsBase : IoCTestsBase
+    public NatsTestsBase(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
     {
-        public NatsTestsBase(ITestOutputHelper output, IoCTestContainer container) : base(output, container)
-        {
-        }
+    }
 
-        protected INatsClient Client { get; set; }
+    protected INatsClient Client { get; set; }
 
-        protected override void Initialize()
-        {
-            Client = Container.GetService<INatsClient>();
-            Assert.NotNull(Client);
-        }
+    protected override void Initialize()
+    {
+        Client = Container.GetService<INatsClient>();
+        Assert.NotNull(Client);
+    }
 
 
-        protected override void InjectDependencies(IServiceCollection services)
-        {
-            services.AddNats();
-        }
+    protected override void InjectDependencies(IServiceCollection services)
+    {
+        services.AddNats();
     }
 }

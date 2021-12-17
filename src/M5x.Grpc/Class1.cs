@@ -1,6 +1,5 @@
-﻿namespace M5x.Grpc
+﻿namespace M5x.Grpc;
+
+public class Class1
 {
-    public class Class1
-    {
-    }
 }

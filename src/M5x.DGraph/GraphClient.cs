@@ -7,85 +7,84 @@ using FluentResults;
 using Grpc.Core;
 using ILogger = Serilog.ILogger;
 
-namespace M5x.DGraph
+namespace M5x.DGraph;
+
+internal class GraphClient : IGraphClient
 {
-    internal class GraphClient : IGraphClient
+    private readonly IDgraphClient _client;
+    private readonly ILogger _logger;
+
+
+    public GraphClient(IDgraphClient client, ILogger logger)
     {
-        private readonly IDgraphClient _client;
-        private readonly ILogger _logger;
+        _client = client;
+        _logger = logger;
+    }
 
+    public GraphClient(IDgraphClient client)
+    {
+        throw new NotImplementedException();
+    }
 
-        public GraphClient(IDgraphClient client, ILogger logger)
+    public void Dispose()
+    {
+        _client?
+            .Dispose();
+    }
+
+    public Task<Result> Alter(Operation op, CallOptions? options = null)
+    {
+        try
         {
-            _client = client;
-            _logger = logger;
+            return _client.Alter(op, options);
         }
-
-        public GraphClient(IDgraphClient client)
+        catch (Exception e)
         {
-            throw new NotImplementedException();
+            _logger?.Fatal(e.Message, e);
+            Console.WriteLine(e);
+            throw;
         }
+    }
 
-        public void Dispose()
+    public Task<Result<string>> CheckVersion(CallOptions? options = null)
+    {
+        try
         {
-            _client?
-                .Dispose();
+            return _client.CheckVersion(options);
         }
-
-        public Task<Result> Alter(Operation op, CallOptions? options = null)
+        catch (Exception e)
         {
-            try
-            {
-                return _client.Alter(op, options);
-            }
-            catch (Exception e)
-            {
-                _logger?.Fatal(e.Message, e);
-                Console.WriteLine(e);
-                throw;
-            }
+            _logger?.Fatal(e.Message, e);
+            Console.WriteLine(e);
+            throw;
         }
+    }
 
-        public Task<Result<string>> CheckVersion(CallOptions? options = null)
+    public IQuery NewReadOnlyTransaction(bool bestEffort = false)
+    {
+        try
         {
-            try
-            {
-                return _client.CheckVersion(options);
-            }
-            catch (Exception e)
-            {
-                _logger?.Fatal(e.Message, e);
-                Console.WriteLine(e);
-                throw;
-            }
+            return _client.NewReadOnlyTransaction(bestEffort);
         }
-
-        public IQuery NewReadOnlyTransaction(bool bestEffort = false)
+        catch (Exception e)
         {
-            try
-            {
-                return _client.NewReadOnlyTransaction(bestEffort);
-            }
-            catch (Exception e)
-            {
-                _logger?.Fatal(e.Message, e);
-                Console.WriteLine(e);
-                throw;
-            }
+            _logger?.Fatal(e.Message, e);
+            Console.WriteLine(e);
+            throw;
         }
+    }
 
-        public ITransaction NewTransaction()
+    public ITransaction NewTransaction()
+    {
+        try
         {
-            try
-            {
-                return _client.NewTransaction();
-            }
-            catch (Exception e)
-            {
-                _logger?.Fatal(e.Message, e);
-                Console.WriteLine(e);
-                throw;
-            }
+            return _client.NewTransaction();
+        }
+        catch (Exception e)
+        {
+            _logger?.Fatal(e.Message, e);
+            Console.WriteLine(e);
+            throw;
         }
     }
 }

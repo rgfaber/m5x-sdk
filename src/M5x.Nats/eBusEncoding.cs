@@ -1,8 +1,7 @@
-namespace M5x.Nats
+namespace M5x.Nats;
+
+public enum eBusEncoding
 {
-    public enum eBusEncoding
-    {
-        Json,
-        ProtoBuf
-    }
+    Json,
+    ProtoBuf
 }

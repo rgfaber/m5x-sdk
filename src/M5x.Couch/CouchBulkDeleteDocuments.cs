@@ -4,36 +4,35 @@ using M5x.Couch.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace M5x.Couch
+namespace M5x.Couch;
+
+/// <summary>
+///     Only used as pseudo doc when doing bulk updates/inserts.
+/// </summary>
+public class CouchBulkDeleteDocuments : CouchBulkDocuments
 {
-    /// <summary>
-    ///     Only used as pseudo doc when doing bulk updates/inserts.
-    /// </summary>
-    public class CouchBulkDeleteDocuments : CouchBulkDocuments
+    public CouchBulkDeleteDocuments(IEnumerable<ICouchDocument> docs) : base(docs)
     {
-        public CouchBulkDeleteDocuments(IEnumerable<ICouchDocument> docs) : base(docs)
+    }
+
+    public override void WriteJson(JsonWriter writer)
+    {
+        writer.WritePropertyName("docs");
+        writer.WriteStartArray();
+        foreach (var doc in Docs)
         {
+            writer.WriteStartObject();
+            CouchDocument.WriteIdAndRev(doc, writer);
+            writer.WritePropertyName("_deleted");
+            writer.WriteValue(true);
+            writer.WriteEndObject();
         }
 
-        public override void WriteJson(JsonWriter writer)
-        {
-            writer.WritePropertyName("docs");
-            writer.WriteStartArray();
-            foreach (var doc in Docs)
-            {
-                writer.WriteStartObject();
-                CouchDocument.WriteIdAndRev(doc, writer);
-                writer.WritePropertyName("_deleted");
-                writer.WriteValue(true);
-                writer.WriteEndObject();
-            }
+        writer.WriteEndArray();
+    }
 
-            writer.WriteEndArray();
-        }
-
-        public override void ReadJson(JObject obj)
-        {
-            throw new NotImplementedException();
-        }
+    public override void ReadJson(JObject obj)
+    {
+        throw new NotImplementedException();
     }
 }

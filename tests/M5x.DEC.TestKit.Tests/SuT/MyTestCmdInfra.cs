@@ -1,6 +1,5 @@
-namespace M5x.DEC.TestKit.Tests.SuT
+namespace M5x.DEC.TestKit.Tests.SuT;
+
+public static class MyTestCmdInfra
 {
-    public static class MyTestCmdInfra
-    {
-    }
 }

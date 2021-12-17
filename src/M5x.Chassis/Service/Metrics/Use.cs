@@ -3,30 +3,29 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 
-namespace M5x.Chassis.Service.Metrics
+namespace M5x.Chassis.Service.Metrics;
+
+public static partial class Use
 {
-    public static partial class Use
+    private const string RoundTripHeader = "Mh-RoundTrip-Milliseconds";
+
+    public static IApplicationBuilder UseMh(this IApplicationBuilder app)
     {
-        private const string RoundTripHeader = "Mh-RoundTrip-Milliseconds";
+        app.UseMetricsAndHealthChecks();
 
-        public static IApplicationBuilder UseMh(this IApplicationBuilder app)
+        return app.Use(async (context, next) =>
         {
-            app.UseMetricsAndHealthChecks();
+            var sw = Stopwatch.StartNew();
 
-            return app.Use(async (context, next) =>
+            context.Response.OnStarting(() =>
             {
-                var sw = Stopwatch.StartNew();
+                context.Response.Headers.Add(RoundTripHeader,
+                    sw.Elapsed.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-                context.Response.OnStarting(() =>
-                {
-                    context.Response.Headers.Add(RoundTripHeader,
-                        sw.Elapsed.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-                    return Task.CompletedTask;
-                });
-
-                await next.Invoke();
+                return Task.CompletedTask;
             });
-        }
+
+            await next.Invoke();
+        });
     }
 }

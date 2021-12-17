@@ -1,7 +1,6 @@
-namespace M5x.DEC.Infra
+namespace M5x.DEC.Infra;
+
+public interface IInterpreter<TModel, in TEvent>
 {
-    public interface IInterpreter<TModel, in TEvent>
-    {
-        TModel Interpret(TEvent evt, TModel model);
-    }
+    TModel Interpret(TEvent evt, TModel model);
 }

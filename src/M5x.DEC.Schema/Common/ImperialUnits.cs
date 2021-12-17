@@ -1,7 +1,6 @@
-namespace M5x.DEC.Schema.Common
+namespace M5x.DEC.Schema.Common;
+
+public static class ImperialUnits
 {
-    public static class ImperialUnits
-    {
-        public static Unit Foot = Unit.New("foot", "ft");
-    }
+    public static Unit Foot = Unit.New("foot", "ft");
 }

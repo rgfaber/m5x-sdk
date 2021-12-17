@@ -1,6 +1,5 @@
-﻿namespace M5x.Docker.Models
+﻿namespace M5x.Docker.Models;
+
+public class MountPoint
 {
-    public class MountPoint
-    {
-    }
 }

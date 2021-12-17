@@ -22,40 +22,39 @@ using Camunda.Api.Client.UserTask;
 using Camunda.Api.Client.VariableInstance;
 using M5x.Camunda.Interfaces;
 
-namespace M5x.Camunda
+namespace M5x.Camunda;
+
+public class BpmClient : IBpmClient
 {
-    public class BpmClient : IBpmClient
+    private readonly CamundaClient _camunda;
+
+    public BpmClient()
     {
-        private readonly CamundaClient _camunda;
-
-        public BpmClient()
-        {
-            var http = new HttpClient();
-            http.DefaultRequestHeaders.Add("Authorization", $"Basic {CamundaConfig.Default.BasicAuthorizationKey}");
-            http.BaseAddress = new Uri(CamundaConfig.EngineUrl);
-            _camunda = CamundaClient.Create(http);
-        }
-
-        public ExternalTaskService ExternalTasks => _camunda.ExternalTasks;
-
-
-        public CaseDefinitionService CaseDefinitions => _camunda.CaseDefinitions;
-        public CaseExecutionService CaseExecutions => _camunda.CaseExecutions;
-        public DecisionDefinitionService DecisionDefinitions => _camunda.DecisionDefinitions;
-        public DeploymentService Deployments => _camunda.Deployments;
-        public ExecutionService Executions => _camunda.Executions;
-        public GroupService Group => _camunda.Group;
-        public HistoryService History => _camunda.History;
-        public IncidentService Incidents => _camunda.Incidents;
-        public JobDefinitionService JobDefinitions => _camunda.JobDefinitions;
-        public JobService Jobs => _camunda.Jobs;
-        public MessageService Messages => _camunda.Messages;
-        public ProcessDefinitionService ProcessDefinitions => _camunda.ProcessDefinitions;
-        public ProcessInstanceService ProcessInstances => _camunda.ProcessInstances;
-        public SignalService Signals => _camunda.Signals;
-        public TenantService Tenants => _camunda.Tenants;
-        public UserService Users => _camunda.Users;
-        public UserTaskService UserTasks => _camunda.UserTasks;
-        public VariableInstanceService VariableInstances => _camunda.VariableInstances;
+        var http = new HttpClient();
+        http.DefaultRequestHeaders.Add("Authorization", $"Basic {CamundaConfig.Default.BasicAuthorizationKey}");
+        http.BaseAddress = new Uri(CamundaConfig.EngineUrl);
+        _camunda = CamundaClient.Create(http);
     }
+
+    public ExternalTaskService ExternalTasks => _camunda.ExternalTasks;
+
+
+    public CaseDefinitionService CaseDefinitions => _camunda.CaseDefinitions;
+    public CaseExecutionService CaseExecutions => _camunda.CaseExecutions;
+    public DecisionDefinitionService DecisionDefinitions => _camunda.DecisionDefinitions;
+    public DeploymentService Deployments => _camunda.Deployments;
+    public ExecutionService Executions => _camunda.Executions;
+    public GroupService Group => _camunda.Group;
+    public HistoryService History => _camunda.History;
+    public IncidentService Incidents => _camunda.Incidents;
+    public JobDefinitionService JobDefinitions => _camunda.JobDefinitions;
+    public JobService Jobs => _camunda.Jobs;
+    public MessageService Messages => _camunda.Messages;
+    public ProcessDefinitionService ProcessDefinitions => _camunda.ProcessDefinitions;
+    public ProcessInstanceService ProcessInstances => _camunda.ProcessInstances;
+    public SignalService Signals => _camunda.Signals;
+    public TenantService Tenants => _camunda.Tenants;
+    public UserService Users => _camunda.Users;
+    public UserTaskService UserTasks => _camunda.UserTasks;
+    public VariableInstanceService VariableInstances => _camunda.VariableInstances;
 }

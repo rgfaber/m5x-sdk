@@ -1,38 +1,37 @@
 ﻿using M5x.Couch.Interfaces;
 using Newtonsoft.Json.Linq;
 
-namespace M5x.Couch
+namespace M5x.Couch;
+
+public class CouchRecord<T> where T : ICanJson, new()
 {
-    public class CouchRecord<T> where T : ICanJson, new()
+    private readonly JObject _record;
+
+    public CouchRecord(JObject source)
     {
-        private readonly JObject _record;
+        _record = source;
 
-        public CouchRecord(JObject source)
+        Id = _record.Value<string>("id");
+        Key = _record["key"];
+        Value = _record["value"];
+    }
+
+    public string Id { get; }
+    public JToken Key { get; }
+    public JToken Value { get; }
+
+    public T Document
+    {
+        get
         {
-            _record = source;
+            if (!_record.TryGetValue("doc", out var val)) return default;
 
-            Id = _record.Value<string>("id");
-            Key = _record["key"];
-            Value = _record["value"];
-        }
+            var doc = val as JObject;
+            if (doc == null) return default;
 
-        public string Id { get; }
-        public JToken Key { get; }
-        public JToken Value { get; }
-
-        public T Document
-        {
-            get
-            {
-                if (!_record.TryGetValue("doc", out var val)) return default;
-
-                var doc = val as JObject;
-                if (doc == null) return default;
-
-                var ret = new T();
-                ret.ReadJson(doc);
-                return ret;
-            }
+            var ret = new T();
+            ret.ReadJson(doc);
+            return ret;
         }
     }
 }

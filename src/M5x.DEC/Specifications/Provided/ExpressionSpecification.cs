@@ -3,47 +3,46 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using M5x.DEC.Schema.Extensions;
 
-namespace M5x.DEC.Specifications.Provided
+namespace M5x.DEC.Specifications.Provided;
+
+public class ExpressionSpecification<T> : Specification<T>
 {
-    public class ExpressionSpecification<T> : Specification<T>
+    private readonly Func<T, bool> _predicate;
+    private readonly Lazy<string> _string;
+
+    public ExpressionSpecification(
+        Expression<Func<T, bool>> expression)
     {
-        private readonly Func<T, bool> _predicate;
-        private readonly Lazy<string> _string;
+        _predicate = expression.Compile();
+        _string = new Lazy<string>(() => MakeString(expression));
+    }
 
-        public ExpressionSpecification(
-            Expression<Func<T, bool>> expression)
+    public override string ToString()
+    {
+        return _string.Value;
+    }
+
+    protected override IEnumerable<string> IsNotSatisfiedBecause(T aggregate)
+    {
+        if (!_predicate(aggregate)) yield return $"'{_string.Value}' is not satisfied";
+    }
+
+    private static string MakeString(Expression<Func<T, bool>> expression)
+    {
+        try
         {
-            _predicate = expression.Compile();
-            _string = new Lazy<string>(() => MakeString(expression));
+            var paramName = expression.Parameters[0].Name;
+            var expBody = expression.Body.ToString();
+
+            expBody = expBody
+                .Replace("AndAlso", "&&")
+                .Replace("OrElse", "||");
+
+            return $"{paramName} => {expBody}";
         }
-
-        public override string ToString()
+        catch
         {
-            return _string.Value;
-        }
-
-        protected override IEnumerable<string> IsNotSatisfiedBecause(T aggregate)
-        {
-            if (!_predicate(aggregate)) yield return $"'{_string.Value}' is not satisfied";
-        }
-
-        private static string MakeString(Expression<Func<T, bool>> expression)
-        {
-            try
-            {
-                var paramName = expression.Parameters[0].Name;
-                var expBody = expression.Body.ToString();
-
-                expBody = expBody
-                    .Replace("AndAlso", "&&")
-                    .Replace("OrElse", "||");
-
-                return $"{paramName} => {expBody}";
-            }
-            catch
-            {
-                return typeof(ExpressionSpecification<T>).PrettyPrint();
-            }
+            return typeof(ExpressionSpecification<T>).PrettyPrint();
         }
     }
 }

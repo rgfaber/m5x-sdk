@@ -1,6 +1,5 @@
-namespace M5x.DEC.Infra.CouchDb
+namespace M5x.DEC.Infra.CouchDb;
+
+public static class CouchHelpers
 {
-    public static class CouchHelpers
-    {
-    }
 }

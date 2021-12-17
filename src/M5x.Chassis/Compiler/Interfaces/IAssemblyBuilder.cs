@@ -7,19 +7,18 @@
 
 using System.Reflection;
 
-namespace M5x.Chassis.Compiler.Interfaces
+namespace M5x.Chassis.Compiler.Interfaces;
+
+/// <summary>
+///     Interface IAssemblyBuilder
+/// </summary>
+public interface IAssemblyBuilder
 {
     /// <summary>
-    ///     Interface IAssemblyBuilder
+    ///     Creates the specified code.
     /// </summary>
-    public interface IAssemblyBuilder
-    {
-        /// <summary>
-        ///     Creates the specified code.
-        /// </summary>
-        /// <param name="code">The code.</param>
-        /// <param name="assemblies">The assemblies.</param>
-        /// <returns>Assembly.</returns>
-        Assembly Create(string code, params Assembly[] assemblies);
-    }
+    /// <param name="code">The code.</param>
+    /// <param name="assemblies">The assemblies.</param>
+    /// <returns>Assembly.</returns>
+    Assembly Create(string code, params Assembly[] assemblies);
 }

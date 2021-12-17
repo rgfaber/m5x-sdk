@@ -1,8 +1,7 @@
 using M5x.DEC.Schema;
 
-namespace M5x.DEC.Commands
+namespace M5x.DEC.Commands;
+
+public interface ISourceID : IIdentity
 {
-    public interface ISourceID : IIdentity
-    {
-    }
 }

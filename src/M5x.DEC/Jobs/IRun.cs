@@ -1,7 +1,6 @@
-namespace M5x.DEC.Jobs
+namespace M5x.DEC.Jobs;
+
+public interface IRun<in TJob>
 {
-    public interface IRun<in TJob>
-    {
-        bool Run(TJob job);
-    }
+    bool Run(TJob job);
 }

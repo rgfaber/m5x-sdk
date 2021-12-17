@@ -5,73 +5,71 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace M5x.Testing
+namespace M5x.Testing;
+
+public interface IHostExecutor
 {
-    public interface IHostExecutor
+    Task StartAsync(CancellationToken token = default);
+    Task StopAsync(CancellationToken token = default);
+}
+
+public class HostExecutor : IHostExecutor
+{
+    private readonly ILogger _logger;
+    private readonly IEnumerable<IHostedService> _services;
+
+    public HostExecutor(ILogger logger, IEnumerable<IHostedService> services)
     {
-        Task StartAsync(CancellationToken token = default);
-        Task StopAsync(CancellationToken token = default);
+        _logger = logger;
+        _services = services;
     }
 
-
-    public class HostExecutor : IHostExecutor
+    public Task StartAsync(CancellationToken token)
     {
-        private readonly ILogger _logger;
-        private readonly IEnumerable<IHostedService> _services;
-
-        public HostExecutor(ILogger logger, IEnumerable<IHostedService> services)
+        try
         {
-            _logger = logger;
-            _services = services;
+            ExecuteAsync(service => service.StartAsync(token));
+        }
+        catch (Exception ex)
+        {
+            _logger?.Error("An error occurred starting the application", ex);
         }
 
-        public Task StartAsync(CancellationToken token)
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken token)
+    {
+        try
         {
+            ExecuteAsync(service => service.StopAsync(token));
+        }
+        catch (Exception ex)
+        {
+            _logger?.Error("An error occurred stopping the application", ex);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private Task ExecuteAsync(Func<IHostedService, Task> callback)
+    {
+        List<Exception> exceptions = null;
+
+        foreach (var service in _services)
             try
             {
-                ExecuteAsync(service => service.StartAsync(token));
+                callback(service);
             }
             catch (Exception ex)
             {
-                _logger?.Error("An error occurred starting the application", ex);
+                exceptions ??= new List<Exception>();
+
+                exceptions.Add(ex);
             }
 
-            return Task.CompletedTask;
-        }
-
-        public Task StopAsync(CancellationToken token)
-        {
-            try
-            {
-                ExecuteAsync(service => service.StopAsync(token));
-            }
-            catch (Exception ex)
-            {
-                _logger?.Error("An error occurred stopping the application", ex);
-            }
-
-            return Task.CompletedTask;
-        }
-
-        private Task ExecuteAsync(Func<IHostedService, Task> callback)
-        {
-            List<Exception> exceptions = null;
-
-            foreach (var service in _services)
-                try
-                {
-                    callback(service);
-                }
-                catch (Exception ex)
-                {
-                    exceptions ??= new List<Exception>();
-
-                    exceptions.Add(ex);
-                }
-
-            // Throw an aggregate exception if there were any exceptions
-            if (exceptions != null) throw new AggregateException(exceptions);
-            return Task.CompletedTask;
-        }
+        // Throw an aggregate exception if there were any exceptions
+        if (exceptions != null) throw new AggregateException(exceptions);
+        return Task.CompletedTask;
     }
 }

@@ -1,6 +1,6 @@
 name: m5x-sdk
 
-on: 
+on:
   push:
     branches:
       - main
@@ -12,30 +12,30 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     strategy:
-      matrix: 
-        dotnet-version: ['6.0.x']
-        
+      matrix:
+        dotnet-version: [ '6.0.x' ]
+    
     steps:
-       - uses: actions/checkout@v2
-       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-         uses: actions/setup-dotnet@v1.8.2
-         with:
-           dotnet-version: ${{ matrix.dotnet-version }}
-       - name: Make Scripts Executable
-         run: chmod +x ./cid
-       - name: Install dependencies
-         run: dotnet restore
-       - name: Build Packages
-         run: ./cid/build.sh #dotnet build --configuration Release --no-restore M5x.root.sln
-#       - name: Test
-#         run: dotnet test --no-restore --verbosity normal M5x.root.sln
-       - name: Publish Packages
-         run: ./cid/pub_pkg.sh
-         env:
-           NUGET_API_KEY: ${{secrets.MACULA_NUGET_ORG_KEY}}
-           NUGET_URL: https://api.nuget.org/v3/index.json
-       - name: Test Published Packages
-         run: ./cid/testpub.sh
-         env:
-           NUGET_API_KEY: ${{secrets.MACULA_NUGET_ORG_KEY}}
-           NUGET_URL: https://api.nuget.org/v3/index.json
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v1.8.2
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Make Scripts Executable
+        run: chmod +x ./cid
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build Packages
+        run: ./cid/build.sh #dotnet build --configuration Release --no-restore M5x.root.sln
+      #       - name: Test
+      #         run: dotnet test --no-restore --verbosity normal M5x.root.sln
+      - name: Publish Packages
+        run: ./cid/pub_pkg.sh
+        env:
+          NUGET_API_KEY: ${{secrets.MACULA_NUGET_ORG_KEY}}
+          NUGET_URL: https://api.nuget.org/v3/index.json
+      - name: Test Published Packages
+        run: ./cid/testpub.sh
+        env:
+          NUGET_API_KEY: ${{secrets.MACULA_NUGET_ORG_KEY}}
+          NUGET_URL: https://api.nuget.org/v3/index.json

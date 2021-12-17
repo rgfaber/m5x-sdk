@@ -1,10 +1,9 @@
 using MyNatsClient;
 
-namespace M5x.Nats.Interfaces
+namespace M5x.Nats.Interfaces;
+
+public interface IBusBuilder
 {
-    public interface IBusBuilder
-    {
-        INatsClient BuildBus(ConnectionInfo conn = null, ISocketFactory sockFact = null,
-            IConsumerFactory consFact = null);
-    }
+    INatsClient BuildBus(ConnectionInfo conn = null, ISocketFactory sockFact = null,
+        IConsumerFactory consFact = null);
 }

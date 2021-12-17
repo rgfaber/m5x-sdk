@@ -2,20 +2,19 @@
 using M5x.Chassis.Container;
 using M5x.Chassis.Container.Interfaces;
 
-namespace M5x.Chassis.Tests.Container
+namespace M5x.Chassis.Tests.Container;
+
+public class NoContainerFixture : IDisposable
 {
-    public class NoContainerFixture : IDisposable
+    public NoContainerFixture()
     {
-        public NoContainerFixture()
-        {
-            C = new NoContainer();
-        }
+        C = new NoContainer();
+    }
 
-        public IContainer C { get; }
+    public IContainer C { get; }
 
-        public void Dispose()
-        {
-            C.Dispose();
-        }
+    public void Dispose()
+    {
+        C.Dispose();
     }
 }

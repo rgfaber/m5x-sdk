@@ -1,10 +1,9 @@
-﻿namespace M5x.Chassis.Container
+﻿namespace M5x.Chassis.Container;
+
+public enum Lifetime
 {
-    public enum Lifetime
-    {
-        AlwaysNew,
-        Permanent,
-        Thread,
-        Request
-    }
+    AlwaysNew,
+    Permanent,
+    Thread,
+    Request
 }

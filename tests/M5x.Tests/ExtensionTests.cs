@@ -4,32 +4,31 @@ using M5x.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace M5x.Tests
+namespace M5x.Tests;
+
+public class ExtensionTests
 {
-    public class ExtensionTests
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public ExtensionTests(ITestOutputHelper testOutputHelper)
     {
-        private readonly ITestOutputHelper _testOutputHelper;
+        _testOutputHelper = testOutputHelper;
+    }
 
-        public ExtensionTests(ITestOutputHelper testOutputHelper)
+
+    [Fact]
+    public void Try_DivideByZero()
+    {
+        try
         {
-            _testOutputHelper = testOutputHelper;
+            var zero = 1 - 1;
+            var t = 1 / zero;
         }
-
-
-        [Fact]
-        public void Try_DivideByZero()
+        catch (Exception e)
         {
-            try
-            {
-                var zero = 1 - 1;
-                var t = 1 / zero;
-            }
-            catch (Exception e)
-            {
-                var xp = e.ToXeption();
-                _testOutputHelper.WriteLine(JsonSerializer.Serialize(xp));
-                throw;
-            }
+            var xp = e.ToXeption();
+            _testOutputHelper.WriteLine(JsonSerializer.Serialize(xp));
+            throw;
         }
     }
 }

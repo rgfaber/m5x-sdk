@@ -1,10 +1,9 @@
 using System;
 
-namespace M5x.Kuzzle
+namespace M5x.Kuzzle;
+
+public static class KuzzleConfig
 {
-    public static class KuzzleConfig
-    {
-        public static string Url = Environment
-            .GetEnvironmentVariable(EnVars.KUZZLE_URL) ?? "ws://kuzzle.local";
-    }
+    public static string Url = Environment
+        .GetEnvironmentVariable(EnVars.KUZZLE_URL) ?? "ws://kuzzle.local";
 }

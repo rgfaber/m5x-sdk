@@ -7,17 +7,16 @@
 
 using System.Runtime.Loader;
 
-namespace M5x.Chassis.Compiler.Interfaces
+namespace M5x.Chassis.Compiler.Interfaces;
+
+/// <summary>
+///     Interface IAssemblyLoadContextProvider
+/// </summary>
+public interface IAssemblyLoadContextProvider
 {
     /// <summary>
-    ///     Interface IAssemblyLoadContextProvider
+    ///     Gets this instance.
     /// </summary>
-    public interface IAssemblyLoadContextProvider
-    {
-        /// <summary>
-        ///     Gets this instance.
-        /// </summary>
-        /// <returns>AssemblyLoadContext.</returns>
-        AssemblyLoadContext Get();
-    }
+    /// <returns>AssemblyLoadContext.</returns>
+    AssemblyLoadContext Get();
 }

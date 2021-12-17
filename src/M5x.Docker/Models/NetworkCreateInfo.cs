@@ -1,8 +1,7 @@
-﻿namespace M5x.Docker.Models
+﻿namespace M5x.Docker.Models;
+
+public class NetworkCreateInfo
 {
-    public class NetworkCreateInfo
-    {
-        public string Id { get; set; }
-        public string Warnings { get; set; }
-    }
+    public string Id { get; set; }
+    public string Warnings { get; set; }
 }

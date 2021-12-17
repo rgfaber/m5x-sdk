@@ -19,25 +19,24 @@
 using System;
 using Newtonsoft.Json;
 
-namespace M5x.Consul.Utilities
+namespace M5x.Consul.Utilities;
+
+public class NanoSecTimespanConverter : JsonConverter
 {
-    public class NanoSecTimespanConverter : JsonConverter
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, (long)((TimeSpan)value).TotalMilliseconds * 1000000, typeof(long));
-        }
+        serializer.Serialize(writer, (long)((TimeSpan)value).TotalMilliseconds * 1000000, typeof(long));
+    }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
-        {
-            return Extensions.FromGoDuration((string)serializer.Deserialize(reader, typeof(string)));
-        }
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+        JsonSerializer serializer)
+    {
+        return Extensions.FromGoDuration((string)serializer.Deserialize(reader, typeof(string)));
+    }
 
-        public override bool CanConvert(Type objectType)
-        {
-            if (objectType == typeof(TimeSpan)) return true;
-            return false;
-        }
+    public override bool CanConvert(Type objectType)
+    {
+        if (objectType == typeof(TimeSpan)) return true;
+        return false;
     }
 }

@@ -3,25 +3,24 @@ using M5x.DEC.Persistence.EventStore;
 using M5x.EventStore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace M5x.DEC.Infra.EventStore
+namespace M5x.DEC.Infra.EventStore;
+
+public static class Inject
 {
-    public static class Inject
+    public static IServiceCollection AddScopedEventStore(this IServiceCollection services,
+        Func<string> eventStoreUri = null)
     {
-        public static IServiceCollection AddScopedEventStore(this IServiceCollection services,
-            Func<string> eventStoreUri = null)
-        {
-            return services?
-                .AddDECEsClients()
-                .AddScoped<IEventStore, EventStoreDb>();
-        }
+        return services?
+            .AddDECEsClients()
+            .AddScoped<IEventStore, EventStoreDb>();
+    }
 
 
-        public static IServiceCollection AddSingletonEventStore(this IServiceCollection services,
-            Func<string> eventStoreUri = null)
-        {
-            return services?
-                .AddDECEsClients()
-                .AddSingleton<IEventStore, EventStoreDb>();
-        }
+    public static IServiceCollection AddSingletonEventStore(this IServiceCollection services,
+        Func<string> eventStoreUri = null)
+    {
+        return services?
+            .AddDECEsClients()
+            .AddSingleton<IEventStore, EventStoreDb>();
     }
 }

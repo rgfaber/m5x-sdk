@@ -1,3 +1,1 @@
-namespace M5x.Swagger.Interfaces
-{
-}
+namespace M5x.Swagger.Interfaces;

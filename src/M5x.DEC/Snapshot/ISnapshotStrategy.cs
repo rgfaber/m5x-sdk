@@ -1,7 +1,6 @@
-namespace M5x.DEC.Snapshot
+namespace M5x.DEC.Snapshot;
+
+public interface ISnapshotStrategy
 {
-    public interface ISnapshotStrategy
-    {
-        bool ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot);
-    }
+    bool ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot);
 }

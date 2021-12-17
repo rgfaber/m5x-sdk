@@ -1,42 +1,41 @@
 ﻿using System.Threading;
 
-namespace M5x.Chassis.Mh.Support
+namespace M5x.Chassis.Mh.Support;
+
+/// <summary>
+///     Provides support for volatile operations around a typed value
+/// </summary>
+internal struct Volatile<T>
 {
-    /// <summary>
-    ///     Provides support for volatile operations around a typed value
-    /// </summary>
-    internal struct Volatile<T>
+    private object _value;
+
+    private Volatile(T value) : this()
     {
-        private object _value;
+        Set(value);
+    }
 
-        private Volatile(T value) : this()
-        {
-            Set(value);
-        }
+    public void Set(T value)
+    {
+        Volatile.Write(ref _value, value);
+    }
 
-        public void Set(T value)
-        {
-            Volatile.Write(ref _value, value);
-        }
+    public T Get()
+    {
+        return (T)Volatile.Read(ref _value);
+    }
 
-        public T Get()
-        {
-            return (T)Volatile.Read(ref _value);
-        }
+    public static implicit operator Volatile<T>(T value)
+    {
+        return new Volatile<T>(value);
+    }
 
-        public static implicit operator Volatile<T>(T value)
-        {
-            return new Volatile<T>(value);
-        }
+    public static implicit operator T(Volatile<T> value)
+    {
+        return value.Get();
+    }
 
-        public static implicit operator T(Volatile<T> value)
-        {
-            return value.Get();
-        }
-
-        public override string ToString()
-        {
-            return Get().ToString();
-        }
+    public override string ToString()
+    {
+        return Get().ToString();
     }
 }

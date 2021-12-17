@@ -1,3 +1,1 @@
-﻿namespace M5x.Swagger.Banner
-{
-}
+﻿namespace M5x.Swagger.Banner;

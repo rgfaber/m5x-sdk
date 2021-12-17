@@ -1,64 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace M5x.Common
+namespace M5x.Common;
+
+/// <summary>
+///     Builder and cache of proxies
+/// </summary>
+internal static class ProxyBuilder
 {
-    /// <summary>
-    ///     Builder and cache of proxies
-    /// </summary>
-    internal static class ProxyBuilder
+    // Generated Types Dictionary
+    private static readonly IDictionary<string, Type> GeneratedTypes = new Dictionary<string, Type>();
+    private static readonly object GenerateLock = new();
+
+    public static Type BuildType<TInterface, TBuilder>()
+        where TInterface : class
+        where TBuilder : ITypeBuilder, new()
     {
-        // Generated Types Dictionary
-        private static readonly IDictionary<string, Type> GeneratedTypes = new Dictionary<string, Type>();
-        private static readonly object GenerateLock = new();
+        var typeName = GetTypeName<TInterface>(typeof(TBuilder).Name.Replace("ClassBuilder", ""));
 
-        public static Type BuildType<TInterface, TBuilder>()
-            where TInterface : class
-            where TBuilder : ITypeBuilder, new()
+        var type = TryGetType(typeName);
+        if (type != null)
+            return type;
+
+        lock (GenerateLock)
         {
-            var typeName = GetTypeName<TInterface>(typeof(TBuilder).Name.Replace("ClassBuilder", ""));
-
-            var type = TryGetType(typeName);
+            type = TryGetType(typeName);
             if (type != null)
                 return type;
 
-            lock (GenerateLock)
-            {
-                type = TryGetType(typeName);
-                if (type != null)
-                    return type;
+            var builder = new TBuilder();
 
-                var builder = new TBuilder();
+            type = builder.GenerateType(typeName);
 
-                type = builder.GenerateType(typeName);
-
-                lock (GeneratedTypes)
-                {
-                    GeneratedTypes[typeName] = type;
-                }
-
-                return type;
-            }
-        }
-
-
-        private static Type TryGetType(string className)
-        {
             lock (GeneratedTypes)
             {
-                if (GeneratedTypes.TryGetValue(className, out var generatedType))
-                    return generatedType;
+                GeneratedTypes[typeName] = type;
             }
 
-            return null;
+            return type;
+        }
+    }
+
+
+    private static Type TryGetType(string className)
+    {
+        lock (GeneratedTypes)
+        {
+            if (GeneratedTypes.TryGetValue(className, out var generatedType))
+                return generatedType;
         }
 
-        private static string GetTypeName<TType>(string classNameSuffix)
-        {
-            var iType = typeof(TType);
-            if (iType.Name.StartsWith("I") && char.IsUpper(iType.Name, 1))
-                return iType.Name.Substring(1) + classNameSuffix;
-            return iType.Name + classNameSuffix;
-        }
+        return null;
+    }
+
+    private static string GetTypeName<TType>(string classNameSuffix)
+    {
+        var iType = typeof(TType);
+        if (iType.Name.StartsWith("I") && char.IsUpper(iType.Name, 1))
+            return iType.Name.Substring(1) + classNameSuffix;
+        return iType.Name + classNameSuffix;
     }
 }

@@ -8,18 +8,17 @@
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 
-namespace M5x.Chassis.Compiler.Interfaces
+namespace M5x.Chassis.Compiler.Interfaces;
+
+/// <summary>
+///     Interface IMetaDataReferenceResolver
+/// </summary>
+public interface IMetaDataReferenceResolver
 {
     /// <summary>
-    ///     Interface IMetaDataReferenceResolver
+    ///     Resolves the specified assembly.
     /// </summary>
-    public interface IMetaDataReferenceResolver
-    {
-        /// <summary>
-        ///     Resolves the specified assembly.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        /// <returns>MetadataReference.</returns>
-        MetadataReference Resolve(Assembly assembly);
-    }
+    /// <param name="assembly">The assembly.</param>
+    /// <returns>MetadataReference.</returns>
+    MetadataReference Resolve(Assembly assembly);
 }

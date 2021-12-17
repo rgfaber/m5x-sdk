@@ -1,14 +1,13 @@
 using YamlDotNet.Serialization;
 
-namespace M5x.Yaml.Tests
-{
-    public class TestClassEnv
-    {
-        public TestClassEnv()
-        {
-            TestClass = new TestClass();
-        }
+namespace M5x.Yaml.Tests;
 
-        [YamlMember] public TestClass TestClass { get; set; }
+public class TestClassEnv
+{
+    public TestClassEnv()
+    {
+        TestClass = new TestClass();
     }
+
+    [YamlMember] public TestClass TestClass { get; set; }
 }

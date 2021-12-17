@@ -11,39 +11,38 @@
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace M5x.DEC.Schema.Common
+namespace M5x.DEC.Schema.Common;
+
+public record Latitude
 {
-    public record Latitude
+    public enum NsEnum
     {
-        public enum NsEnum
-        {
-            /// <summary>
-            ///     Enum NEnum for N
-            /// </summary>
-            [EnumMember(Value = "N")] NEnum = 0,
+        /// <summary>
+        ///     Enum NEnum for N
+        /// </summary>
+        [EnumMember(Value = "N")] NEnum = 0,
 
-            /// <summary>
-            ///     Enum SEnum for S
-            /// </summary>
-            [EnumMember(Value = "S")] SEnum = 1
-        }
+        /// <summary>
+        ///     Enum SEnum for S
+        /// </summary>
+        [EnumMember(Value = "S")] SEnum = 1
+    }
 
-        public int? Degrees { get; set; }
-        public int? Minutes { get; set; }
-        public decimal? Seconds { get; set; }
+    public int? Degrees { get; set; }
+    public int? Minutes { get; set; }
+    public decimal? Seconds { get; set; }
 
-        public NsEnum? Ns { get; set; }
+    public NsEnum? Ns { get; set; }
 
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.Append("class Latitude {\n");
-            sb.Append("  Degrees: ").Append(Degrees).Append("\n");
-            sb.Append("  Minutes: ").Append(Minutes).Append("\n");
-            sb.Append("  Seconds: ").Append(Seconds).Append("\n");
-            sb.Append("  Ns: ").Append(Ns).Append("\n");
-            sb.Append("}\n");
-            return sb.ToString();
-        }
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        sb.Append("class Latitude {\n");
+        sb.Append("  Degrees: ").Append(Degrees).Append("\n");
+        sb.Append("  Minutes: ").Append(Minutes).Append("\n");
+        sb.Append("  Seconds: ").Append(Seconds).Append("\n");
+        sb.Append("  Ns: ").Append(Ns).Append("\n");
+        sb.Append("}\n");
+        return sb.ToString();
     }
 }

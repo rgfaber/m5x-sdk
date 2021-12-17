@@ -6,53 +6,52 @@ using M5x.Docker.Interfaces;
 using M5x.Docker.Models;
 using Serilog;
 
-namespace M5x.Docker
+namespace M5x.Docker;
+
+public abstract class DockerContainerBase : IDockerContainer
 {
-    public abstract class DockerContainerBase : IDockerContainer
+    protected readonly IDockerEnvironment Denv;
+
+    protected DockerContainerBase(IDockerEnvironment denv)
     {
-        protected readonly IDockerEnvironment Denv;
+        Denv = denv;
+    }
 
-        protected DockerContainerBase(IDockerEnvironment denv)
+    public async Task<bool> VerifyService(ContainerInfo info)
+    {
+        if (!info.ForceVerify) return true;
+        var res = true;
+        Thread.Sleep(3000);
+        foreach (var url in info.VerifyUrls)
         {
-            Denv = denv;
+            var b = await Denv.VerifyService(url);
+            res = res && b;
         }
 
-        public async Task<bool> VerifyService(ContainerInfo info)
+        return res;
+    }
+
+    public async Task<ContainerListResponse> Start(ContainerInfo nfo)
+    {
+        try
         {
-            if (!info.ForceVerify) return true;
-            var res = true;
-            Thread.Sleep(3000);
-            foreach (var url in info.VerifyUrls)
+            var startInfo = await Denv.StartContainer(nfo);
+            if (startInfo != null)
             {
-                var b = await Denv.VerifyService(url);
-                res = res && b;
+                startInfo.WriteStartResult();
+                return startInfo;
             }
 
-            return res;
+            throw new Exception($"Container '{nfo.ContainerName}' could not be started");
         }
-
-        public async Task<ContainerListResponse> Start(ContainerInfo nfo)
+        catch (Exception e)
         {
-            try
-            {
-                var startInfo = await Denv.StartContainer(nfo);
-                if (startInfo != null)
-                {
-                    startInfo.WriteStartResult();
-                    return startInfo;
-                }
-
-                throw new Exception($"Container '{nfo.ContainerName}' could not be started");
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e, e.Message);
-                throw;
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
+            Log.Fatal(e, e.Message);
+            throw;
+        }
+        finally
+        {
+            Log.CloseAndFlush();
         }
     }
 }

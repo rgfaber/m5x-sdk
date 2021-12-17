@@ -1,6 +1,5 @@
-﻿namespace M5x.MailKit
+﻿namespace M5x.MailKit;
+
+public class Class1
 {
-    public class Class1
-    {
-    }
 }

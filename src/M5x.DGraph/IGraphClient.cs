@@ -1,8 +1,7 @@
 using Dgraph;
 
-namespace M5x.DGraph
+namespace M5x.DGraph;
+
+public interface IGraphClient : IDgraphClient
 {
-    public interface IGraphClient : IDgraphClient
-    {
-    }
 }

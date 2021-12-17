@@ -1,16 +1,15 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace M5x.Couch.Interfaces
+namespace M5x.Couch.Interfaces;
+
+/// <summary>
+///     Basic capability to write and read myself using Newtonsoft.JSON.
+///     Writing is done using JsonWriter in a fast streaming fashion.
+///     Reading is done using JObject "DOM style".
+/// </summary>
+public interface ICanJson
 {
-    /// <summary>
-    ///     Basic capability to write and read myself using Newtonsoft.JSON.
-    ///     Writing is done using JsonWriter in a fast streaming fashion.
-    ///     Reading is done using JObject "DOM style".
-    /// </summary>
-    public interface ICanJson
-    {
-        void WriteJson(JsonWriter writer);
-        void ReadJson(JObject obj);
-    }
+    void WriteJson(JsonWriter writer);
+    void ReadJson(JObject obj);
 }

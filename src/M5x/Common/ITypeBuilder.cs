@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace M5x.Common
+namespace M5x.Common;
+
+internal interface ITypeBuilder
 {
-    internal interface ITypeBuilder
-    {
-        Type GenerateType(string className);
-    }
+    Type GenerateType(string className);
 }

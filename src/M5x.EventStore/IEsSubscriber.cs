@@ -1,6 +1,5 @@
-namespace M5x.EventStore
+namespace M5x.EventStore;
+
+public interface IEsSubscriber
 {
-    public interface IEsSubscriber
-    {
-    }
 }

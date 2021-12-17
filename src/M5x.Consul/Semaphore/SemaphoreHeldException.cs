@@ -1,21 +1,20 @@
 ﻿using System;
 
-namespace M5x.Consul.Semaphore
+namespace M5x.Consul.Semaphore;
+
+public class SemaphoreHeldException : Exception
 {
-    public class SemaphoreHeldException : Exception
+    public SemaphoreHeldException()
     {
-        public SemaphoreHeldException()
-        {
-        }
+    }
 
-        public SemaphoreHeldException(string message)
-            : base(message)
-        {
-        }
+    public SemaphoreHeldException(string message)
+        : base(message)
+    {
+    }
 
-        public SemaphoreHeldException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
+    public SemaphoreHeldException(string message, Exception inner)
+        : base(message, inner)
+    {
     }
 }

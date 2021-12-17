@@ -1,7 +1,6 @@
-﻿namespace M5x.Swagger.Banner
+﻿namespace M5x.Swagger.Banner;
+
+public static class BannerFactory
 {
-    public static class BannerFactory
-    {
-        public static IServiceBanner Banner = new ServiceBanner();
-    }
+    public static IServiceBanner Banner = new ServiceBanner();
 }

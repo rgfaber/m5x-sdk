@@ -10,26 +10,25 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyModel;
 
-namespace M5x.Chassis.Compiler
+namespace M5x.Chassis.Compiler;
+
+/// <summary>
+///     Class Runtime.
+/// </summary>
+public static class Runtime
 {
     /// <summary>
-    ///     Class Runtime.
+    ///     Gets the runtime assemblies.
     /// </summary>
-    public static class Runtime
+    /// <returns>IEnumerable&lt;Assembly&gt;.</returns>
+    public static IEnumerable<Assembly> GetRuntimeAssemblies()
     {
-        /// <summary>
-        ///     Gets the runtime assemblies.
-        /// </summary>
-        /// <returns>IEnumerable&lt;Assembly&gt;.</returns>
-        public static IEnumerable<Assembly> GetRuntimeAssemblies()
-        {
-            var dependencies = DependencyContext.Default.RuntimeLibraries
-                .SelectMany(info => info.Dependencies);
+        var dependencies = DependencyContext.Default.RuntimeLibraries
+            .SelectMany(info => info.Dependencies);
 
-            var assemblies = dependencies
-                .Select(info => Assembly.Load(info.Name));
+        var assemblies = dependencies
+            .Select(info => Assembly.Load(info.Name));
 
-            return assemblies;
-        }
+        return assemblies;
     }
 }

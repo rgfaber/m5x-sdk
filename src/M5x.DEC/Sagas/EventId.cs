@@ -1,12 +1,11 @@
 ﻿using M5x.DEC.Schema;
 
-namespace M5x.DEC.Sagas
+namespace M5x.DEC.Sagas;
+
+public record EventId : Identity<EventId>, IEventId
 {
-    public record EventId : Identity<EventId>, IEventId
+    public EventId(string value)
+        : base(value)
     {
-        public EventId(string value)
-            : base(value)
-        {
-        }
     }
 }

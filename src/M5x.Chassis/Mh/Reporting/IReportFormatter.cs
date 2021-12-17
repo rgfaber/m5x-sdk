@@ -1,7 +1,6 @@
-﻿namespace M5x.Chassis.Mh.Reporting
+﻿namespace M5x.Chassis.Mh.Reporting;
+
+public interface IReportFormatter
 {
-    public interface IReportFormatter
-    {
-        string GetSample();
-    }
+    string GetSample();
 }

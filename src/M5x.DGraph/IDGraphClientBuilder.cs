@@ -1,6 +1,5 @@
-namespace M5x.DGraph
+namespace M5x.DGraph;
+
+public interface IDGraphClientBuilder
 {
-    public interface IDGraphClientBuilder
-    {
-    }
 }
