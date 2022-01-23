@@ -6,8 +6,7 @@
 ## Introduction
 
 This is an opinionated library of various tools and classes that we have been carrying around from project to project
-since 2001; updating as we move along.
-[Releases](RELEASES.MD)
+since 2001; updating as we move along. Check the [Releases](RELEASES.MD).
 
 ### Motivation
 
@@ -20,8 +19,8 @@ since 2001; updating as we move along.
 
 The M5x.DEC.* namespace contains an SDK that helps with the creation of systems that are based on
 **D**omain Driven Design - **E**vent Sourcing and **C**ommand Query Responsibility Segregation using Clean Architecture
-with the Event/Command Handler ("mediator") pattern. There is built in support for **EventStoreDB**, **CouchDB**, **
-Redis**, **NATS** and **RabbitMQ**.
+with the Event/Command Handler ("mediator") pattern. 
+There is built in support for **EventStoreDB**, **CouchDB**, **Redis**, **NATS** and **RabbitMQ**.
 
 ## RoadMap
 

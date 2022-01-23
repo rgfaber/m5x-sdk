@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Polly" Version="7.2.2"/>
+        <PackageReference Include="Polly" Version="7.2.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\M5x\M5x.csproj"/>
+        <ProjectReference Include="..\M5x\M5x.csproj" />
     </ItemGroup>
 
 </Project>
