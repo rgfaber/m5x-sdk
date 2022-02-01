@@ -15,14 +15,14 @@
         <PackageReference Include="JunitXml.TestLogger" Version="3.0.110" />
         <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
         <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
-        <PackageReference Include="NSubstitute" Version="4.2.2" />
+        <PackageReference Include="NSubstitute" Version="4.3.0" />
         <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="xunit.runner.utility" Version="2.4.1" />
         <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
-        <PackageReference Include="coverlet.collector" Version="3.1.0">
+        <PackageReference Include="coverlet.collector" Version="3.1.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

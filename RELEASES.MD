@@ -1,5 +1,8 @@
 # Releases
 
+## February 2022
+- v2.2.0 |> Dependency updates (Bogus, Kubernetes, Grpc, Mailkit, Swagger, Twilio)
+
 ## January 2022
 - Happy New Year!
 - v2.1.0 |> Dependency updates (AutoMapper, Serilog, MediatR, Grpc)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ardalis.GuardClauses;
 
 namespace M5x.DEC.Specifications.Provided;
 
@@ -13,8 +14,10 @@ public class OrSpecification<T> : Specification<T>
         ISpecification<T> specification1,
         ISpecification<T> specification2)
     {
-        _specification1 = specification1 ?? throw new ArgumentNullException(nameof(specification1));
-        _specification2 = specification2 ?? throw new ArgumentNullException(nameof(specification2));
+        Guard.Against.ArgumentNull(specification1, nameof(specification1));
+        Guard.Against.ArgumentNull(specification2, nameof(specification2));
+        _specification1 = specification1; 
+        _specification2 = specification2;
     }
 
     protected override IEnumerable<string> IsNotSatisfiedBecause(T aggregate)
