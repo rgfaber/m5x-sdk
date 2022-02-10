@@ -1,6 +1,7 @@
 # Releases
 
 ## February 2022
+- v2.2.1 |> Added Cocona, Dependency Updates (AutoMapper, Testing, Kubernetes, Twilio, NSwag, ElasticSearch, Swagger)
 - v2.2.0 |> Dependency updates (Bogus, Kubernetes, Grpc, Mailkit, Swagger, Twilio)
 
 ## January 2022

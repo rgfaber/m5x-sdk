@@ -26,6 +26,7 @@ dotnet add package -n -s "$source" -v "$version" "M5x.Camunda"
 
 dotnet add package -n -s "$source" -v "$version" "M5x.Chassis"
 #dotnet add package -n -s $source -v $version "M5x.Cli"
+dotnet add package -n -s "$source" -v "$version" "M5x.Cocona"
 dotnet add package -n -s "$source" -v "$version" "M5x.Consul"
 #dotnet add package -n -s "$source" -v "$version" "M5x.Contract"
 dotnet add package -n -s "$source" -v "$version" "M5x.Couch"

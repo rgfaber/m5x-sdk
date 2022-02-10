@@ -19,6 +19,7 @@ dotnet nuget delete "M5x.Camunda" $version -k $api_key -s $source --non-interact
 #dotnet nuget delete "M5x.CEQS.TestKit" $version -k $api_key -s $source --non-interactive
 
 dotnet nuget delete "M5x.Chassis" $version -k $api_key -s $source --non-interactive
+dotnet nuget delete "M5x.Cocona" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.Consul" $version -k $api_key -s $source --non-interactive
 #dotnet nuget delete "M5x.Contract" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.Couch" $version -k $api_key -s $source --non-interactive
