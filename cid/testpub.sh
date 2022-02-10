@@ -74,6 +74,7 @@ dotnet add package -n -s "$source" -v "$version" "M5x.TermUI"
 dotnet add package -n -s "$source" -v "$version" "M5x.Testing"
 dotnet add package -n -s "$source" -v "$version" "M5x.Tty"
 dotnet add package -n -s "$source" -v "$version" "M5x.Twilio"
+dotnet add package -n -s "$source" -v "$version" "M5x.Units"
 dotnet add package -n -s "$source" -v "$version" "M5x.Xml"
 dotnet add package -n -s "$source" -v "$version" "M5x.Yaml"
 dotnet restore --disable-parallel 

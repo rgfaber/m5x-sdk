@@ -64,6 +64,7 @@ dotnet nuget delete "M5x.TermUI" $version -k $api_key -s $source --non-interacti
 dotnet nuget delete "M5x.Testing" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.Tty" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.Twilio" $version -k $api_key -s $source --non-interactive
+dotnet nuget delete "M5x.Units" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.Xml" $version -k $api_key -s $source --non-interactive
 dotnet nuget delete "M5x.Yaml" $version -k $api_key -s $source --non-interactive
 exit 0
