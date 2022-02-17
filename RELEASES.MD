@@ -1,7 +1,8 @@
 # Releases
 
 ## February 2022
-- v2.2.1 |> Added M5x.Units
+- v2.2.3 |> Security Updates (Chassis, Cocona, Couch, DEC.Infra, Grpc, Kubernetes, NATS, Serilog, Swagger, Testing, Units) 
+- v2.2.2 |> Added M5x.Units
 - v2.2.1 |> Added M5x.Cocona, Dependency Updates (AutoMapper, Testing, Kubernetes, Twilio, NSwag, ElasticSearch, Swagger)
 - v2.2.0 |> Dependency updates (Bogus, Kubernetes, Grpc, Mailkit, Swagger, Twilio)
 

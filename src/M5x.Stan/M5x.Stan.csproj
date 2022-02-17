@@ -5,15 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
-        <PackageReference Include="NATS.Client.Extensions.DependencyInjection" Version="1.0.0"/>
-        <PackageReference Include="STAN.Client" Version="0.3.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.1.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+        <PackageReference Include="NATS.Client.Extensions.DependencyInjection" Version="1.0.0" />
+        <PackageReference Include="STAN.Client" Version="0.3.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\M5x.Kubernetes\M5x.Kubernetes.csproj"/>
-        <ProjectReference Include="..\M5x\M5x.csproj"/>
+        <ProjectReference Include="..\M5x.Kubernetes\M5x.Kubernetes.csproj" />
+        <ProjectReference Include="..\M5x\M5x.csproj" />
     </ItemGroup>
 
     <!--  <ItemGroup>-->
