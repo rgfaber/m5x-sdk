@@ -14,8 +14,8 @@ public interface IEventStore
     Task<AppendResult> AppendEventAsync<TAggregateId>(IEvent<TAggregateId> @event)
         where TAggregateId : IIdentity;
 
-    Task<IEnumerable<StoreEvent<TAggregateId>>> ReadEventsSlicedAsync<TAggregateId>(TAggregateId id,
-        int sliceSize, long startPos) where TAggregateId : IIdentity;
+    // Task<IEnumerable<StoreEvent<TAggregateId>>> ReadEventsSlicedAsync<TAggregateId>(TAggregateId id,
+    //     int sliceSize, long startPos) where TAggregateId : IIdentity;
 
     IAsyncEnumerable<StoreEvent<TAggregateId>> ReadAllEventsAsync<TAggregateId>(
         CancellationToken cancellationToken = default)

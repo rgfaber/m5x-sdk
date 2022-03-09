@@ -168,8 +168,8 @@ internal class S3Client : IS3Client
         return await _minio.PresignedPutObjectAsync(bucketName, objectName, expiresInt);
     }
 
-    public async Task<Tuple<string, Dictionary<string, string>>> PresignedPostPolicyAsync(PostPolicy policy)
+    public Task<(Uri, Dictionary<string, string>)> PresignedPostPolicyAsync(PostPolicy policy)
     {
-        return await _minio.PresignedPostPolicyAsync(policy);
+        return _minio.PresignedPostPolicyAsync(policy);
     }
 }

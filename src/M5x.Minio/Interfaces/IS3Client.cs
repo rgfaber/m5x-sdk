@@ -300,6 +300,5 @@ public interface IS3Client
     /// <summary>Presigned post policy</summary>
     /// <param name="policy"></param>
     /// <returns></returns>
-    Task<Tuple<string, Dictionary<string, string>>> PresignedPostPolicyAsync(
-        PostPolicy policy);
+    Task<(Uri, Dictionary<string, string>)> PresignedPostPolicyAsync(PostPolicy policy);
 }

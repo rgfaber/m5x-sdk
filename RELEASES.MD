@@ -1,5 +1,8 @@
 # Releases
 
+## March 2022
+- v2.3.0 |> EventStoreDB 
+
 ## February 2022
 - v2.2.3 |> Security Updates (Chassis, Cocona, Couch, DEC.Infra, Grpc, Kubernetes, NATS, Serilog, Swagger, Testing, Units) 
 - v2.2.2 |> Added M5x.Units

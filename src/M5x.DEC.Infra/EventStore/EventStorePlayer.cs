@@ -53,12 +53,11 @@ public abstract class EventStorePlayer<TAggregateId> : IEventStorePlayer<TAggreg
                 CheckpointReached);
             var resolveLinkTos = false;
             _subscription = await _client.SubscribeToAllAsync(
-                Position.Start,
+                FromAll.Start, 
                 EventAppeared,
                 resolveLinkTos,
                 SubscriptionDropped,
-                filterOptions,
-                ConfigureOperationOptions);
+                filterOptions);
         }
         catch (Exception e)
         {

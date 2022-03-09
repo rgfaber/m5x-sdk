@@ -104,31 +104,32 @@ internal class EventStoreDb : IEventStore
     }
 
 
-    public async Task<IEnumerable<StoreEvent<TAggregateId>>> ReadEventsSlicedAsync<TAggregateId>(TAggregateId id,
-        int sliceSize, long startPos)
-        where TAggregateId : IIdentity
-    {
-        var ret = new List<StoreEvent<TAggregateId>>();
-        EventStoreClient.ReadStreamResult currentSlice;
-        bool hasNext;
-        var nextSliceStart = StreamPosition.FromInt64(startPos);
-        do
-        {
-            currentSlice =
-                _client.ReadStreamAsync(Direction.Forwards, id.Value, nextSliceStart, sliceSize);
-            if (await currentSlice.ReadState == ReadState.StreamNotFound)
-                throw new EventStoreAggregateNotFoundException($"Aggregate {id.Value} not found");
-            await foreach (var resolvedEvent in currentSlice)
-            {
-                var s = SerializationHelper.Deserialize<TAggregateId>(resolvedEvent);
-                var ev = new StoreEvent<TAggregateId>(s, resolvedEvent.Event.EventNumber.ToInt64());
-                ret.Add(ev);
-                nextSliceStart = resolvedEvent.Event.EventNumber.Next();
-            }
 
-            hasNext = await currentSlice.MoveNextAsync();
-        } while (hasNext);
-
-        return ret;
-    }
+    // public async Task<IEnumerable<StoreEvent<TAggregateId>>> ReadEventsSlicedAsync<TAggregateId>(TAggregateId id,
+    //     int sliceSize, long startPos)
+    //     where TAggregateId : IIdentity
+    // {
+    //     var ret = new List<StoreEvent<TAggregateId>>();
+    //     EventStoreClient.ReadStreamResult currentSlice;
+    //     bool hasNext;
+    //     var nextSliceStart = StreamPosition.FromInt64(startPos);
+    //     do
+    //     {
+    //         currentSlice =
+    //             _client.ReadStreamAsync(Direction.Forwards, id.Value, nextSliceStart, sliceSize);
+    //         if (await currentSlice.ReadState == ReadState.StreamNotFound)
+    //             throw new EventStoreAggregateNotFoundException($"Aggregate {id.Value} not found");
+    //         await foreach (var resolvedEvent in currentSlice)
+    //         {
+    //             var s = SerializationHelper.Deserialize<TAggregateId>(resolvedEvent);
+    //             var ev = new StoreEvent<TAggregateId>(s, resolvedEvent.Event.EventNumber.ToInt64());
+    //             ret.Add(ev);
+    //             nextSliceStart = resolvedEvent.Event.EventNumber.Next();
+    //         }
+    //
+    //         hasNext = await currentSlice.MoveNextAsync();
+    //     } while (hasNext);
+    //
+    //     return ret;
+    // }
 }

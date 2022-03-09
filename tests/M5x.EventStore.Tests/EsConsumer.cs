@@ -19,6 +19,7 @@ public class EsConsumer : BackgroundService
     private readonly UserCredentials? _credentials;
     private readonly ITestOutputHelper _output;
     private readonly PersistentSubscriptionSettings _settings;
+    private readonly TimeSpan? _deadline;
     private PersistentSubscription _subscription;
 
     public EsConsumer(IEsPersistentSubscriptionsClient client,
@@ -27,6 +28,7 @@ public class EsConsumer : BackgroundService
         _client = client;
         _settings = settings;
         _output = output;
+        _deadline = null;
         _credentials = new UserCredentials(EventStoreConfig.UserName, EventStoreConfig.Password);
     }
 
@@ -51,7 +53,9 @@ public class EsConsumer : BackgroundService
                     .CreateAsync(TestConstants.Id,
                         TestConstants.GroupName,
                         _settings,
-                        _credentials, cancellationToken)
+                        _deadline,
+                        _credentials, 
+                        cancellationToken)
                     .ConfigureAwait(false);
             }
             catch (Exception e)
@@ -66,7 +70,6 @@ public class EsConsumer : BackgroundService
                     SubscriptionDropped,
                     _credentials,
                     _bufferSize,
-                    _autoAck,
                     cancellationToken)
                 .ConfigureAwait(false);
         }
@@ -90,10 +93,7 @@ public class EsConsumer : BackgroundService
         return Task.CompletedTask;
     }
 
-    public override Task StopAsync(CancellationToken cancellationToken)
-    {
-        return base.StopAsync(cancellationToken);
-    }
+
 
     private void SubscriptionDropped(PersistentSubscription subscription, SubscriptionDroppedReason droppedReason,
         Exception? exception)

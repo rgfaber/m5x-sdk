@@ -30,37 +30,45 @@ internal class EsPersistentSubscriptionsClient : IEsPersistentSubscriptionsClien
     public string ConnectionName => _clt.ConnectionName;
 
     public Task CreateAsync(string streamName, string groupName, PersistentSubscriptionSettings settings,
+        TimeSpan? deadline = null,
         UserCredentials? userCredentials = null, CancellationToken cancellationToken = default)
     {
-        return _clt.CreateAsync(streamName, groupName, settings, userCredentials, cancellationToken);
+        return _clt.CreateAsync(streamName, groupName, settings, deadline, userCredentials, cancellationToken);
     }
 
-    public Task DeleteAsync(string streamName, string groupName, UserCredentials? userCredentials = null,
+    public Task DeleteAsync(string streamName, string groupName, 
+        TimeSpan? deadline = null,
+        UserCredentials? userCredentials = null,
         CancellationToken cancellationToken = default)
     {
-        return _clt.DeleteAsync(streamName, groupName, userCredentials, cancellationToken);
+        return _clt.DeleteAsync(streamName, groupName, deadline, userCredentials, cancellationToken);
     }
 
-    public Task<PersistentSubscription> SubscribeAsync(string streamName,
+    public Task<PersistentSubscription> SubscribeAsync(
+        string streamName,
         string groupName,
         Func<PersistentSubscription, ResolvedEvent, int?, CancellationToken, Task> eventAppeared,
         Action<PersistentSubscription, SubscriptionDroppedReason, Exception?>? subscriptionDropped = null,
-        UserCredentials? userCredentials = null, int bufferSize = 10, bool autoAck = true,
+        UserCredentials? userCredentials = null, 
+        int bufferSize = 10, 
         CancellationToken cancellationToken = default)
     {
-        return _clt.SubscribeAsync(streamName,
+        return _clt.SubscribeToStreamAsync(
+            streamName,
             groupName,
             eventAppeared,
             subscriptionDropped,
             userCredentials,
             bufferSize,
-            autoAck,
             cancellationToken);
     }
 
-    public Task UpdateAsync(string streamName, string groupName, PersistentSubscriptionSettings settings,
-        UserCredentials? userCredentials = null, CancellationToken cancellationToken = default)
+    public Task UpdateAsync(string streamName, string groupName, 
+        PersistentSubscriptionSettings settings,
+        TimeSpan? deadline = null,
+        UserCredentials? userCredentials = null, 
+        CancellationToken cancellationToken = default)
     {
-        return _clt.UpdateAsync(streamName, groupName, settings, userCredentials, cancellationToken);
+        return _clt.UpdateAsync(streamName, groupName, settings, deadline, userCredentials, cancellationToken);
     }
 }

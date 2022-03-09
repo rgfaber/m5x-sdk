@@ -74,6 +74,7 @@ public abstract class EventStoreListener<TAggregateId> : BackgroundService
         {
             var request = string.Empty;
             _subscription = _connection.SubscribeToAllAsync(
+                FromAll.Start, 
                 EventAppeared,
                 false,
                 SubscriptionDropped,
