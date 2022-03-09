@@ -1,7 +1,7 @@
 # Releases
 
 ## March 2022
-- v2.3.0 |> EventStoreDB 
+- v2.3.0 |> EventStoreDB Update (DEC.Infra) 
 
 ## February 2022
 - v2.2.3 |> Security Updates (Chassis, Cocona, Couch, DEC.Infra, Grpc, Kubernetes, NATS, Serilog, Swagger, Testing, Units) 
