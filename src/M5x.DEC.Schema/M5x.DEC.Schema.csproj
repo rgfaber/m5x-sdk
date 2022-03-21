@@ -5,13 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj"/>
+        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="10.3.6"/>
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.6"/>
-        <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2"/>
+        <PackageReference Include="FluentValidation" Version="10.4.0" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.4.0" />
+        <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     </ItemGroup>
 
 
