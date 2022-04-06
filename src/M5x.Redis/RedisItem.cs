@@ -55,9 +55,9 @@ public class RedisItem<T> : RedisObject
     /// <param name="expiration"></param>
     /// <param name="when"></param>
     /// <returns></returns>
-    public Task<bool> Set(T value, TimeSpan? expiration = null, When when = When.Always)
+    public Task<bool> Set(T value, TimeSpan? expiration = null, bool keepTtl=false, When when = When.Always)
     {
-        return Executor.StringSetAsync(KeyName, ToRedisValue(value), expiration, when);
+        return Executor.StringSetAsync(KeyName, ToRedisValue(value), expiration, keepTtl, when);
     }
 
     /// <summary>

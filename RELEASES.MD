@@ -1,5 +1,8 @@
 # Releases
 
+## April 2022
+- v2.4.0 |> Security Updates (Ardalis, Bogus, Chassis, Grpc, Kubernetes, MailKit, Redis, Testing, Twilio, Units)
+
 ## March 2022
 - v2.3.0 |> EventStoreDB Update (DEC.Infra) 
 
