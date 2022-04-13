@@ -1,6 +1,7 @@
 # Releases
 
 ## April 2022
+- v2.4.1 |> Security Updates (Bogus, ElasticSearch, Minio, Sso, Swagger, Twilio)
 - v2.4.0 |> Security Updates (Ardalis, Bogus, Chassis, Grpc, Kubernetes, MailKit, Redis, Testing, Twilio, Units)
 
 ## March 2022
