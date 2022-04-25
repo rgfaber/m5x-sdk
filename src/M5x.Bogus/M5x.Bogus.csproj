@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="24SevenOffice.MappedApi.Fakers" Version="1.0.9" />
+        <PackageReference Include="24SevenOffice.MappedApi.Fakers" Version="1.0.10" />
         <PackageReference Include="AutoBogus" Version="2.13.1" />
         <PackageReference Include="AutoBogus.Conventions" Version="2.13.1" />
         <PackageReference Include="AutoBogus.FakeItEasy" Version="2.13.1" />
