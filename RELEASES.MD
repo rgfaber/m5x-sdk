@@ -1,5 +1,8 @@
 # Releases
 
+## May 2022
+- v2.5.0 |> Security Updates (DEC.Schema, Serilog, Testing) 
+
 ## April 2022
 - v2.4.2 |> Security Updates (Bogus, Grpc, Kubernetes, Serilog, Sso, Swagger, TermUI)
 - v2.4.1 |> Security Updates (Bogus, ElasticSearch, Minio, Sso, Swagger, Twilio)
