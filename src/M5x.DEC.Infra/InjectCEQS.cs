@@ -4,6 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using k8s;
 using M5x.DEC.Infra.EventStore;
 using M5x.Kubernetes;
 using M5x.Serilog;
@@ -103,18 +104,16 @@ public static class InjectCEQS
         var k8sFact = sp.GetService<IKubernetesFactory>();
         var _logger = sp.GetService<ILogger>();
         var k8s = k8sFact.Build();
-        var natsClientTls = k8s.ReadNamespacedSecretWithHttpMessagesAsync(natsClientTlsSecret,
+        var natsClientTls = k8s.ReadNamespacedSecretAsync(natsClientTlsSecret,
                 nameSpace)
             .Result;
         var clientCert = natsClientTls
-            .Body
             .Data
             .FirstOrDefault(x => x.Key == "ca.crt")
             .Value;
-        var SysCreds = k8s.ReadNamespacedSecretWithHttpMessagesAsync(natsCredsSecret,
+        var SysCreds = k8s.ReadNamespacedSecretAsync(natsCredsSecret,
             nameSpace).Result;
         var secret = Encoding.UTF8.GetString(SysCreds
-            .Body
             .Data
             .FirstOrDefault(x => x.Key == "sys.creds")
             .Value);

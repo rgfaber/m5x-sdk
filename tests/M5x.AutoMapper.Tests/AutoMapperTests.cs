@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
+using AutoBogus;
 using AutoMapper;
 using M5x.Testing;
 using Microsoft.Extensions.DependencyInjection;

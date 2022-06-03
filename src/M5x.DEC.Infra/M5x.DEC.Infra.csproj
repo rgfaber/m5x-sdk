@@ -6,7 +6,7 @@
 
     <ItemGroup>
         <PackageReference Include="CouchDB.NET" Version="3.1.1" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.1.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.2.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     </ItemGroup>
 

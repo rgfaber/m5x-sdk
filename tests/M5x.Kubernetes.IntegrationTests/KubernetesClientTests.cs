@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using k8s;
 using M5x.Testing;
 using Xunit;
 using Xunit.Abstractions;
@@ -14,8 +15,8 @@ public class KubernetesTests : KubernetesTestsBase
     [Fact]
     public async Task Should_RetrieveSecrets()
     {
-        var rsp = await Client.ListSecretForAllNamespacesWithHttpMessagesAsync();
-        var lst = rsp.Body;
-        foreach (var v1Secret in lst.Items) Output.WriteLine(v1Secret.Metadata.Name);
+        var rsp = await Client.ListSecretForAllNamespacesAsync();
+        var lst = rsp.Items;
+        foreach (var v1Secret in lst) Output.WriteLine(v1Secret.Metadata.Name);
     }
 }

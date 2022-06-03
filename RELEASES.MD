@@ -1,5 +1,8 @@
 # Releases
 
+## June 2022
+- v2.6.0 |> Security Updates
+
 ## May 2022
 - v2.5.0 |> Security Updates (DEC.Schema, Serilog, Testing) 
 

@@ -1,6 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>bin/Debug/net6.0/</OutputPath>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    </PropertyGroup>
+
+
     <ItemGroup>
         <ProjectReference Include="..\..\src\M5x.AutoMapper\M5x.AutoMapper.csproj" />
         <ProjectReference Include="..\..\src\M5x.Testing\M5x.Testing.csproj" />

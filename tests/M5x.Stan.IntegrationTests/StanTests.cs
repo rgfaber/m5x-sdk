@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using k8s;
 using M5x.Kubernetes;
 using M5x.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,15 +63,13 @@ public class StanTests : StanTestsBase
         var k8sFact = Container.GetService<IKubernetesFactory>();
         var k8s = k8sFact.Build();
 
-        var natsClientTls = k8s.ReadNamespacedSecretWithHttpMessagesAsync("nats-client-tls", "default").Result;
+        var natsClientTls = k8s.ReadNamespacedSecretAsync("nats-client-tls", "default").Result;
         var clientCert = natsClientTls
-            .Body
             .Data
             .FirstOrDefault(x => x.Key == "ca.crt")
             .Value;
-        var SysCreds = k8s.ReadNamespacedSecretWithHttpMessagesAsync("nats-sys-creds", "default").Result;
+        var SysCreds = k8s.ReadNamespacedSecretAsync("nats-sys-creds", "default").Result;
         var secret = SysCreds
-            .Body
             .Data
             .FirstOrDefault(x => x.Key == "sys.creds")
             .Value;
@@ -103,9 +102,8 @@ public class StanTests : StanTestsBase
     public async Task Should_GetCredentialsFromKubernetes()
     {
         var clt = K8S.Build();
-        var cred = await clt.ReadNamespacedSecretWithHttpMessagesAsync("nats-sys-creds", "default");
-        var secret = cred.Body;
-        var dict = secret.Data;
+        var cred = await clt.ReadNamespacedSecretAsync("nats-sys-creds", "default");
+        var dict = cred.Data;
         foreach (var kvp in dict)
         {
             var val = Encoding.UTF8.GetString(kvp.Value);
