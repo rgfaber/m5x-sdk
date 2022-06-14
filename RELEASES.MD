@@ -1,6 +1,7 @@
 # Releases
 
 ## June 2022
+- v2.6.1 |> Security Updates (Chassis, DEC.Schema, Kubernetes, MailKit, Minio, Serilog, Testing, Units)
 - v2.6.0 |> Security Updates
 
 ## May 2022
