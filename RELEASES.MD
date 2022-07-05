@@ -1,5 +1,8 @@
 # Releases
 
+## July 2022
+- v2.7.0 |> Security Updates (Bogus, Chassis, Couch, DEC, ElasticSearch, Grpc, Kubernetes, Redis, Serilog, Swagger, Testing, Twilio, Units)
+
 ## June 2022
 - v2.6.2 |> Security Updates (Redis, Twilio, Units)
 - v2.6.1 |> Security Updates (Chassis, DEC.Schema, Kubernetes, MailKit, Minio, Serilog, Testing, Units)
