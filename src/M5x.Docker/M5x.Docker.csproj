@@ -5,12 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Docker.DotNet" Version="3.125.5"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
+        <PackageReference Include="Docker.DotNet" Version="3.125.10" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj"/>
+        <ProjectReference Include="..\M5x.Serilog\M5x.Serilog.csproj" />
     </ItemGroup>
 
 </Project>
