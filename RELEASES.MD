@@ -1,6 +1,7 @@
 # Releases
 
 ## August 2022
+- v2.8.1 |> Security Update (Schema, Grpc, Serilog, TermUI, Testing, Twilio, Units)
 - v2.8.0 |> Security Updates (Bogus, Chassis, Docker, gRPC, Minio, Serilog, Swagger, TermUI, Testing, Twilio, Units, Yaml)
 
 ## July 2022
