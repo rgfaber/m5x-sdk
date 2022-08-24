@@ -5,8 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NBomber" Version="2.1.5" />
-        <PackageReference Include="NBomber.Http" Version="2.0.1" />
+        <PackageReference Include="NBomber" Version="3.0.0" />
+        <PackageReference Include="NBomber.Http" Version="3.0.0" />
     </ItemGroup>
 
 </Project>
