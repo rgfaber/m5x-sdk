@@ -1,5 +1,8 @@
 # Releases
 
+## September 2023
+- v2.9.0 |> Security Updates (Bogus, Chassis, Couch, DEC, Docker, gRPC, Kubernetes, MailKit, Nats, NBomber, Neo4j, Redis, Serilog, Sso, Stan, Swagger, TermUI, Testing, TTY, Twilio, Units, Yaml)
+
 ## August 2022
 - v2.8.2 |> Security Updates (gRPC, K8S, Mailkit, NBomber, M5x.Sso, M5x.Tty)
 - v2.8.1 |> Security Update (Schema, Grpc, Serilog, TermUI, Testing, Twilio, Units)

@@ -14,7 +14,7 @@
         <PackageReference Include="Bogus.Hollywood" Version="34.0.2" />
         <PackageReference Include="Bogus.Locations" Version="34.0.2" />
         <PackageReference Include="Bogus.Text" Version="34.0.2" />
-        <PackageReference Include="CountryData.Bogus" Version="3.75.0" />
+        <PackageReference Include="CountryData.Bogus" Version="3.78.0" />
         <PackageReference Include="WaffleGenerator.Bogus" Version="4.2.1" />
     </ItemGroup>
 

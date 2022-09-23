@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.2.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.3.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
         <PackageReference Include="MyNatsClient" Version="0.19.1" />
         <PackageReference Include="MyNatsClient.Encodings.Json" Version="0.19.1" />

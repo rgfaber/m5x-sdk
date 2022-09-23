@@ -3,6 +3,12 @@
 
 # M5x SDK
 
+## Important Announcement
+> Starting in 2001, this SDK has been a useful and loyal companion. 
+> Over time, it has seen many incarnations.
+> Though it may still be of use, we are going to make the effort to port the parts that support ES/CQRS to a new library that will be implemented in F#.
+> Keep an eye on the [dot-cart](https://github.com/discomco/dot-cart) repository!
+
 ## Introduction
 
 This is an opinionated library of various tools and classes that we have been carrying around from project to project
