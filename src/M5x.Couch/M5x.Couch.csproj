@@ -8,7 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="CouchDB.NET" Version="3.2.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.3.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.3.1" />
     </ItemGroup>
 
 

@@ -1,6 +1,9 @@
 # Releases
 
-## September 2023
+## October 2022
+- v2.10.0 |> Security Updates (AutoMapper, Chassis, Couch, DEC, Grpc, Kubernetes, MediatR, Nats, NBomber, Serilog, Stan, Swagger, Testing, Twilio)
+
+## September 2022
 - v2.9.0 |> Security Updates (Bogus, Chassis, Couch, DEC, Docker, gRPC, Kubernetes, MailKit, Nats, NBomber, Neo4j, Redis, Serilog, Sso, Stan, Swagger, TermUI, Testing, TTY, Twilio, Units, Yaml)
 
 ## August 2022
